@@ -1,5 +1,7 @@
 using System;
 using UnityEngine;
+using System.Collections.Generic;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -12,24 +14,17 @@ public class MBH_GridSpawner : MonoBehaviour
     public enum OptionsForSize
     {
         BasedOnGridWidthAndHeight,
-        // Uses gridWidth/gridHeight counts. If using a prefab, it auto-scales to fit your cellSize.
-        // Gap is applied between cells.
-
         BasedOnTargetWidthAndHeight,
-        // Tries to fit the MAX number of cells within targetUnitsWidth/targetUnitsHeight,
-        // using the prefab’s *native world size* and then applying cellSize ADDITIVELY to that size.
-        // (baseSize + cellSize). Gap is applied between cells.
     }
     public OptionsForSize sizeOption = OptionsForSize.BasedOnGridWidthAndHeight;
 
     public enum OptionsForTile
     {
-        UseDefaultTile, // A 1x1 unit white square (SpriteRenderer) tinted with defaultTileColor
-        UsePrefab       // Uses your prefab (must contain a SpriteRenderer)
+        UseDefaultTile,
+        UsePrefab
     }
     public OptionsForTile tileOption = OptionsForTile.UseDefaultTile;
 
-    // ── Common params ───────────────────────────────────────────────────────────
     [Min(1)] public int gridWidth = 5;
     [Min(1)] public int gridHeight = 5;
 
@@ -56,7 +51,6 @@ public class MBH_GridSpawner : MonoBehaviour
 
     public bool show_logs = false;
 
-    // ── Helpers (used by editor) ────────────────────────────────────────────────
     public GameObject CreateDefaultTileGO(string name, Transform parent)
     {
         var go = new GameObject(name, typeof(SpriteRenderer));
@@ -69,34 +63,18 @@ public class MBH_GridSpawner : MonoBehaviour
 
     public static Sprite MakeUnitSprite()
     {
-        // 1x1 world-unit white sprite from a 2x2 texture
         var tex = new Texture2D(2, 2, TextureFormat.RGBA32, false);
         tex.SetPixels(new[] { Color.white, Color.white, Color.white, Color.white });
         tex.Apply();
         var pivot = new Vector2(0.5f, 0.5f);
-        // Pixels Per Unit = 2  => sprite world size ≈ (1,1) at scale (1,1,1)
-        return Sprite.Create(tex, new Rect(0, 0, 2, 2), pivot, 2f);
-    }
 
-    public Transform GetOrCreateBoardParent()
-    {
-        if (board_parent != null) return board_parent;
-        var holder = transform.Find("Board");
-        if (holder == null)
-        {
-            var go = new GameObject("Board");
-            go.transform.SetParent(transform, false);
-            holder = go.transform;
-        }
-        board_parent = holder;
-        return holder;
+        return Sprite.Create(tex, new Rect(0, 0, 2, 2), pivot, 2f);
     }
 
     public static float GetSpriteWorldEdge(SpriteRenderer sr)
     {
         if (sr == null || sr.sprite == null)
         {
-            // default edge size if nothing valid is provided
             return 1f;
         }
 
@@ -104,82 +82,119 @@ public class MBH_GridSpawner : MonoBehaviour
         return Mathf.Max(size.x, size.y);
     }
 
-    // ── Color application options ─────────────────────────────────────────────────
     public enum ApplyColorToTiles
     {
         None,
-        ChessPattern,              // requires colorA, colorB
-        UniqueColorBetween2Colors  // generates unique colors along the A→B gradient
+        SingleColor,
+        ChessPattern,
+        UniqueColorBetween2Colors
     }
     public ApplyColorToTiles colorMode = ApplyColorToTiles.None;
 
-    // Used when colorMode != None
     public Color colorA = Color.white;
     public Color colorB = Color.black;
 
-    public void ApplyColorToCell(int x, int y, SpriteRenderer sr, int width, int height, int flatIndex)
+    public void RecolorExistingGrid()
     {
+        if (board_parent == null) { return; }
+        int childCount = board_parent.childCount;
+
+        if (childCount == 0) return;
+
+        SpriteRenderer[] spriteRendererArray = board_parent.GetComponentsInChildren<SpriteRenderer>();
+
         switch (colorMode)
         {
             case ApplyColorToTiles.None:
                 return;
+            case ApplyColorToTiles.SingleColor:
+                for (int i = 0; i < spriteRendererArray.Length; i++)
+                {
+                    if (spriteRendererArray[i] != null)
+                        spriteRendererArray[i].color = colorA;
+                }
+                return;
 
             case ApplyColorToTiles.ChessPattern:
-                sr.color = ((x + y) % 2 == 0) ? colorA : colorB;
+                ApplyChessPattern(spriteRendererArray, colorA, colorB);
                 return;
 
             case ApplyColorToTiles.UniqueColorBetween2Colors:
                 {
-                    // Deterministic unique color along the gradient A→B.
-                    // flatIndex ∈ [0, width*height-1]
-                    int total = Mathf.Max(1, width * height - 1);
-                    float t = (total == 0) ? 0f : (float)flatIndex / total;
-                    sr.color = Color.Lerp(colorA, colorB, t);
+                    UniqueColorBetween2Colors(spriteRendererArray, colorA, colorB);
                     return;
                 }
         }
     }
 
-    public void RecolorExistingGrid()
+    public void ApplyChessPattern(SpriteRenderer[] tiles, Color colorA, Color colorB)
     {
-        var parent = GetOrCreateBoardParent();
-        int childCount = parent.childCount;
 
-        if (childCount == 0) return;
 
-        // Try to infer width/height from current layout.
-        // Fallback to stored gridWidth/Height.
-        int width = gridWidth;
-        int height = gridHeight;
+        List<float> uniqueXs = new List<float>();
 
-        // If we created by target-fit mode, try to re-derive from children count
-        if (sizeOption == OptionsForSize.BasedOnTargetWidthAndHeight)
+        for (int i = 0; i < tiles.Length; i++)
         {
-            // pick a reasonably compact factorization close to square
-            FactorToGrid(childCount, out width, out height);
+            if (tiles[i] == null) continue;
+
+            Vector3 positionVector = tiles[i].transform.localPosition;
+            if (uniqueXs.Contains(positionVector.x) == false)
+            {
+                uniqueXs.Add(positionVector.x);
+            }
         }
+        int width = uniqueXs.Count;
 
-        for (int i = 0; i < childCount; i++)
+        bool isEven = (width % 2) == 0;
+        bool isLastInRow;
+
+        bool alternate = true;
+        for (int i = 0; i < tiles.Length; i++)
         {
-            var t = parent.GetChild(i);
-            var sr = t.GetComponentInChildren<SpriteRenderer>();
-            if (sr == null) continue;
+            if (alternate)
+            {
+                tiles[i].color = colorA;
+            }
+            else
+            {
+                tiles[i].color = colorB;
+            }
+            bool stopAlternation = isEven && (i + 1) % width == 0;
 
-            int x = i % width;
-            int y = i / width;
-            ApplyColorToCell(x, y, sr, width, height, i);
+            if (stopAlternation)
+            {
+                continue;
+            }
+            alternate = !alternate;
         }
     }
 
-    // Quick helper to factor N into width/height (closest to square)
-    static void FactorToGrid(int n, out int width, out int height)
+    public void UniqueColorBetween2Colors(SpriteRenderer[] tiles, Color colorA, Color colorB)
     {
-        width = Mathf.CeilToInt(Mathf.Sqrt(n));
-        height = Mathf.CeilToInt((float)n / width);
+        if (tiles == null || tiles.Length == 0) return;
+
+        int count = tiles.Length;
+
+        Color[] gradientColors = new Color[count];
+
+        for (int i = 0; i < count; i++)
+        {
+            float t = (count == 1) ? 0f : (float)i / (count - 1);
+            gradientColors[i] = Color.Lerp(colorA, colorB, t);
+        }
+
+        System.Random rng = new System.Random();
+        for (int i = count - 1; i > 0; i--)
+        {
+            int j = rng.Next(i + 1);
+            (gradientColors[i], gradientColors[j]) = (gradientColors[j], gradientColors[i]);
+        }
+
+        for (int i = 0; i < count; i++)
+        {
+            if (tiles[i] != null)
+                tiles[i].color = gradientColors[i];
+        }
     }
-
-
-
-
 
 }

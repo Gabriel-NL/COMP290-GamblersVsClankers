@@ -111,23 +111,9 @@ public class Editor_GridSpawner : Editor
 
         EditorGUILayout.PropertyField(colorMode);
 
-        var cm = (MBH_GridSpawner.ApplyColorToTiles)colorMode.enumValueIndex;
-        if (cm == MBH_GridSpawner.ApplyColorToTiles.ChessPattern ||
-            cm == MBH_GridSpawner.ApplyColorToTiles.UniqueColorBetween2Colors)
-        {
-            EditorGUILayout.PropertyField(colorA, new GUIContent("Color A"));
-            EditorGUILayout.PropertyField(colorB, new GUIContent("Color B"));
-        }
+        ColorModeColorsVisibility();
 
         EditorGUILayout.Space();
-
-        // Buttons
-        using (new EditorGUI.DisabledScope(
-               (tileMode == MBH_GridSpawner.OptionsForTile.UsePrefab && prefab.objectReferenceValue == null)))
-        {
-            if (GUILayout.Button("Create Grid"))
-                CreateGrid(spawner);
-        }
 
         if (GUILayout.Button("Recolor Tiles"))
         {
@@ -139,10 +125,26 @@ public class Editor_GridSpawner : Editor
         serializedObject.ApplyModifiedProperties();
     }
 
+    void ColorModeColorsVisibility()
+    {
+        var cm = (MBH_GridSpawner.ApplyColorToTiles)colorMode.enumValueIndex;
+        if (cm == MBH_GridSpawner.ApplyColorToTiles.SingleColor)
+        {
+            EditorGUILayout.PropertyField(colorA, new GUIContent("Color A"));
+            return;
+
+        }
+        if (cm == MBH_GridSpawner.ApplyColorToTiles.ChessPattern ||
+            cm == MBH_GridSpawner.ApplyColorToTiles.UniqueColorBetween2Colors)
+        {
+            EditorGUILayout.PropertyField(colorA, new GUIContent("Color A"));
+            EditorGUILayout.PropertyField(colorB, new GUIContent("Color B"));
+        }
+    }
     // ── Grid creation ───────────────────────────────────────────────────────────
     void CreateGrid(MBH_GridSpawner sp)
     {
-        var parent = sp.GetOrCreateBoardParent();
+        var parent = (sp).board_parent;
 
         // Clear previous
         for (int i = parent.childCount - 1; i >= 0; i--)
