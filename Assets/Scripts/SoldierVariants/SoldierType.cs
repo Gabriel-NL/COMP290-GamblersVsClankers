@@ -2,7 +2,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "SoldierType", menuName = "Soldiers/SoldierType")]
-public class Soldier : ScriptableObject
+public class SoldierType : ScriptableObject
 {
     [Header("Soldier Details")]
     public new string name;
@@ -16,11 +16,11 @@ public class Soldier : ScriptableObject
     }
     [Tooltip("Select soldier type")]
     public TypeOfSoldier type;
-
+    public float cost;
     // public Sprite weaponSprite;
     // //public RuntimeAnimatorController AnimController;
     // public Sprite bulletSprite;
-    // public Sprite characterSprite;
+    public Sprite characterSprite;
     //public string shootAudioName;
 
     

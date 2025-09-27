@@ -14,7 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Rifle
   type: 1
-  weaponSprite: {fileID: 0}
-  bulletSprite: {fileID: 0}
-  characterSprite: {fileID: 0}
-  shootAudioName: 
+  cost: 100
+  characterSprite: {fileID: 21300000, guid: 282ae77b6f6964941baf80e2af99f85b, type: 3}

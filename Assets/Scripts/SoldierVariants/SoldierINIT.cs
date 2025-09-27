@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class SoldierINIT : MonoBehaviour
 {
-    public Soldier SoldierType;
+    public SoldierType SoldierType;
     public SoldierTier SoldierTier;
     public Transform firePoint;
     public GameObject bulletPrefab;
@@ -14,8 +14,6 @@ public class SoldierINIT : MonoBehaviour
     [HideInInspector] public float attackSpeed;
     [HideInInspector] public float health;
     [HideInInspector] public float dmg;
-    [HideInInspector] public string cost;
-
     //[HideInInspector] public string shootAudioName;
 
     void Start()
@@ -30,37 +28,33 @@ public class SoldierINIT : MonoBehaviour
 
         switch (SoldierType.type)
         {
-            case Soldier.TypeOfSoldier.Pistol:
+            case SoldierType.TypeOfSoldier.Pistol:
                 // Pistol specific settings
                 bulletSpeed = 20f;
                 attackSpeed = 2f;
                 health = 50f;
                 dmg = 10f;
-                cost = "50";
                 break;
-            case Soldier.TypeOfSoldier.Rifleman:
+            case SoldierType.TypeOfSoldier.Rifleman:
                 // Rifleman specific settings
                 bulletSpeed = 30f;
                 attackSpeed = 1.5f;
                 health = 75f;
                 dmg = 35f;
-                cost = "100";
                 break;
-            case Soldier.TypeOfSoldier.ARSoldier:
+            case SoldierType.TypeOfSoldier.ARSoldier:
                 // ARSoldier specific settings
                 bulletSpeed = 40f;
                 attackSpeed = 0.5f;
                 health = 100f;
                 dmg = 25f;
-                cost = "175";
                 break;
-            case Soldier.TypeOfSoldier.LaserMan:
+            case SoldierType.TypeOfSoldier.LaserMan:
                 // LaserMan specific settings
                 bulletSpeed = 60f;
                 attackSpeed = 0.2f;
                 health = 150f;
                 dmg = 15f;
-                cost = "250";
                 break;
         }
         //spriteRenderer.sprite = SoldierType.characterSprite;
