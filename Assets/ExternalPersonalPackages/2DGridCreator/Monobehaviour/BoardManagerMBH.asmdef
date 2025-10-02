@@ -1,15 +1,12 @@
 {
   "name": "2DGridCreatorMBH",
   "rootNamespace": "2DGridCreator",
-  "references": [
-  ],
-    "includePlatforms": [
-    "Editor"
-  ],
+  "includePlatforms": [],          
   "excludePlatforms": [],
+  "autoReferenced": true,
   "allowUnsafeCode": false,
   "overrideReferences": false,
-  "autoReferenced": true,
+  "references": [],
   "defineConstraints": [],
   "versionDefines": [],
   "noEngineReferences": false
