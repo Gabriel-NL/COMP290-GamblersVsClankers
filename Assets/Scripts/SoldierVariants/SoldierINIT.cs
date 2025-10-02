@@ -16,10 +16,13 @@ public class SoldierINIT : MonoBehaviour
     [HideInInspector] public float dmg;
     //[HideInInspector] public string shootAudioName;
 
+    
+
     void Start()
     {
         SetSoldierType();
     }
+   
 
     private void SetSoldierType()
     {
@@ -108,4 +111,5 @@ public class SoldierINIT : MonoBehaviour
         // healthBar.GetComponent<Slider>().maxValue = health;
         // healthBar.GetComponent<Slider>().value = health;
     }
+   
 }
