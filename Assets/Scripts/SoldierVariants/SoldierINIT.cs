@@ -14,16 +14,37 @@ public class SoldierINIT : MonoBehaviour
     [HideInInspector] public float attackSpeed;
     [HideInInspector] public float health;
     [HideInInspector] public float dmg;
+    [SerializeField] float fireforce;
+    public float timer;
+    private float initialTimer;
     //[HideInInspector] public string shootAudioName;
 
-    
+
 
     void Start()
     {
         SetSoldierType();
+        initialTimer = timer;
     }
-   
-
+    private void Update()
+    {
+        if (timer > 0)
+        {
+            timer -= Time.deltaTime;
+            if (timer <= 0)
+            {
+                Fire();
+                timer = initialTimer; // Reset the timer
+            }
+        }
+    }
+    public void Fire()
+    {
+        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
+        rb.AddForce(firePoint.up * fireforce, ForceMode2D.Impulse);
+        Destroy(bullet, 10f); // Destroy bullet after 10 seconds
+    }
     private void SetSoldierType()
     {
         SpriteRenderer spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
