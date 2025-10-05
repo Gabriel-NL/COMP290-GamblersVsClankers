@@ -10,11 +10,22 @@ public class ShopINIT : MonoBehaviour
 {
     [SerializeField] List<Image> shopSlots = new List<Image>();
     [SerializeField] List<SoldierType> shopSoldiers = new List<SoldierType>();
+    [Header("Economy")]
+    [Tooltip("Sound to play when player doesn't have enough money")]
+    public AudioClip insufficientFundsClip;
+
+    private AudioSource audioSource;
 
     //List<float> soldierCosts = new List<float>();
     void Start()
     {
         InitializeShop();
+    }
+
+    private void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
     }
 
     // track suppressed clicks per slot to avoid a single click firing after a hold
@@ -135,8 +146,28 @@ public class ShopINIT : MonoBehaviour
             Debug.Log($"Suppressed single click for slot {slotIndex} after hold/repeat.");
             return;
         }
+        // On a regular click, attempt to purchase one: check funds first via ScoreManager
+        int costInt = Mathf.CeilToInt(cost);
+        bool bought = false;
+        if (ScoreManager.instance != null)
+        {
+            bought = ScoreManager.instance.TrySpend(costInt);
+        }
+        else
+        {
+            // If ScoreManager is missing, allow the purchase but warn (helps testing)
+            Debug.LogWarning("ScoreManager.instance not found — allowing purchase for testing.");
+            bought = true;
+        }
 
-        // Try to find a text component (TMPro or legacy Text) in the slot's children and increment it
+        if (!bought)
+        {
+            if (insufficientFundsClip != null && audioSource != null) audioSource.PlayOneShot(insufficientFundsClip);
+            Debug.Log($"Not enough funds to purchase {soldierName}. Cost: {costInt}");
+            return;
+        }
+
+        // Purchase succeeded — increment the slot counter in UI
         if (slotIndex >= 0 && slotIndex < shopSlots.Count)
         {
             Transform slotTransform = shopSlots[slotIndex].transform;

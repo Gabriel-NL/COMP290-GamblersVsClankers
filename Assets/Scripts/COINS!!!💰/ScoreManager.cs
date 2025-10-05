@@ -9,10 +9,31 @@ public class ScoreManager : MonoBehaviour
 
     private int score;
     public TMP_Text scoreText;
+    [Tooltip("Starting coins for the player")]
+    public int startingScore = 350;
 
     private void Awake()
     {
-        instance = this; // Add this line to initialize the singleton
+        instance = this; // initialize the singleton
+        // Initialize starting score
+        score = startingScore;
+        UpdateScoreText();
+    }
+
+    // Expose current score (useful as player money)
+    public int CurrentScore => score;
+
+    // Attempt to spend points. Returns true if spent, false if insufficient funds.
+    public bool TrySpend(int amount)
+    {
+        if (amount <= 0) return true;
+        if (score >= amount)
+        {
+            score -= amount;
+            UpdateScoreText();
+            return true;
+        }
+        return false;
     }
 
     public void AddPoints(int points)
