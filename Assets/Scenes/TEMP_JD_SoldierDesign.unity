@@ -319,6 +319,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6018619142518317229, guid: 673777f7e0db93946a07bb6ee33cb37b, type: 3}
+      propertyPath: timer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6018619142518317229, guid: 673777f7e0db93946a07bb6ee33cb37b, type: 3}
+      propertyPath: fireforce
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 7815089993619729977, guid: 673777f7e0db93946a07bb6ee33cb37b, type: 3}
       propertyPath: m_Name
       value: Rifle Soldier
@@ -398,9 +406,21 @@ PrefabInstance:
       value: Pistol
       objectReference: {fileID: 0}
     - target: {fileID: 3508561192655838772, guid: 86fd6d68395bb054396e13d694bb48e4, type: 3}
+      propertyPath: timer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3508561192655838772, guid: 86fd6d68395bb054396e13d694bb48e4, type: 3}
+      propertyPath: fireforce
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3508561192655838772, guid: 86fd6d68395bb054396e13d694bb48e4, type: 3}
       propertyPath: SoldierTier
       value: 
       objectReference: {fileID: 11400000, guid: e3410101603fe1e42ae9d7077bad3087, type: 2}
+    - target: {fileID: 3508561192655838772, guid: 86fd6d68395bb054396e13d694bb48e4, type: 3}
+      propertyPath: enemyLayer.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
     - target: {fileID: 6457836247543650675, guid: 86fd6d68395bb054396e13d694bb48e4, type: 3}
       propertyPath: m_LocalPosition.x
       value: -5.75
