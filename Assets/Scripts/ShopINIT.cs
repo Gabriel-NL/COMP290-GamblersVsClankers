@@ -4,6 +4,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class ShopINIT : MonoBehaviour
 {
@@ -213,5 +214,127 @@ public class ShopINIT : MonoBehaviour
             return;
         }
         OnSoldierClick(soldierName, index);
+    }
+
+    // Spawn a new UI Image that represents the soldier and make it draggable by the existing DragDrop script.
+    // Returns the created GameObject (or null on failure).
+    public GameObject SpawnSoldierForDrag(int slotIndex)
+    {
+        if (slotIndex < 0 || slotIndex >= shopSoldiers.Count)
+        {
+            Debug.LogWarning("Slot index out of range for SpawnSoldierForDrag: " + slotIndex);
+            return null;
+        }
+
+        // If the shop UI displays a counter for this slot and it's zero, don't allow spawning.
+        Transform slotTransformCheck = shopSlots != null && slotIndex < shopSlots.Count ? shopSlots[slotIndex].transform : null;
+        if (slotTransformCheck != null)
+        {
+            var tmpTextCheck = slotTransformCheck.GetComponentInChildren<TMP_Text>();
+            if (tmpTextCheck != null && int.TryParse(tmpTextCheck.text, out int currentCheck) && currentCheck <= 0)
+            {
+                Debug.Log("No stock to spawn for slot " + slotIndex);
+                return null;
+            }
+            var uiTextCheck = slotTransformCheck.GetComponentInChildren<Text>();
+            if (uiTextCheck != null && int.TryParse(uiTextCheck.text, out int currentCheck2) && currentCheck2 <= 0)
+            {
+                Debug.Log("No stock to spawn for slot " + slotIndex);
+                return null;
+            }
+        }
+
+        SoldierType soldier = shopSoldiers[slotIndex];
+        if (soldier == null || soldier.characterSprite == null)
+        {
+            Debug.LogWarning("Soldier or sprite missing for slot " + slotIndex);
+            return null;
+        }
+
+        // Attempt to find a Canvas in the scene to parent the UI element.
+        Canvas canvas = FindObjectOfType<Canvas>();
+        if (canvas == null)
+        {
+            Debug.LogWarning("No Canvas found in scene to spawn draggable soldier.");
+            return null;
+        }
+
+        // Create UI Image
+        GameObject go = new GameObject(soldier.name + "_Drag", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        var rt = go.GetComponent<RectTransform>();
+        go.transform.SetParent(canvas.transform, false);
+
+        var img = go.GetComponent<Image>();
+        img.sprite = soldier.characterSprite;
+        img.raycastTarget = true; // allow pointer events
+
+        // Add DragDrop and wire Canvas reference
+        var drag = go.AddComponent<DragDrop>();
+        drag.canvas = canvas;
+
+    // Ensure there's a CanvasGroup so raycasts can be toggled by DragDrop later if needed
+    var cg = go.GetComponent<CanvasGroup>();
+    if (cg == null) cg = go.AddComponent<CanvasGroup>();
+    // Default CanvasGroup state: visible and interactive until drag starts
+    cg.alpha = 1f;
+    cg.interactable = true;
+    cg.blocksRaycasts = true;
+
+        // Position at current pointer (mouse/touch) so drag begins under the cursor
+        Vector2 localPoint = Vector2.zero;
+        Vector2 screenPos = Input.mousePosition;
+        RectTransform canvasRect = canvas.GetComponent<RectTransform>();
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, screenPos, canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera, out localPoint))
+        {
+            rt.anchoredPosition = localPoint;
+        }
+        else
+        {
+            rt.anchoredPosition = Vector2.zero;
+        }
+
+    Debug.Log("Spawned draggable soldier: " + go.name);
+    // Decrement the shop counter immediately since the player grabbed one
+    DecrementSoldierByIndex(slotIndex);
+        // Attach spawn metadata so drop handlers can return this to the shop counter if needed
+        var info = go.AddComponent<ShopSpawnInfo>();
+        info.slotIndex = slotIndex;
+        info.shop = this;
+        return go;
+    }
+
+    // Re-add one to the shop UI counter for a slot (inverse of DecrementSoldierByIndex)
+    public void IncrementSoldierByIndex(int slotIndex)
+    {
+        if (slotIndex < 0 || slotIndex >= shopSlots.Count) return;
+
+        Transform slotTransform = shopSlots[slotIndex].transform;
+        var tmpText = slotTransform.GetComponentInChildren<TMP_Text>();
+        if (tmpText != null)
+        {
+            if (int.TryParse(tmpText.text, out int current))
+            {
+                tmpText.text = (current + 1).ToString();
+            }
+            else
+            {
+                tmpText.text = "1";
+            }
+            return;
+        }
+
+        var uiText = slotTransform.GetComponentInChildren<Text>();
+        if (uiText != null)
+        {
+            if (int.TryParse(uiText.text, out int current))
+            {
+                uiText.text = (current + 1).ToString();
+            }
+            else
+            {
+                uiText.text = "1";
+            }
+            return;
+        }
     }
 }
