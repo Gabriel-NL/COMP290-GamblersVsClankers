@@ -14,9 +14,9 @@ public class SoldierINIT : MonoBehaviour
     [HideInInspector] public float attackSpeed;
     [HideInInspector] public float health;
     [HideInInspector] public float dmg;
-    [SerializeField] float fireforce;
+    // legacy public timer kept for inspector visibility if needed, but firing uses attackSpeed
     public float timer;
-    private float initialTimer;
+    private float cooldownTimer;
     //[HideInInspector] public string shootAudioName;
 
 
@@ -24,26 +24,56 @@ public class SoldierINIT : MonoBehaviour
     void Start()
     {
         SetSoldierType();
-        initialTimer = timer;
+        // Initialize cooldown. Prefer attackSpeed, fallback to legacy 'timer'. If both are <= 0,
+        // set cooldownTimer = 0 so first Frame will fire immediately (and we'll use a safe fallback
+        // when resetting the cooldown after firing).
+        cooldownTimer = (attackSpeed > 0f) ? attackSpeed : ((timer > 0f) ? timer : 0f);
+
+        Debug.Log($"[SoldierINIT] Initialized attackSpeed={attackSpeed}, legacy timer={timer}, cooldownTimer={cooldownTimer} on '{gameObject.name}'");
     }
     private void Update()
     {
-        if (timer > 0)
+        if (cooldownTimer > 0f)
         {
-            timer -= Time.deltaTime;
-            if (timer <= 0)
-            {
-                Fire();
-                timer = initialTimer; // Reset the timer
-            }
+            cooldownTimer -= Time.deltaTime;
+        }
+        if (cooldownTimer <= 0f)
+        {
+            Fire();
+            // Reset cooldownTimer using attackSpeed if valid, else fallback to legacy timer, else default to 1s
+            cooldownTimer = (attackSpeed > 0f) ? attackSpeed : ((timer > 0f) ? timer : 1f);
+            Debug.Log($"[SoldierINIT] Fired from '{gameObject.name}'. Next shot in {cooldownTimer} seconds.");
         }
     }
     public void Fire()
     {
+        if (firePoint == null)
+        {
+            Debug.LogWarning($"[SoldierINIT] firePoint is null on '{gameObject.name}'. Cannot Fire().");
+            return;
+        }
+        if (bulletPrefab == null)
+        {
+            Debug.LogWarning($"[SoldierINIT] bulletPrefab is null on '{gameObject.name}'. Cannot Fire().");
+            return;
+        }
+
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
-        rb.AddForce(firePoint.up * fireforce, ForceMode2D.Impulse);
-        Destroy(bullet, 10f); // Destroy bullet after 10 seconds
+        if (rb != null)
+        {
+            rb.AddForce(firePoint.up * bulletSpeed, ForceMode2D.Impulse);
+        }
+        else
+        {
+            Debug.LogWarning($"[SoldierINIT] Instantiated bullet has no Rigidbody2D on '{gameObject.name}'.");
+        }
+        // Log creation details to help debug why bullets might not be visible
+        Debug.Log($"[SoldierINIT] Instantiated bullet at {firePoint.position} with life={bulletLife} on '{gameObject.name}'");
+        // Draw a short debug ray showing firing direction in the Scene view
+        Debug.DrawRay(firePoint.position, firePoint.up * 2f, Color.red, 0.5f);
+
+        Destroy(bullet, bulletLife); // Destroy bullet after bulletLife seconds
     }
     private void SetSoldierType()
     {
@@ -54,34 +84,38 @@ public class SoldierINIT : MonoBehaviour
         {
             case SoldierType.TypeOfSoldier.Pistol:
                 // Pistol specific settings
-                bulletSpeed = 20f;
-                attackSpeed = 2f;
+                bulletSpeed = 10f;
+                bulletLife = 2f;
+                attackSpeed = 2.8f;
                 health = 50f;
                 dmg = 10f;
                 break;
             case SoldierType.TypeOfSoldier.Rifleman:
                 // Rifleman specific settings
-                bulletSpeed = 30f;
-                attackSpeed = 1.5f;
+                bulletSpeed = 20f;
+                bulletLife = 2f;
+                attackSpeed = 2f;
                 health = 75f;
                 dmg = 35f;
                 break;
             case SoldierType.TypeOfSoldier.ARSoldier:
                 // ARSoldier specific settings
-                bulletSpeed = 40f;
-                attackSpeed = 0.5f;
+                bulletSpeed = 30f;
+                bulletLife = 2f;
+                attackSpeed = 1f;
                 health = 100f;
                 dmg = 25f;
                 break;
             case SoldierType.TypeOfSoldier.LaserMan:
                 // LaserMan specific settings
-                bulletSpeed = 60f;
-                attackSpeed = 0.2f;
+                bulletSpeed = 35f;
+                bulletLife = 2f;
+                attackSpeed = 0.6f;
                 health = 150f;
                 dmg = 15f;
                 break;
         }
-        //spriteRenderer.sprite = SoldierType.characterSprite;
+        spriteRenderer.sprite = SoldierType.characterSprite;
         //firePoint.GetComponent<SpriteRenderer>().sprite = SoldierType.weaponSprite;
         //shootAudioName = SoldierType.shootAudioName;
 
