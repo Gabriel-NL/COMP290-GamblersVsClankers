@@ -13,6 +13,11 @@ MonoBehaviour:
   m_Name: Pistol
   m_EditorClassIdentifier: 
   name: Pistol
-  type: 0
-  cost: 50
   characterSprite: {fileID: 21300000, guid: bb027010112c87b4daa38b0660f235eb, type: 3}
+  stats:
+    bulletSpeed: 10
+    bulletLife: 2
+    attackSpeed: 2.8
+    health: 50
+    dmg: 10
+    cost: 10

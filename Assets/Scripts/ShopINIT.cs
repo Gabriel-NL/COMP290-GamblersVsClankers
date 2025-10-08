@@ -128,7 +128,7 @@ public class ShopINIT : MonoBehaviour
         for (int i = 0; i < shopSoldiers.Count; i++)
         {
             if (shopSoldiers[i].name == soldierName)
-                return shopSoldiers[i].cost;
+                return shopSoldiers[i].stats.cost;
         }
 
         Debug.LogWarning("Soldier type not found: " + soldierName);
@@ -303,13 +303,13 @@ public class ShopINIT : MonoBehaviour
         var drag = go.AddComponent<DragDrop>();
         drag.canvas = canvas;
 
-    // Ensure there's a CanvasGroup so raycasts can be toggled by DragDrop later if needed
-    var cg = go.GetComponent<CanvasGroup>();
-    if (cg == null) cg = go.AddComponent<CanvasGroup>();
-    // Default CanvasGroup state: visible and interactive until drag starts
-    cg.alpha = 1f;
-    cg.interactable = true;
-    cg.blocksRaycasts = true;
+        // Ensure there's a CanvasGroup so raycasts can be toggled by DragDrop later if needed
+        var cg = go.GetComponent<CanvasGroup>();
+        if (cg == null) cg = go.AddComponent<CanvasGroup>();
+        // Default CanvasGroup state: visible and interactive until drag starts
+        cg.alpha = 1f;
+        cg.interactable = true;
+        cg.blocksRaycasts = true;
 
         // Position at current pointer (mouse/touch) so drag begins under the cursor
         Vector2 localPoint = Vector2.zero;
@@ -324,9 +324,9 @@ public class ShopINIT : MonoBehaviour
             rt.anchoredPosition = Vector2.zero;
         }
 
-    Debug.Log("Spawned draggable soldier: " + go.name);
-    // Decrement the shop counter immediately since the player grabbed one
-    DecrementSoldierByIndex(slotIndex);
+        Debug.Log("Spawned draggable soldier: " + go.name);
+        // Decrement the shop counter immediately since the player grabbed one
+        DecrementSoldierByIndex(slotIndex);
         // Attach spawn metadata so drop handlers can return this to the shop counter if needed
         var info = go.AddComponent<ShopSpawnInfo>();
         info.slotIndex = slotIndex;
