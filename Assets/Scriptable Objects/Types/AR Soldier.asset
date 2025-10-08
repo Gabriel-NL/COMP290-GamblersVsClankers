@@ -13,6 +13,11 @@ MonoBehaviour:
   m_Name: AR Soldier
   m_EditorClassIdentifier: 
   name: Assault Rifle
-  type: 2
-  cost: 175
   characterSprite: {fileID: 21300000, guid: 83ab198af00869c4cb267e544d51c351, type: 3}
+  stats:
+    bulletSpeed: 30
+    bulletLife: 2
+    attackSpeed: 1
+    health: 100
+    dmg: 25
+    cost: 100
