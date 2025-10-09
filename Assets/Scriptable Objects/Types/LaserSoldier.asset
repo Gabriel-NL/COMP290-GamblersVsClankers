@@ -12,7 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 104216c16a8ae5b48961a24ac31c4b7b, type: 3}
   m_Name: LaserSoldier
   m_EditorClassIdentifier: 
-  name: Laser
-  type: 3
-  cost: 250
+  name: Laser Soldier
   characterSprite: {fileID: 21300000, guid: 3e4e938fe68657e419b012012b87595b, type: 3}
+  stats:
+    bulletSpeed: 35
+    bulletLife: 2
+    attackSpeed: 0.6
+    health: 150
+    dmg: 15
+    cost: 150

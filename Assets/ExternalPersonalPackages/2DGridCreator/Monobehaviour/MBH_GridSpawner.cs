@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 #if UNITY_EDITOR
 using UnityEditor;
+[ExecuteInEditMode]
 #endif
 
-[ExecuteInEditMode]
 public class MBH_GridSpawner : MonoBehaviour
 {
     // ── Enums ───────────────────────────────────────────────────────────────────
@@ -87,7 +87,8 @@ public class MBH_GridSpawner : MonoBehaviour
         None,
         SingleColor,
         ChessPattern,
-        UniqueColorBetween2Colors
+        UniqueColorBetween2Colors,
+        MultipleRowsGradient
     }
     public ApplyColorToTiles colorMode = ApplyColorToTiles.None;
 
@@ -122,6 +123,11 @@ public class MBH_GridSpawner : MonoBehaviour
             case ApplyColorToTiles.UniqueColorBetween2Colors:
                 {
                     UniqueColorBetween2Colors(spriteRendererArray, colorA, colorB);
+                    return;
+                }
+            case ApplyColorToTiles.MultipleRowsGradient:
+                {
+                    MultipleRowsGradient(spriteRendererArray, colorA, colorB);
                     return;
                 }
         }
@@ -194,6 +200,52 @@ public class MBH_GridSpawner : MonoBehaviour
         {
             if (tiles[i] != null)
                 tiles[i].color = gradientColors[i];
+        }
+    }
+
+    public void MultipleRowsGradient(SpriteRenderer[] tiles, Color colorA, Color colorB)
+    {
+        if (tiles == null || tiles.Length == 0) return;
+
+        List<float> uniqueYs = new List<float>();
+
+        for (int i = 0; i < tiles.Length; i++)
+        {
+            if (tiles[i] == null) continue;
+
+            Vector3 positionVector = tiles[i].transform.localPosition;
+            if (uniqueYs.Contains(positionVector.y) == false)
+            {
+                uniqueYs.Add(positionVector.y);
+            }
+        }
+        int height = uniqueYs.Count;
+        if (height == 0) return;
+
+        Color[] gradientColors = new Color[height];
+
+        for (int i = 0; i < height; i++)
+        {
+            float t = (height == 1) ? 0f : (float)i / (height - 1);
+            gradientColors[i] = Color.Lerp(colorA, colorB, t);
+        }
+
+        Dictionary<float, Color> yToColorMap = new Dictionary<float, Color>();
+        for (int i = 0; i < height; i++)
+        {
+            yToColorMap[uniqueYs[i]] = gradientColors[i];
+        }
+
+        for (int i = 0; i < tiles.Length; i++)
+        {
+            if (tiles[i] != null)
+            {
+                float yPos = tiles[i].transform.localPosition.y;
+                if (yToColorMap.TryGetValue(yPos, out Color assignedColor))
+                {
+                    tiles[i].color = assignedColor;
+                }
+            }
         }
     }
 

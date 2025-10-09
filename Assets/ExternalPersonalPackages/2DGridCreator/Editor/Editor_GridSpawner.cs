@@ -132,10 +132,9 @@ public class Editor_GridSpawner : Editor
         {
             EditorGUILayout.PropertyField(colorA, new GUIContent("Color A"));
             return;
-
         }
         if (cm == MBH_GridSpawner.ApplyColorToTiles.ChessPattern ||
-            cm == MBH_GridSpawner.ApplyColorToTiles.UniqueColorBetween2Colors)
+            cm == MBH_GridSpawner.ApplyColorToTiles.UniqueColorBetween2Colors || cm == MBH_GridSpawner.ApplyColorToTiles.MultipleRowsGradient)
         {
             EditorGUILayout.PropertyField(colorA, new GUIContent("Color A"));
             EditorGUILayout.PropertyField(colorB, new GUIContent("Color B"));
