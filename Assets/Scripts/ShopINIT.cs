@@ -282,18 +282,68 @@ public class ShopINIT : MonoBehaviour
             return null;
         }
 
-        // Attempt to find a Canvas in the scene to parent the UI element.
-        Canvas canvas = FindObjectOfType<Canvas>();
+        // Attempt to find the best Canvas in the scene to parent the UI element.
+        // Prefer a top-level/root canvas or the one with the highest sort order so the spawned
+        // draggable appears above nested shop UI elements.
+        Canvas[] canvases = FindObjectsOfType<Canvas>();
+        Canvas canvas = null;
+        if (canvases != null && canvases.Length > 0)
+        {
+            // Prefer rootCanvas if present
+            foreach (var c in canvases)
+            {
+                if (c.rootCanvas == c)
+                {
+                    canvas = c;
+                    break;
+                }
+            }
+            // otherwise pick canvas with highest sortingOrder (useful for ScreenSpaceCamera or Overlay)
+            if (canvas == null)
+            {
+                int bestOrder = int.MinValue;
+                foreach (var c in canvases)
+                {
+                    int order = 0;
+                    var cc = c.GetComponent<Canvas>();
+                    if (cc != null) order = cc.sortingOrder;
+                    if (order > bestOrder)
+                    {
+                        bestOrder = order;
+                        canvas = c;
+                    }
+                }
+            }
+        }
         if (canvas == null)
         {
             Debug.LogWarning("No Canvas found in scene to spawn draggable soldier.");
             return null;
         }
 
+        // Ensure there's a dedicated DragCanvas at top layer so drags always appear above other UI.
+        Canvas dragCanvas = GameObject.FindObjectOfType<Canvas>() as Canvas; // placeholder
+        // Try to find an existing GameObject named "DragCanvas"
+        var existingDragCanvas = GameObject.Find("DragCanvas");
+        if (existingDragCanvas != null)
+        {
+            dragCanvas = existingDragCanvas.GetComponent<Canvas>();
+        }
+        else
+        {
+            // Create DragCanvas as ScreenSpaceOverlay and set a high sorting order
+            GameObject dc = new GameObject("DragCanvas", typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
+            dragCanvas = dc.GetComponent<Canvas>();
+            dragCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            dragCanvas.sortingOrder = 1000; // high so it's above other canvases
+            // Make sure it sits at root level
+            dc.transform.SetParent(null);
+        }
+
         // Create UI Image
         GameObject go = new GameObject(soldier.name + "_Drag", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
         var rt = go.GetComponent<RectTransform>();
-        go.transform.SetParent(canvas.transform, false);
+        go.transform.SetParent(dragCanvas != null ? dragCanvas.transform : canvas.transform, false);
 
         var img = go.GetComponent<Image>();
         img.sprite = soldier.characterSprite;
@@ -324,7 +374,9 @@ public class ShopINIT : MonoBehaviour
             rt.anchoredPosition = Vector2.zero;
         }
 
-        Debug.Log("Spawned draggable soldier: " + go.name);
+    // Ensure spawned drag object is on top of UI so it's not obscured by the shop slot
+    go.transform.SetAsLastSibling();
+    Debug.Log("Spawned draggable soldier: " + go.name + " (set as last sibling)");
         // Decrement the shop counter immediately since the player grabbed one
         DecrementSoldierByIndex(slotIndex);
         // Attach spawn metadata so drop handlers can return this to the shop counter if needed

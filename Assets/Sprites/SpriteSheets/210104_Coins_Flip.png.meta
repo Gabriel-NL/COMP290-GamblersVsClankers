@@ -1,0 +1,652 @@
+fileFormatVersion: 2
+guid: 6c1ca71136f3d154596ef703170bb122
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: 210104_Coins_Flip_4
+      rect:
+        serializedVersion: 2
+        x: 364
+        y: 2074
+        width: 489
+        height: 490
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d2ad9c2f3e63b894ebdecbc611eb6fdd
+      internalID: 2095605501
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 210104_Coins_Flip_6
+      rect:
+        serializedVersion: 2
+        x: 979
+        y: 2078
+        width: 451
+        height: 482
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0623d7ddb6b419b4289e5a10521d823a
+      internalID: -1942540276
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 210104_Coins_Flip_8
+      rect:
+        serializedVersion: 2
+        x: 1569
+        y: 2078
+        width: 371
+        height: 482
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f6a442a92b1a7f447aef2b48004cad01
+      internalID: -141659598
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 210104_Coins_Flip_9
+      rect:
+        serializedVersion: 2
+        x: 2148
+        y: 2075
+        width: 80
+        height: 487
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 55c3b620ce25e984791006f847f7811f
+      internalID: 1201097922
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 210104_Coins_Flip_10
+      rect:
+        serializedVersion: 2
+        x: 2436
+        y: 2078
+        width: 371
+        height: 482
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 551d40824eebdb9488ac7b2d7bc76082
+      internalID: 106132562
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 210104_Coins_Flip_11
+      rect:
+        serializedVersion: 2
+        x: 2946
+        y: 2078
+        width: 449
+        height: 482
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 68c49591d1e2ab84c95fcbc9486b2f88
+      internalID: -552577877
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 210104_Coins_Flip_12
+      rect:
+        serializedVersion: 2
+        x: 3521
+        y: 2074
+        width: 491
+        height: 490
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c4a0aea300927b4ab874dab1cf0743e
+      internalID: 2053567261
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 210104_Coins_Flip_21
+      rect:
+        serializedVersion: 2
+        x: 364
+        y: 1373
+        width: 489
+        height: 489
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 23d913a231d179d4e927cbbbe77f3ef6
+      internalID: -1581134111
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 210104_Coins_Flip_22
+      rect:
+        serializedVersion: 2
+        x: 979
+        y: 1377
+        width: 451
+        height: 483
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 372415e4d9bd1a34a801ba9f514da2d0
+      internalID: 1944489533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 210104_Coins_Flip_23
+      rect:
+        serializedVersion: 2
+        x: 1569
+        y: 1377
+        width: 371
+        height: 483
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 515eb63e1a083464c92f6f988f7b8428
+      internalID: -1538475772
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 210104_Coins_Flip_24
+      rect:
+        serializedVersion: 2
+        x: 2148
+        y: 1375
+        width: 80
+        height: 486
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0204fa5b5ada96e4ba927269a8cdceda
+      internalID: 727132904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 210104_Coins_Flip_25
+      rect:
+        serializedVersion: 2
+        x: 2436
+        y: 1377
+        width: 371
+        height: 483
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7f5da0c6a91790742b60913e823a0b3b
+      internalID: 1481873419
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 210104_Coins_Flip_27
+      rect:
+        serializedVersion: 2
+        x: 2946
+        y: 1377
+        width: 449
+        height: 483
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2813a80f7a7e63342a71e5c1fcaf6506
+      internalID: 2094382512
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 210104_Coins_Flip_28
+      rect:
+        serializedVersion: 2
+        x: 3521
+        y: 1373
+        width: 491
+        height: 489
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e8ec062f3a35d94db8fa5d0887d14c9
+      internalID: -77648414
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 210104_Coins_Flip_35
+      rect:
+        serializedVersion: 2
+        x: 364
+        y: 672
+        width: 489
+        height: 489
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c962e1e3b3987b742b902df4b025cacb
+      internalID: 1341577358
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 210104_Coins_Flip_38
+      rect:
+        serializedVersion: 2
+        x: 3521
+        y: 672
+        width: 491
+        height: 489
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 59b12749327bd4c4289e60370fcc64d2
+      internalID: 2051366808
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 210104_Coins_Flip_39
+      rect:
+        serializedVersion: 2
+        x: 979
+        y: 674
+        width: 451
+        height: 485
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 971f97f4bbe5b2341b8e62a2cdaad9fe
+      internalID: -1799482473
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 210104_Coins_Flip_40
+      rect:
+        serializedVersion: 2
+        x: 1569
+        y: 674
+        width: 371
+        height: 485
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9cbf668e6fa6be742b6d79227505d76d
+      internalID: 270537862
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 210104_Coins_Flip_42
+      rect:
+        serializedVersion: 2
+        x: 2148
+        y: 674
+        width: 80
+        height: 485
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c24b51e5e456f714eb23d3c6da7dd14c
+      internalID: 383448393
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 210104_Coins_Flip_43
+      rect:
+        serializedVersion: 2
+        x: 2436
+        y: 674
+        width: 371
+        height: 485
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bbf505948f027f64c9e98f3f357b2e6a
+      internalID: -1184020152
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 210104_Coins_Flip_44
+      rect:
+        serializedVersion: 2
+        x: 2946
+        y: 674
+        width: 449
+        height: 485
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 563f5728c7100f340a69d36e59fbd308
+      internalID: 1732434768
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 210104_Coins_Flip_51
+      rect:
+        serializedVersion: 2
+        x: 1994
+        y: 289
+        width: 17
+        height: 69
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e90d418958c833344a7ab8934e80e91d
+      internalID: -1160016189
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      210104_Coins_Flip_0: -1119425541
+      210104_Coins_Flip_1: 2122523487
+      210104_Coins_Flip_10: 106132562
+      210104_Coins_Flip_11: -552577877
+      210104_Coins_Flip_12: 2053567261
+      210104_Coins_Flip_13: 436917009
+      210104_Coins_Flip_14: -1082112884
+      210104_Coins_Flip_15: 1925537823
+      210104_Coins_Flip_16: -218609674
+      210104_Coins_Flip_17: -2133664367
+      210104_Coins_Flip_18: 1763639432
+      210104_Coins_Flip_19: 1760300338
+      210104_Coins_Flip_2: -2077067424
+      210104_Coins_Flip_20: 68314778
+      210104_Coins_Flip_21: -1581134111
+      210104_Coins_Flip_22: 1944489533
+      210104_Coins_Flip_23: -1538475772
+      210104_Coins_Flip_24: 727132904
+      210104_Coins_Flip_25: 1481873419
+      210104_Coins_Flip_26: -1997606361
+      210104_Coins_Flip_27: 2094382512
+      210104_Coins_Flip_28: -77648414
+      210104_Coins_Flip_29: -1987596808
+      210104_Coins_Flip_3: -1039938372
+      210104_Coins_Flip_30: 2044690688
+      210104_Coins_Flip_31: -328160966
+      210104_Coins_Flip_32: -399964103
+      210104_Coins_Flip_33: -338218296
+      210104_Coins_Flip_34: 1687983793
+      210104_Coins_Flip_35: 1341577358
+      210104_Coins_Flip_36: 1215116958
+      210104_Coins_Flip_37: 1654887357
+      210104_Coins_Flip_38: 2051366808
+      210104_Coins_Flip_39: -1799482473
+      210104_Coins_Flip_4: 2095605501
+      210104_Coins_Flip_40: 270537862
+      210104_Coins_Flip_41: 450372443
+      210104_Coins_Flip_42: 383448393
+      210104_Coins_Flip_43: -1184020152
+      210104_Coins_Flip_44: 1732434768
+      210104_Coins_Flip_45: 1314246897
+      210104_Coins_Flip_46: -627151017
+      210104_Coins_Flip_47: -2006622415
+      210104_Coins_Flip_48: -1642054017
+      210104_Coins_Flip_49: 1266272300
+      210104_Coins_Flip_5: -1956850401
+      210104_Coins_Flip_50: -1753185852
+      210104_Coins_Flip_51: -1160016189
+      210104_Coins_Flip_52: 133756006
+      210104_Coins_Flip_53: 1643016096
+      210104_Coins_Flip_54: 639688846
+      210104_Coins_Flip_55: 1557858300
+      210104_Coins_Flip_56: -1875494827
+      210104_Coins_Flip_57: 1580610563
+      210104_Coins_Flip_58: 2048603333
+      210104_Coins_Flip_59: -1971634752
+      210104_Coins_Flip_6: -1942540276
+      210104_Coins_Flip_60: -736791808
+      210104_Coins_Flip_61: 449062710
+      210104_Coins_Flip_62: 1788289940
+      210104_Coins_Flip_7: -1122049996
+      210104_Coins_Flip_8: -141659598
+      210104_Coins_Flip_9: 1201097922
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
