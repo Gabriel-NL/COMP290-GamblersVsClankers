@@ -71,13 +71,13 @@ public class SlotMachineBehaviour : MonoBehaviour
         scoreText.text = currentScore.ToString();
 
         slotMachineImages[0].sprite = possibleResults[0].soldierType.characterSprite;
+        SoldierTier newTier = WeightedRaritySelection();
 
         for (int i = 0; i < currentResults.Length; i++)
         {
             SoldierType newSoldier = WeightedRandomSoldierSelection();
             slotMachineImages[i].sprite = newSoldier.characterSprite;
 
-            SoldierTier newTier = WeightedRaritySelection();
             slotMachineBGImages[i].color = newTier.tierColor;
 
             currentResults[i] = new CharactherAndRarity() { soldierType = newSoldier, tier = newTier };
