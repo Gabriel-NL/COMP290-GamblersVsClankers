@@ -10,6 +10,7 @@ public class ShopINIT : MonoBehaviour
 {
     [SerializeField] List<Image> shopSlots = new List<Image>();
     [SerializeField] List<SoldierType> shopSoldiers = new List<SoldierType>();
+    [SerializeField] List<TMP_Text> purchasedTexts = new List<TMP_Text>(); // Optional: manually assign purchased text components
     [Header("Economy")]
     [Tooltip("Sound to play when player doesn't have enough money")]
     public AudioClip insufficientFundsClip;
@@ -31,12 +32,45 @@ public class ShopINIT : MonoBehaviour
     // track suppressed clicks per slot to avoid a single click firing after a hold
     private HashSet<int> suppressedNextClick = new HashSet<int>();
 
+    // Helper method to get the text component for a slot
+    private TMP_Text GetSlotText(int slotIndex)
+    {
+        // First check if we have a manually assigned text component
+        if (slotIndex >= 0 && slotIndex < purchasedTexts.Count && purchasedTexts[slotIndex] != null)
+        {
+            return purchasedTexts[slotIndex];
+        }
+        
+        // If no manual assignment, try to get the first child's TMP_Text component
+        if (slotIndex >= 0 && slotIndex < shopSlots.Count)
+        {
+            Transform slotTransform = shopSlots[slotIndex].transform;
+            if (slotTransform.childCount > 0)
+            {
+                Transform firstChild = slotTransform.GetChild(0);
+                TMP_Text tmpText = firstChild.GetComponent<TMP_Text>();
+                if (tmpText != null)
+                {
+                    return tmpText;
+                }
+            }
+            
+            // Fallback: search all children for any TMP_Text
+            return slotTransform.GetComponentInChildren<TMP_Text>();
+        }
+        
+        return null;
+    }
+
     private void InitializeShop()
     {
+        Debug.Log($"InitializeShop started - shopSlots.Count: {shopSlots.Count}, shopSoldiers.Count: {shopSoldiers.Count}");
         for (int i = 0; i < shopSlots.Count; i++)
         {
             // guard in case lists are different sizes
             if (i >= shopSoldiers.Count) continue;
+            
+            Debug.Log($"Initializing slot {i}: {shopSlots[i]?.gameObject.name}");
 
             shopSlots[i].sprite = shopSoldiers[i].characterSprite;
             // capture the loop variable for the listener
@@ -71,9 +105,14 @@ public class ShopINIT : MonoBehaviour
 
                     // Attach or configure HoldClickRepeater so press-and-hold repeats the click
                     var repeater = btn.gameObject.GetComponent<HoldClickRepeater>();
-                    if (repeater == null) repeater = btn.gameObject.AddComponent<HoldClickRepeater>();
+                    if (repeater == null) 
+                    {
+                        repeater = btn.gameObject.AddComponent<HoldClickRepeater>();
+                        Debug.Log($"Added HoldClickRepeater to slot {idx} ({btn.gameObject.name})");
+                    }
                     repeater.shop = this;
                     repeater.slotIndex = idx;
+                    Debug.Log($"Configured HoldClickRepeater for slot {idx} - initialDelay: {repeater.initialDelay}s");
                 }
             }
         }
@@ -88,10 +127,7 @@ public class ShopINIT : MonoBehaviour
     // Decrement the displayed count for a slot down to a minimum of 0
     public void DecrementSoldierByIndex(int slotIndex)
     {
-        if (slotIndex < 0 || slotIndex >= shopSlots.Count) return;
-
-        Transform slotTransform = shopSlots[slotIndex].transform;
-        var tmpText = slotTransform.GetComponentInChildren<TMP_Text>();
+        var tmpText = GetSlotText(slotIndex);
         if (tmpText != null)
         {
             if (int.TryParse(tmpText.text, out int current))
@@ -103,22 +139,6 @@ public class ShopINIT : MonoBehaviour
             {
                 tmpText.text = "0";
             }
-            return;
-        }
-
-        var uiText = slotTransform.GetComponentInChildren<Text>();
-        if (uiText != null)
-        {
-            if (int.TryParse(uiText.text, out int current))
-            {
-                current = Mathf.Max(0, current - 1);
-                uiText.text = current.ToString();
-            }
-            else
-            {
-                uiText.text = "0";
-            }
-            return;
         }
     }
 
@@ -168,47 +188,21 @@ public class ShopINIT : MonoBehaviour
         }
 
         // Purchase succeeded — increment the slot counter in UI
-        if (slotIndex >= 0 && slotIndex < shopSlots.Count)
+        var tmpText = GetSlotText(slotIndex);
+        if (tmpText != null)
         {
-            Transform slotTransform = shopSlots[slotIndex].transform;
-
-            // TMP first
-            var tmpText = slotTransform.GetComponentInChildren<TMP_Text>();
-            if (tmpText != null)
+            if (int.TryParse(tmpText.text, out int current))
             {
-                if (int.TryParse(tmpText.text, out int current))
-                {
-                    tmpText.text = (current + 1).ToString();
-                }
-                else
-                {
-                    tmpText.text = "1";
-                }
+                tmpText.text = (current + 1).ToString();
             }
             else
             {
-                // fallback to legacy UI.Text
-                var uiText = slotTransform.GetComponentInChildren<Text>();
-                if (uiText != null)
-                {
-                    if (int.TryParse(uiText.text, out int current))
-                    {
-                        uiText.text = (current + 1).ToString();
-                    }
-                    else
-                    {
-                        uiText.text = "1";
-                    }
-                }
-                else
-                {
-                    Debug.LogWarning($"No text component found in shop slot {slotIndex} to set quantity.");
-                }
+                tmpText.text = "1";
             }
         }
         else
         {
-            Debug.LogWarning("Slot index out of range: " + slotIndex);
+            Debug.LogWarning($"No text component found in shop slot {slotIndex} to set quantity.");
         }
 
         // if(/*add overall funds here*/ > cost)
@@ -258,21 +252,11 @@ public class ShopINIT : MonoBehaviour
         }
 
         // If the shop UI displays a counter for this slot and it's zero, don't allow spawning.
-        Transform slotTransformCheck = shopSlots != null && slotIndex < shopSlots.Count ? shopSlots[slotIndex].transform : null;
-        if (slotTransformCheck != null)
+        var tmpTextCheck = GetSlotText(slotIndex);
+        if (tmpTextCheck != null && int.TryParse(tmpTextCheck.text, out int currentCheck) && currentCheck <= 0)
         {
-            var tmpTextCheck = slotTransformCheck.GetComponentInChildren<TMP_Text>();
-            if (tmpTextCheck != null && int.TryParse(tmpTextCheck.text, out int currentCheck) && currentCheck <= 0)
-            {
-                Debug.Log("No stock to spawn for slot " + slotIndex);
-                return null;
-            }
-            var uiTextCheck = slotTransformCheck.GetComponentInChildren<Text>();
-            if (uiTextCheck != null && int.TryParse(uiTextCheck.text, out int currentCheck2) && currentCheck2 <= 0)
-            {
-                Debug.Log("No stock to spawn for slot " + slotIndex);
-                return null;
-            }
+            Debug.Log("No stock to spawn for slot " + slotIndex);
+            return null;
         }
 
         SoldierType soldier = shopSoldiers[slotIndex];
@@ -389,10 +373,7 @@ public class ShopINIT : MonoBehaviour
     // Re-add one to the shop UI counter for a slot (inverse of DecrementSoldierByIndex)
     public void IncrementSoldierByIndex(int slotIndex)
     {
-        if (slotIndex < 0 || slotIndex >= shopSlots.Count) return;
-
-        Transform slotTransform = shopSlots[slotIndex].transform;
-        var tmpText = slotTransform.GetComponentInChildren<TMP_Text>();
+        var tmpText = GetSlotText(slotIndex);
         if (tmpText != null)
         {
             if (int.TryParse(tmpText.text, out int current))
@@ -403,21 +384,6 @@ public class ShopINIT : MonoBehaviour
             {
                 tmpText.text = "1";
             }
-            return;
-        }
-
-        var uiText = slotTransform.GetComponentInChildren<Text>();
-        if (uiText != null)
-        {
-            if (int.TryParse(uiText.text, out int current))
-            {
-                uiText.text = (current + 1).ToString();
-            }
-            else
-            {
-                uiText.text = "1";
-            }
-            return;
         }
     }
 }
