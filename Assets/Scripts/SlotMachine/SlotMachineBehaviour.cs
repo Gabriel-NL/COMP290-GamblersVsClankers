@@ -14,7 +14,7 @@ public class SlotMachineBehaviour : MonoBehaviour
     private CharactherAndRarity[] currentResults = new CharactherAndRarity[3];
     public Image[] slotMachineImages = new Image[3];
     public Image[] slotMachineBGImages = new Image[3];
-
+    public TMP_Text scoreText;
 
 
     // Start is called before the first frame update
@@ -60,6 +60,16 @@ public class SlotMachineBehaviour : MonoBehaviour
     [NaughtyAttributes.Button]
     public void Spin()
     {
+        int currentScore = int.Parse(scoreText.text);
+        if (currentScore < 100)
+        {
+            Debug.LogWarning("Not enough coins to spin!");
+            return;
+        }
+
+        currentScore -= 100;
+        scoreText.text = currentScore.ToString();
+
         slotMachineImages[0].sprite = possibleResults[0].soldierType.characterSprite;
 
         for (int i = 0; i < currentResults.Length; i++)
