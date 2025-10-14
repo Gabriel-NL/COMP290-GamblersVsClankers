@@ -14,6 +14,8 @@ public class SlotMachineBehaviour : MonoBehaviour
     private CharactherAndRarity[] currentResults = new CharactherAndRarity[3];
     public Image[] slotMachineImages = new Image[3];
     public Image[] slotMachineBGImages = new Image[3];
+    public Image rewardSlotImage;
+    public Canvas dragCanvas; // Canvas for drag operations
     public TMP_Text scoreText;
 
 
@@ -71,13 +73,13 @@ public class SlotMachineBehaviour : MonoBehaviour
         scoreText.text = currentScore.ToString();
 
         slotMachineImages[0].sprite = possibleResults[0].soldierType.characterSprite;
+        SoldierTier newTier = WeightedRaritySelection();
 
         for (int i = 0; i < currentResults.Length; i++)
         {
             SoldierType newSoldier = WeightedRandomSoldierSelection();
             slotMachineImages[i].sprite = newSoldier.characterSprite;
 
-            SoldierTier newTier = WeightedRaritySelection();
             slotMachineBGImages[i].color = newTier.tierColor;
 
             currentResults[i] = new CharactherAndRarity() { soldierType = newSoldier, tier = newTier };
@@ -85,6 +87,13 @@ public class SlotMachineBehaviour : MonoBehaviour
 
         CharactherAndRarity rolledCharacther = GetRolledCharacther();
         Debug.Log($"{rolledCharacther.soldierType.name} - {rolledCharacther.tier.tierType}");
+        
+        // Display the rolled character in the reward slot and make it draggable
+        if (rewardSlotImage != null)
+        {
+            rewardSlotImage.sprite = rolledCharacther.soldierType.characterSprite;
+            SetupRewardSlotDragging(rolledCharacther);
+        }
     }
 
     public CharactherAndRarity GetRolledCharacther()
@@ -127,6 +136,48 @@ public class SlotMachineBehaviour : MonoBehaviour
         endResult.soldierType = mostFrequent;
         return endResult;
     }
+
+    private void SetupRewardSlotDragging(CharactherAndRarity rolledCharacter)
+    {
+        if (rewardSlotImage == null) return;
+
+        // Find or create DragCanvas (similar to shop system)
+        Canvas targetCanvas = dragCanvas;
+        if (targetCanvas == null)
+        {
+            var existingDragCanvas = GameObject.Find("DragCanvas");
+            if (existingDragCanvas != null)
+            {
+                targetCanvas = existingDragCanvas.GetComponent<Canvas>();
+            }
+            else
+            {
+                GameObject dc = new GameObject("DragCanvas", typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
+                targetCanvas = dc.GetComponent<Canvas>();
+                targetCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
+                targetCanvas.sortingOrder = 1000;
+                dc.transform.SetParent(null);
+            }
+        }
+
+        // Remove existing DragDrop component if present
+        var existingDrag = rewardSlotImage.GetComponent<DragDrop>();
+        if (existingDrag != null) DestroyImmediate(existingDrag);
+
+        // Add DragDrop component and configure it
+        var dragDrop = rewardSlotImage.gameObject.AddComponent<DragDrop>();
+        dragDrop.canvas = targetCanvas;
+
+        // Ensure CanvasGroup exists for drag functionality
+        var canvasGroup = rewardSlotImage.GetComponent<CanvasGroup>();
+        if (canvasGroup == null) canvasGroup = rewardSlotImage.gameObject.AddComponent<CanvasGroup>();
+
+        // Enable raycast target for dragging
+        rewardSlotImage.raycastTarget = true;
+
+        Debug.Log($"Reward slot image is now draggable for {rolledCharacter.soldierType.name}");
+    }
+
     [System.Serializable]
     public class CharactherAndProbability
     {

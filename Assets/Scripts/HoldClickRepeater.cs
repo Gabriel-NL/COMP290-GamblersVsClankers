@@ -21,7 +21,12 @@ public class HoldClickRepeater : MonoBehaviour, IPointerDownHandler, IPointerUpH
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (shop == null) return;
+        Debug.Log($"HoldClickRepeater.OnPointerDown - slotIndex: {slotIndex}, shop: {shop}");
+        if (shop == null) 
+        {
+            Debug.LogWarning("HoldClickRepeater: shop reference is null!");
+            return;
+        }
 
         // Stop any running coroutine just in case
         if (repeatCoroutine != null) StopCoroutine(repeatCoroutine);
@@ -34,9 +39,11 @@ public class HoldClickRepeater : MonoBehaviour, IPointerDownHandler, IPointerUpH
 
     IEnumerator HoldAndRepeat()
     {
+        Debug.Log($"HoldAndRepeat started - waiting {initialDelay}s for slot {slotIndex}");
         // Wait initial delay; if pointer is released before this, coroutine will be stopped and nothing happens.
         yield return new WaitForSeconds(initialDelay);
 
+        Debug.Log($"Hold delay completed for slot {slotIndex} - attempting to spawn soldier");
         // Mark to suppress the next single click (so releasing after a hold doesn't trigger a single increment)
         shop.SuppressNextClick(slotIndex);
 
