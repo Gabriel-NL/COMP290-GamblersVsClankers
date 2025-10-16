@@ -92,6 +92,7 @@ public class SlotMachineBehaviour : MonoBehaviour
         if (rewardSlotImage != null)
         {
             rewardSlotImage.sprite = rolledCharacther.soldierType.characterSprite;
+            rewardSlotImage.color = rolledCharacther.tier.tierColor; // Set color based on rarity
             SetupRewardSlotDragging(rolledCharacther);
         }
     }
@@ -164,9 +165,25 @@ public class SlotMachineBehaviour : MonoBehaviour
         var existingDrag = rewardSlotImage.GetComponent<DragDrop>();
         if (existingDrag != null) DestroyImmediate(existingDrag);
 
-        // Add DragDrop component and configure it
+        // Add DragDrop component and configure it AS A SOURCE (so it stays in place and spawns clones)
         var dragDrop = rewardSlotImage.gameObject.AddComponent<DragDrop>();
         dragDrop.canvas = targetCanvas;
+        dragDrop.isSource = true;  // CRITICAL: Mark as source so it creates clones instead of moving
+        dragDrop.oneTimeUse = true; // CRITICAL: Only allow placing the reward once
+        dragDrop.sourceSprite = rolledCharacter.soldierType.characterSprite;
+        dragDrop.sourceColor = rolledCharacter.tier.tierColor; // Set the tier color for clones
+        dragDrop.soldierColor = rolledCharacter.tier.tierColor; // Set the tier color for instantiated prefab
+        
+        // Assign the soldier prefab so the clone knows what to instantiate when dropped
+        if (rolledCharacter.soldierType.soldierPrefab != null)
+        {
+            dragDrop.soldierPrefab = rolledCharacter.soldierType.soldierPrefab;
+            Debug.Log($"Assigned soldierPrefab: {rolledCharacter.soldierType.soldierPrefab.name}");
+        }
+        else
+        {
+            Debug.LogWarning($"No soldierPrefab found on {rolledCharacter.soldierType.name}");
+        }
 
         // Ensure CanvasGroup exists for drag functionality
         var canvasGroup = rewardSlotImage.GetComponent<CanvasGroup>();
@@ -175,7 +192,7 @@ public class SlotMachineBehaviour : MonoBehaviour
         // Enable raycast target for dragging
         rewardSlotImage.raycastTarget = true;
 
-        Debug.Log($"Reward slot image is now draggable for {rolledCharacter.soldierType.name}");
+        Debug.Log($"Reward slot image is now draggable (SOURCE MODE, ONE-TIME USE) for {rolledCharacter.soldierType.name}");
     }
 
     [System.Serializable]
