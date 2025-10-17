@@ -336,6 +336,17 @@ public class ShopINIT : MonoBehaviour
         // Add DragDrop and wire Canvas reference
         var drag = go.AddComponent<DragDrop>();
         drag.canvas = canvas;
+        
+        // CRITICAL: Assign the soldier prefab so it can be instantiated when dropped
+        if (soldier.soldierPrefab != null)
+        {
+            drag.soldierPrefab = soldier.soldierPrefab;
+            Debug.Log($"Assigned soldierPrefab '{soldier.soldierPrefab.name}' to shop drag for {soldier.name}");
+        }
+        else
+        {
+            Debug.LogWarning($"No soldierPrefab assigned to SoldierType '{soldier.name}' - drop will only place sprite!");
+        }
 
         // Ensure there's a CanvasGroup so raycasts can be toggled by DragDrop later if needed
         var cg = go.GetComponent<CanvasGroup>();

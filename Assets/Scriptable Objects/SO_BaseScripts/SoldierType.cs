@@ -6,6 +6,7 @@ public class SoldierType : ScriptableObject
     [Header("Soldier Info")]
     public new string name;
     public Sprite characterSprite;
+    public GameObject soldierPrefab;  // Prefab for spawning the actual soldier in-game
 
     [Header("Soldier Stats")]
     public SoldierStats stats;  // <— all your numbers live here

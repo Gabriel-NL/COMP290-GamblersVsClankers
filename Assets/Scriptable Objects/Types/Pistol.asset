@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Pistol Soldier
   characterSprite: {fileID: 21300000, guid: bb027010112c87b4daa38b0660f235eb, type: 3}
+  soldierPrefab: {fileID: 2547468567153757322, guid: 86fd6d68395bb054396e13d694bb48e4, type: 3}
   stats:
     bulletSpeed: 10
     bulletLife: 2
