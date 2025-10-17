@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using NaughtyAttributes;
 
 public class SoldierBehaviour : MonoBehaviour
 {
@@ -15,11 +16,11 @@ public class SoldierBehaviour : MonoBehaviour
 
     //public GameObject healthBar;
     [Header("Soldier Stats (Read-Only)")]
-    [ReadOnlyInInspector] public float bulletSpeed;
-    [ReadOnlyInInspector] public float bulletLife;
-    [ReadOnlyInInspector] public float attackSpeed;
-    [ReadOnlyInInspector] public float health;
-    [ReadOnlyInInspector] public float dmg;
+    [ReadOnly] public float bulletSpeed;
+    [ReadOnly] public float bulletLife;
+    [ReadOnly] public float attackSpeed;
+    [ReadOnly] public float health;
+    [ReadOnly] public float dmg;
     // legacy public timer kept for inspector visibility if needed, but firing uses attackSpeed
 
     [Header("Timer")]

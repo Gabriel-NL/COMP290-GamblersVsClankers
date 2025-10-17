@@ -152,7 +152,6 @@ public class MBH_GridSpawner : MonoBehaviour
         int width = uniqueXs.Count;
 
         bool isEven = (width % 2) == 0;
-        bool isLastInRow;
 
         bool alternate = true;
         for (int i = 0; i < tiles.Length; i++)

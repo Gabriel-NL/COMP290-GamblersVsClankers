@@ -2,7 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+#if UNITY_EDITOR
 using UnityEditor;
+using UnityEditor.Callbacks;
+#endif
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -10,7 +13,7 @@ using Object = UnityEngine.Object;
 public class MustBeAssignedHandler
 {
 
-
+#if UNITY_EDITOR
     #region MustBeAssignedProperty
     [InitializeOnLoadMethod]
     public static void InitializeValidation()
@@ -66,6 +69,7 @@ public class MustBeAssignedHandler
     }
 
     #endregion
+#endif
 }
 
 // Attribute: Marks fields as required (must be assigned in the Inspector)
