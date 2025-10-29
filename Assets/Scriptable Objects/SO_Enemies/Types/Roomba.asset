@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Roomba
   m_EditorClassIdentifier: 
   name: Roomba
-  characterSprite: {fileID: 0}
+  characterSprite: {fileID: 21300000, guid: 647fdc3c2df644547befb7e26eb508a4, type: 3}
   enemyPrefab: {fileID: 0}
   stats:
     health: 25

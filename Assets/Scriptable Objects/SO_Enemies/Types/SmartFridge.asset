@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SmartFridge
   m_EditorClassIdentifier: 
   name: SmartFridge
-  characterSprite: {fileID: 0}
+  characterSprite: {fileID: 21300000, guid: 25a99bca3197bf443aaacf11719d2991, type: 3}
   enemyPrefab: {fileID: 0}
   stats:
     health: 80

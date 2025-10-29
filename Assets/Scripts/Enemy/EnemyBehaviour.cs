@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
 
-public class EnemyBehaviour : MonoBehaviour
+public class JD_EnemyBehaviour : MonoBehaviour
 {
     [Header("References")]
     public EnemyType enemyType;
@@ -42,8 +42,6 @@ public class EnemyBehaviour : MonoBehaviour
         health = enemyType.stats.health;
         dmg = enemyType.stats.dmg;
     }
-    [NaughtyAttributes.Button("Apply Tier Changes")]
-
     private void Initialization()
     {
         SetEnemyType();
