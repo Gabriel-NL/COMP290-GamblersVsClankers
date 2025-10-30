@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Gameplay.unity
     guid: 1ece802a13a283f43b470f93b165b8b1
+  - enabled: 1
+    path: Assets/Scenes/JD_Gameplay_Deathzone.unity
+    guid: 122879c27682edf4991fccceb861087c
   m_configObjects: {}
