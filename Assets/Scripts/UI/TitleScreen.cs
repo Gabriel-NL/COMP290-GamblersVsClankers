@@ -16,4 +16,9 @@ public class TitleScreen : MonoBehaviour
     {
         Application.Quit();
     }
+
+    void Awake()
+    {
+        AudioManager.Play("MainMenu Music");
+    }
 }

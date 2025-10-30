@@ -3,12 +3,12 @@ using UnityEngine;
 public class BulletController : MonoBehaviour
 {
     [HideInInspector]public float DamageAmount;
-    //public string audioName = "BlastPistolSFX";
+    public string audioName = "Shot";
     //public float bulletScale = 1f;
 
     private void Start()
     {
-        //AudioManager.Play(audioName);
+        AudioManager.Play(audioName);
         
         // Apply bullet scale
         // if (bulletScale != 1f)
@@ -26,6 +26,7 @@ public class BulletController : MonoBehaviour
         // {
         //     collision.gameObject.GetComponent<PlayerController>().TakeDamage(DamageAmount);
         // }
+        Debug.Log($"[Bullet] '{gameObject.name}' collided with '{collision.gameObject.name}' and will be destroyed.");
         Destroy(this.gameObject);
     }
 }

@@ -50,26 +50,26 @@ public class EnemyBehaviour : MonoBehaviour
     private void Update()
     {
         // Enemy movement logic would go here
-        ApplyJitter();
+        //ApplyJitter();
     }
 
-    private void ApplyJitter()
-    {
-        if (spriteRenderer == null) return;
+    // private void ApplyJitter()
+    // {
+    //     if (spriteRenderer == null) return;
 
-        // Use Perlin noise for smooth, natural movement
-        float t = Time.time * jitterFrequency + jitterSeed;
-        float nx = Mathf.PerlinNoise(t, 0f) - 0.5f;
-        float ny = Mathf.PerlinNoise(0f, t) - 0.5f;
+    //     // Use Perlin noise for smooth, natural movement
+    //     float t = Time.time * jitterFrequency + jitterSeed;
+    //     float nx = Mathf.PerlinNoise(t, 0f) - 0.5f;
+    //     float ny = Mathf.PerlinNoise(0f, t) - 0.5f;
 
-        Vector3 offset = new Vector3(nx * 2f * jitterAmplitude, ny * 2f * jitterAmplitude, 0f);
-        spriteRenderer.transform.localPosition = spriteOriginalLocalPos + offset;
+    //     Vector3 offset = new Vector3(nx * 2f * jitterAmplitude, ny * 2f * jitterAmplitude, 0f);
+    //     spriteRenderer.transform.localPosition = spriteOriginalLocalPos + offset;
 
-        // subtle rotation jitter
-        float nr = (Mathf.PerlinNoise(t + 37.1f, t + 12.3f) - 0.5f) * 2f;
-        float angle = nr * jitterRotationAmplitude;
-        spriteRenderer.transform.localRotation = spriteOriginalLocalRot * Quaternion.Euler(0f, 0f, angle);
-    }
+    //     // subtle rotation jitter
+    //     float nr = (Mathf.PerlinNoise(t + 37.1f, t + 12.3f) - 0.5f) * 2f;
+    //     float angle = nr * jitterRotationAmplitude;
+    //     spriteRenderer.transform.localRotation = spriteOriginalLocalRot * Quaternion.Euler(0f, 0f, angle);
+    // }
 
     [NaughtyAttributes.Button("Import data from EnemyType SO")]
     private void SetEnemyType()

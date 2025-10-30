@@ -27,6 +27,7 @@ public class ShopINIT : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
+        AudioManager.Play("GameplayMusic");
     }
 
     // track suppressed clicks per slot to avoid a single click firing after a hold
