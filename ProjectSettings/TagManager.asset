@@ -8,15 +8,16 @@ TagManager:
   - Bronze
   - Silver
   - Gold
+  - Soldier
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Bullet
   - Water
   - UI
   - Enemy
-  - 
+  - Soldier
   - 
   - 
   - 

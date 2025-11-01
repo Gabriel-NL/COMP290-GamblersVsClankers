@@ -16,7 +16,7 @@ public class SlotMachineBehaviour : MonoBehaviour
     public Image[] slotMachineBGImages = new Image[3];
     public Image rewardSlotImage;
     public Canvas dragCanvas; // Canvas for drag operations
-    public TMP_Text scoreText;
+    // Note: scoreText removed - now using ScoreManager.instance instead
 
 
     // Start is called before the first frame update
@@ -62,15 +62,28 @@ public class SlotMachineBehaviour : MonoBehaviour
     [NaughtyAttributes.Button]
     public void Spin()
     {
-        int currentScore = int.Parse(scoreText.text);
-        if (currentScore < 100)
+        // Use ScoreManager instead of directly reading/writing scoreText
+        if (ScoreManager.instance == null)
         {
-            Debug.LogWarning("Not enough coins to spin!");
+            Debug.LogError("ScoreManager.instance not found! Cannot process spin.");
+            return;
+        }
+        
+        int spinCost = 100;
+        if (ScoreManager.instance.CurrentScore < spinCost)
+        {
+            Debug.LogWarning($"Not enough coins to spin! Need {spinCost}, have {ScoreManager.instance.CurrentScore}");
             return;
         }
 
-        currentScore -= 100;
-        scoreText.text = currentScore.ToString();
+        // Attempt to spend coins via ScoreManager
+        if (!ScoreManager.instance.TrySpend(spinCost))
+        {
+            Debug.LogWarning("Failed to spend coins for slot machine spin!");
+            return;
+        }
+        
+        Debug.Log($"Slot machine spin cost {spinCost} coins. Remaining: {ScoreManager.instance.CurrentScore}");
 
         slotMachineImages[0].sprite = possibleResults[0].soldierType.characterSprite;
         SoldierTier newTier = WeightedRaritySelection();
@@ -173,6 +186,7 @@ public class SlotMachineBehaviour : MonoBehaviour
         dragDrop.sourceSprite = rolledCharacter.soldierType.characterSprite;
         dragDrop.sourceColor = rolledCharacter.tier.tierColor; // Set the tier color for clones
         dragDrop.soldierColor = rolledCharacter.tier.tierColor; // Set the tier color for instantiated prefab
+        dragDrop.soldierTier = rolledCharacter.tier.tierType; // CRITICAL: Set the tier enum for stat scaling
         
         // Assign the soldier prefab so the clone knows what to instantiate when dropped
         if (rolledCharacter.soldierType.soldierPrefab != null)

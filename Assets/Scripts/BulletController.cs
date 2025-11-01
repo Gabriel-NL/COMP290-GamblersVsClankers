@@ -3,12 +3,12 @@ using UnityEngine;
 public class BulletController : MonoBehaviour
 {
     [HideInInspector]public float DamageAmount;
-    //public string audioName = "BlastPistolSFX";
+    public string audioName = "Shot";
     //public float bulletScale = 1f;
 
     private void Start()
     {
-        //AudioManager.Play(audioName);
+        AudioManager.Play(audioName);
         
         // Apply bullet scale
         // if (bulletScale != 1f)
@@ -18,14 +18,34 @@ public class BulletController : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // if (collision.gameObject.CompareTag("Enemy"))
-        // {
-        //     collision.gameObject.GetComponent<EnemyNavigation>().TakeDamage(DamageAmount);
-        // }
-        // else if (collision.gameObject.CompareTag("Player"))
-        // {
-        //     collision.gameObject.GetComponent<PlayerController>().TakeDamage(DamageAmount);
-        // }
+        Debug.Log($"[Bullet] '{gameObject.name}' collided with '{collision.gameObject.name}' (Tag: {collision.gameObject.tag})");
+        
+        // Check if hit an enemy
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            EnemyBehaviour enemy = collision.gameObject.GetComponent<EnemyBehaviour>();
+            if (enemy != null)
+            {
+                enemy.TakeDamage(DamageAmount);
+                Debug.Log($"[Bullet] Applied {DamageAmount} damage to enemy '{collision.gameObject.name}'");
+            }
+            else
+            {
+                Debug.LogWarning($"[Bullet] Enemy '{collision.gameObject.name}' has no EnemyBehaviour component!");
+            }
+        }
+        // Check if hit a soldier (friendly fire or enemy bullets)
+        else if (collision.gameObject.CompareTag("Soldier"))
+        {
+            SoldierBehaviour soldier = collision.gameObject.GetComponent<SoldierBehaviour>();
+            if (soldier != null)
+            {
+                soldier.TakeDamage(DamageAmount);
+                Debug.Log($"[Bullet] Applied {DamageAmount} damage to soldier '{collision.gameObject.name}'");
+            }
+        }
+        
+        // Destroy bullet after collision
         Destroy(this.gameObject);
     }
 }

@@ -10,23 +10,13 @@ public class ShopINIT : MonoBehaviour
 {
     [SerializeField] List<Image> shopSlots = new List<Image>();
     [SerializeField] List<SoldierType> shopSoldiers = new List<SoldierType>();
-    [SerializeField] List<TMP_Text> purchasedTexts = new List<TMP_Text>(); // Optional: manually assign purchased text components
-    [Header("Economy")]
-    [Tooltip("Sound to play when player doesn't have enough money")]
-    public AudioClip insufficientFundsClip;
-
-    private AudioSource audioSource;
+    [SerializeField] List<TMP_Text> purchasedTexts = new List<TMP_Text>();
 
     //List<float> soldierCosts = new List<float>();
     void Start()
     {
         InitializeShop();
-    }
-
-    private void Awake()
-    {
-        audioSource = GetComponent<AudioSource>();
-        if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
+        AudioManager.Play("GameplayMusic");
     }
 
     // track suppressed clicks per slot to avoid a single click firing after a hold
@@ -182,7 +172,7 @@ public class ShopINIT : MonoBehaviour
 
         if (!bought)
         {
-            if (insufficientFundsClip != null && audioSource != null) audioSource.PlayOneShot(insufficientFundsClip);
+            AudioManager.Play("InsufficientFunds");
             Debug.Log($"Not enough funds to purchase {soldierName}. Cost: {costInt}");
             return;
         }

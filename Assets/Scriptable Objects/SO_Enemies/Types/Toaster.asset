@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Toaster
   characterSprite: {fileID: 21300000, guid: 00b91106d1550ec42b372dc2709e56d0, type: 3}
-  enemyPrefab: {fileID: 0}
+  enemyPrefab: {fileID: 1942547105517165933, guid: 45b3fdae14868f046916fc2714f2bb26, type: 3}
   stats:
-    health: 35
+    health: 50
     dmg: 14
     reward: 10
     speed: 10

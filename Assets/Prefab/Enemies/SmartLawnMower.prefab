@@ -9,13 +9,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3726533048348153520}
+  - component: {fileID: 7177613958066321924}
   - component: {fileID: 6505683980300860509}
-  - component: {fileID: 253930949356162060}
   - component: {fileID: 9018129631748236339}
   - component: {fileID: 312268746362101807}
-  m_Layer: 0
+  - component: {fileID: 3535114854428153463}
+  m_Layer: 6
   m_Name: SmartLawnMower
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -35,6 +36,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7177613958066321924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4340084239442993850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a15e7b2bf6f2214782bd8b3906d95ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 2
+  destroyAtX: -12
+  autoDestroy: 1
 --- !u!212 &6505683980300860509
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -87,28 +103,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &253930949356162060
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4340084239442993850}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db8790ff2da0d194abe2de48427cea1c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyType: {fileID: 11400000, guid: 08155637d87bba44ea220128de12205a, type: 2}
-  spriteRenderer: {fileID: 6505683980300860509}
-  speed: 25
-  health: 45
-  dmg: 35
-  reward: 0
-  timer: 0
-  jitterAmplitude: 0.05
-  jitterFrequency: 1.5
-  jitterRotationAmplitude: 2
 --- !u!50 &9018129631748236339
 Rigidbody2D:
   serializedVersion: 4
@@ -124,7 +118,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -135,7 +129,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 7
 --- !u!61 &312268746362101807
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -151,7 +145,7 @@ BoxCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -181,3 +175,26 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 10.24, y: 15.36}
   m_EdgeRadius: 0
+--- !u!114 &3535114854428153463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4340084239442993850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19b4d725c3f2b8946925140f0b2c2e5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyType: {fileID: 11400000, guid: 08155637d87bba44ea220128de12205a, type: 2}
+  spriteRenderer: {fileID: 6505683980300860509}
+  speed: 25
+  maxHealth: 45
+  currentHealth: 45
+  dmg: 35
+  reward: 30
+  timer: 0
+  jitterAmplitude: 0.05
+  jitterFrequency: 8
+  jitterRotationAmplitude: 2
