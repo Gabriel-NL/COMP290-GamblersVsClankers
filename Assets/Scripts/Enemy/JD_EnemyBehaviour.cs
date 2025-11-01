@@ -74,8 +74,8 @@ public class EnemyBehaviour : MonoBehaviour
     [NaughtyAttributes.Button("Import data from EnemyType SO")]
     private void SetEnemyType()
     {
-        gameObject.name += " - " + enemyType.name;
-        gameObject.name = enemyType.name;
+        //gameObject.name += " - " + enemyType.name;
+        //gameObject.name = enemyType.name;
         spriteRenderer.sprite = enemyType.characterSprite;
         speed = enemyType.stats.speed;
         health = enemyType.stats.health;
