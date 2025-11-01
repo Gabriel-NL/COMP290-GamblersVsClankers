@@ -4,14 +4,30 @@ using UnityEngine;
 
 public class EnemyWalking : MonoBehaviour
 {
+    [Header("Movement")]
     public float moveSpeed = 2f;
     private bool isStopped = false;
+    
+    [Header("Auto Destroy")]
+    [Tooltip("X position where enemy gets destroyed (typically off-screen left)")]
+    public float destroyAtX = -12f;
+    
+    [Tooltip("Enable auto-destroy when off screen")]
+    public bool autoDestroy = true;
 
     void Update()
     {
+        if (transform == null) return; // Safety check
+        
         if (!isStopped)
         {
             transform.Translate(Vector2.left * moveSpeed * Time.deltaTime);
+        }
+        
+        // Auto-destroy if off screen
+        if (autoDestroy && transform.position.x < destroyAtX)
+        {
+            Destroy(gameObject);
         }
     }
 
@@ -41,5 +57,11 @@ public class EnemyWalking : MonoBehaviour
     public void Resume()
     {
         isStopped = false;
+    }
+    
+    void OnDestroy()
+    {
+        // Clean up - prevents inspector errors when destroyed
+        StopAllCoroutines();
     }
 }

@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: SmartLawnMower
   characterSprite: {fileID: 21300000, guid: 9fc217df2ba327e4992d9cdb3b163bf4, type: 3}
-  enemyPrefab: {fileID: 0}
+  enemyPrefab: {fileID: 8129901452232044080, guid: d1b7ac40278827741a0ef19de094f8d8, type: 3}
   stats:
-    health: 45
+    health: 75
     dmg: 35
-    reward: 30
+    reward: 20
     speed: 25

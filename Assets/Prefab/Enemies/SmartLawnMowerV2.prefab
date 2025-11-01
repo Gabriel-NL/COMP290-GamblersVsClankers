@@ -16,6 +16,46 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 9fc217df2ba327e4992d9cdb3b163bf4, type: 3}
+    - target: {fileID: 2813566799900983285, guid: c38a5e9bf5458124e92ce749002d191f, type: 3}
+      propertyPath: m_Size.x
+      value: 0.86208534
+      objectReference: {fileID: 0}
+    - target: {fileID: 2813566799900983285, guid: c38a5e9bf5458124e92ce749002d191f, type: 3}
+      propertyPath: m_Size.y
+      value: 0.968483
+      objectReference: {fileID: 0}
+    - target: {fileID: 2813566799900983285, guid: c38a5e9bf5458124e92ce749002d191f, type: 3}
+      propertyPath: m_Offset.x
+      value: 0.0059103966
+      objectReference: {fileID: 0}
+    - target: {fileID: 2813566799900983285, guid: c38a5e9bf5458124e92ce749002d191f, type: 3}
+      propertyPath: m_Offset.y
+      value: 0.0894891
+      objectReference: {fileID: 0}
+    - target: {fileID: 4217936843665856621, guid: c38a5e9bf5458124e92ce749002d191f, type: 3}
+      propertyPath: dmg
+      value: 35
+      objectReference: {fileID: 0}
+    - target: {fileID: 4217936843665856621, guid: c38a5e9bf5458124e92ce749002d191f, type: 3}
+      propertyPath: speed
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 4217936843665856621, guid: c38a5e9bf5458124e92ce749002d191f, type: 3}
+      propertyPath: reward
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 4217936843665856621, guid: c38a5e9bf5458124e92ce749002d191f, type: 3}
+      propertyPath: enemyType
+      value: 
+      objectReference: {fileID: 11400000, guid: 08155637d87bba44ea220128de12205a, type: 2}
+    - target: {fileID: 4217936843665856621, guid: c38a5e9bf5458124e92ce749002d191f, type: 3}
+      propertyPath: maxHealth
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 4217936843665856621, guid: c38a5e9bf5458124e92ce749002d191f, type: 3}
+      propertyPath: currentHealth
+      value: 45
+      objectReference: {fileID: 0}
     - target: {fileID: 5345693906583311701, guid: c38a5e9bf5458124e92ce749002d191f, type: 3}
       propertyPath: dmg
       value: 35
@@ -29,6 +69,10 @@ PrefabInstance:
       value: 45
       objectReference: {fileID: 0}
     - target: {fileID: 5345693906583311701, guid: c38a5e9bf5458124e92ce749002d191f, type: 3}
+      propertyPath: enemyType
+      value: 
+      objectReference: {fileID: 11400000, guid: 08155637d87bba44ea220128de12205a, type: 2}
+    - target: {fileID: 5726007697769671671, guid: c38a5e9bf5458124e92ce749002d191f, type: 3}
       propertyPath: enemyType
       value: 
       objectReference: {fileID: 11400000, guid: 08155637d87bba44ea220128de12205a, type: 2}
@@ -72,7 +116,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4480969321747891072, guid: c38a5e9bf5458124e92ce749002d191f, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

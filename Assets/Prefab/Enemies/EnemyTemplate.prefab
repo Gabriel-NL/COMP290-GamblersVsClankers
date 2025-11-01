@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2732927060102493944}
   - component: {fileID: 2535829431886164371}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Face
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,12 +93,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7685997644244475087}
-  - component: {fileID: 9050827343631540709}
   - component: {fileID: 3451426806241463823}
   - component: {fileID: 1206555501232163653}
-  m_Layer: 0
+  - component: {fileID: 953735057178029277}
+  - component: {fileID: 691631605392035075}
+  m_Layer: 6
   m_Name: EnemyTemplate
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -119,28 +120,6 @@ Transform:
   - {fileID: 2732927060102493944}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9050827343631540709
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4446341221936769057}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db8790ff2da0d194abe2de48427cea1c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyType: {fileID: 11400000, guid: 259bc64d1d21bf0449674f21233952f1, type: 2}
-  spriteRenderer: {fileID: 2535829431886164371}
-  speed: 7
-  health: 80
-  dmg: 25
-  reward: 0
-  timer: 0
-  jitterAmplitude: 0.05
-  jitterFrequency: 1.5
-  jitterRotationAmplitude: 2
 --- !u!50 &3451426806241463823
 Rigidbody2D:
   serializedVersion: 4
@@ -167,7 +146,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 6
 --- !u!61 &1206555501232163653
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -183,7 +162,7 @@ BoxCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -213,3 +192,41 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1.5}
   m_EdgeRadius: 0
+--- !u!114 &953735057178029277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4446341221936769057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19b4d725c3f2b8946925140f0b2c2e5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyType: {fileID: 0}
+  spriteRenderer: {fileID: 2535829431886164371}
+  speed: 0
+  maxHealth: 0
+  currentHealth: 0
+  dmg: 0
+  reward: 0
+  timer: 0
+  jitterAmplitude: 0.05
+  jitterFrequency: 8
+  jitterRotationAmplitude: 2
+--- !u!114 &691631605392035075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4446341221936769057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a15e7b2bf6f2214782bd8b3906d95ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 2
+  destroyAtX: -12
+  autoDestroy: 1

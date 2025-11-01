@@ -25,6 +25,7 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
     public UnityEngine.Sprite sourceSprite;
     public Color sourceColor = Color.white; // Color to apply to clones (for rarity tinting)
     public Color soldierColor = Color.white; // Color to apply to the instantiated prefab
+    public SoldierTierList.TierEnum soldierTier = SoldierTierList.TierEnum.Common; // Tier to apply to the spawned soldier
     private GameObject activeClone;
     private void Awake()
     {
@@ -97,6 +98,7 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
             dd.parentSource = this; // Set reference to source
             dd.soldierPrefab = this.soldierPrefab;
             dd.soldierColor = color; // Pass the color to the clone so it can apply to instantiated prefab
+            dd.soldierTier = this.soldierTier; // Pass the tier to the clone
             return go;
         }
         else
@@ -330,18 +332,40 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
                 var rb = spawnedSoldier.GetComponent<Rigidbody2D>();
                 if (rb != null) { rb.bodyType = RigidbodyType2D.Kinematic; rb.velocity = Vector2.zero; }
                 
-                // Apply the rarity color to the spawned soldier
+                // Apply the tier to the spawned soldier BEFORE Start() is called
+                var soldierBehaviour = spawnedSoldier.GetComponent<SoldierBehaviour>();
+                if (soldierBehaviour != null)
+                {
+                    soldierBehaviour.tier = soldierTier;
+                    Debug.Log($"Applied tier {soldierTier} to spawned soldier '{spawnedSoldier.name}'");
+                    // Note: ApplyTierChanges() will be called automatically in Start()
+                    
+                    // Apply the rarity color to the soldier's sprite renderer
+                    if (soldierBehaviour.spriteRenderer != null)
+                    {
+                        soldierBehaviour.spriteRenderer.color = soldierColor;
+                        Debug.Log($"Applied tier color {soldierColor} to soldier's spriteRenderer");
+                    }
+                }
+                
+                // Also try to apply color to any other SpriteRenderer or Image components as fallback
                 var soldierSr = spawnedSoldier.GetComponent<SpriteRenderer>();
                 if (soldierSr != null)
                 {
                     soldierSr.color = soldierColor;
-                    Debug.Log($"Applied color {soldierColor} to spawned soldier SpriteRenderer");
+                    Debug.Log($"Applied color {soldierColor} to spawned soldier SpriteRenderer (root)");
                 }
                 var soldierImg = spawnedSoldier.GetComponent<UnityEngine.UI.Image>();
                 if (soldierImg != null)
                 {
                     soldierImg.color = soldierColor;
                     Debug.Log($"Applied color {soldierColor} to spawned soldier Image");
+                }
+                
+                // Notify difficulty manager that a soldier was placed
+                if (DifficultyManager.instance != null)
+                {
+                    DifficultyManager.instance.OnSoldierPlaced();
                 }
                 
                 // Mark the slot as occupied

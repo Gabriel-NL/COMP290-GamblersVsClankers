@@ -64,6 +64,70 @@ PrefabInstance:
       propertyPath: enemyType
       value: 
       objectReference: {fileID: 11400000, guid: e8153f475cb2b1e478fc3bd1f8309b0c, type: 2}
+    - target: {fileID: 3865284644604385622, guid: d1b7ac40278827741a0ef19de094f8d8, type: 3}
+      propertyPath: dmg
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 3865284644604385622, guid: d1b7ac40278827741a0ef19de094f8d8, type: 3}
+      propertyPath: speed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3865284644604385622, guid: d1b7ac40278827741a0ef19de094f8d8, type: 3}
+      propertyPath: reward
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3865284644604385622, guid: d1b7ac40278827741a0ef19de094f8d8, type: 3}
+      propertyPath: enemyType
+      value: 
+      objectReference: {fileID: 11400000, guid: e8153f475cb2b1e478fc3bd1f8309b0c, type: 2}
+    - target: {fileID: 3865284644604385622, guid: d1b7ac40278827741a0ef19de094f8d8, type: 3}
+      propertyPath: maxHealth
+      value: 35
+      objectReference: {fileID: 0}
+    - target: {fileID: 3865284644604385622, guid: d1b7ac40278827741a0ef19de094f8d8, type: 3}
+      propertyPath: currentHealth
+      value: 35
+      objectReference: {fileID: 0}
+    - target: {fileID: 4637578934494456524, guid: d1b7ac40278827741a0ef19de094f8d8, type: 3}
+      propertyPath: dmg
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 4637578934494456524, guid: d1b7ac40278827741a0ef19de094f8d8, type: 3}
+      propertyPath: speed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4637578934494456524, guid: d1b7ac40278827741a0ef19de094f8d8, type: 3}
+      propertyPath: reward
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4637578934494456524, guid: d1b7ac40278827741a0ef19de094f8d8, type: 3}
+      propertyPath: enemyType
+      value: 
+      objectReference: {fileID: 11400000, guid: e8153f475cb2b1e478fc3bd1f8309b0c, type: 2}
+    - target: {fileID: 4637578934494456524, guid: d1b7ac40278827741a0ef19de094f8d8, type: 3}
+      propertyPath: maxHealth
+      value: 35
+      objectReference: {fileID: 0}
+    - target: {fileID: 4637578934494456524, guid: d1b7ac40278827741a0ef19de094f8d8, type: 3}
+      propertyPath: currentHealth
+      value: 35
+      objectReference: {fileID: 0}
+    - target: {fileID: 6762487264928992596, guid: d1b7ac40278827741a0ef19de094f8d8, type: 3}
+      propertyPath: m_Size.x
+      value: 0.9096327
+      objectReference: {fileID: 0}
+    - target: {fileID: 6762487264928992596, guid: d1b7ac40278827741a0ef19de094f8d8, type: 3}
+      propertyPath: m_Size.y
+      value: 1.1161296
+      objectReference: {fileID: 0}
+    - target: {fileID: 6762487264928992596, guid: d1b7ac40278827741a0ef19de094f8d8, type: 3}
+      propertyPath: m_Offset.x
+      value: -0.017863274
+      objectReference: {fileID: 0}
+    - target: {fileID: 6762487264928992596, guid: d1b7ac40278827741a0ef19de094f8d8, type: 3}
+      propertyPath: m_Offset.y
+      value: 0.1257751
+      objectReference: {fileID: 0}
     - target: {fileID: 7950743324380411778, guid: d1b7ac40278827741a0ef19de094f8d8, type: 3}
       propertyPath: m_Sprite
       value: 
