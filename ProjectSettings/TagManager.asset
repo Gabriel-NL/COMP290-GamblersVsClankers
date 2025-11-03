@@ -9,6 +9,7 @@ TagManager:
   - Silver
   - Gold
   - Soldier
+  - Bullet
   layers:
   - Default
   - TransparentFX

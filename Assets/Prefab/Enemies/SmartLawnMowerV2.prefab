@@ -38,11 +38,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4217936843665856621, guid: c38a5e9bf5458124e92ce749002d191f, type: 3}
       propertyPath: speed
-      value: 25
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4217936843665856621, guid: c38a5e9bf5458124e92ce749002d191f, type: 3}
       propertyPath: reward
-      value: 30
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 4217936843665856621, guid: c38a5e9bf5458124e92ce749002d191f, type: 3}
       propertyPath: enemyType
@@ -50,11 +50,11 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 08155637d87bba44ea220128de12205a, type: 2}
     - target: {fileID: 4217936843665856621, guid: c38a5e9bf5458124e92ce749002d191f, type: 3}
       propertyPath: maxHealth
-      value: 45
+      value: 75
       objectReference: {fileID: 0}
     - target: {fileID: 4217936843665856621, guid: c38a5e9bf5458124e92ce749002d191f, type: 3}
       propertyPath: currentHealth
-      value: 45
+      value: 75
       objectReference: {fileID: 0}
     - target: {fileID: 5345693906583311701, guid: c38a5e9bf5458124e92ce749002d191f, type: 3}
       propertyPath: dmg
