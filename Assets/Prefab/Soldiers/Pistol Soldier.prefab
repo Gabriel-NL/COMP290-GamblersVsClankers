@@ -159,10 +159,10 @@ MonoBehaviour:
   healthBar: {fileID: 4881588903620741901}
   bulletSpeed: 10
   bulletLife: 2
-  attackSpeed: 2.8
+  attackSpeed: 1.7
   maxHealth: 50
   currentHealth: 50
-  dmg: 10
+  dmg: 18
   timer: 0
 --- !u!61 &5665283547630815771
 BoxCollider2D:

@@ -94,7 +94,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4637578934494456524, guid: d1b7ac40278827741a0ef19de094f8d8, type: 3}
       propertyPath: speed
-      value: 10
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4637578934494456524, guid: d1b7ac40278827741a0ef19de094f8d8, type: 3}
       propertyPath: reward
@@ -106,11 +106,11 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: e8153f475cb2b1e478fc3bd1f8309b0c, type: 2}
     - target: {fileID: 4637578934494456524, guid: d1b7ac40278827741a0ef19de094f8d8, type: 3}
       propertyPath: maxHealth
-      value: 35
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 4637578934494456524, guid: d1b7ac40278827741a0ef19de094f8d8, type: 3}
       propertyPath: currentHealth
-      value: 35
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 6762487264928992596, guid: d1b7ac40278827741a0ef19de094f8d8, type: 3}
       propertyPath: m_Size.x

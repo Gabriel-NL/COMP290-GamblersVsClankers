@@ -15,6 +15,16 @@ public class EnemyWalking : MonoBehaviour
     [Tooltip("Enable auto-destroy when off screen")]
     public bool autoDestroy = true;
 
+    void Start()
+    {
+        // Try to read default speed from the EnemyBehaviour component on the same GameObject.
+        EnemyBehaviour enemyBehaviour = GetComponent<EnemyBehaviour>();
+        if (enemyBehaviour != null)
+        {
+            moveSpeed = enemyBehaviour.speed;
+        }
+    }
+
     void Update()
     {
         if (transform == null) return; // Safety check

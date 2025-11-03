@@ -211,6 +211,9 @@ MonoBehaviour:
   currentHealth: 0
   dmg: 0
   reward: 0
+  attackCooldown: 1
+  attackLungeDistance: 0.3
+  attackLungeSpeed: 10
   timer: 0
   jitterAmplitude: 0.05
   jitterFrequency: 8

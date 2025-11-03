@@ -18,7 +18,7 @@ MonoBehaviour:
   stats:
     bulletSpeed: 10
     bulletLife: 2
-    attackSpeed: 2.8
+    attackSpeed: 1.7
     health: 50
-    dmg: 10
+    dmg: 18
     cost: 10

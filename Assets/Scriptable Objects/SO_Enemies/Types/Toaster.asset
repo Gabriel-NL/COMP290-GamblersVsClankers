@@ -19,4 +19,4 @@ MonoBehaviour:
     health: 50
     dmg: 14
     reward: 10
-    speed: 10
+    speed: 2

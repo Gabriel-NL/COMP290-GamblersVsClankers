@@ -274,7 +274,7 @@ MonoBehaviour:
   healthBar: {fileID: 1071286086067878559}
   bulletSpeed: 20
   bulletLife: 2
-  attackSpeed: 2
+  attackSpeed: 1.6
   maxHealth: 75
   currentHealth: 75
   dmg: 35
