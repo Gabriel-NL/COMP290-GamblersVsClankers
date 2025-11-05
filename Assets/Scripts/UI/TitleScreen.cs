@@ -23,29 +23,8 @@ public class TitleScreen : MonoBehaviour
         Application.Quit();
     }
 
-    // Called when Options button is pressed
-    public void ToggleOptions()
+    void Start()
     {
-        if (optionsPanel != null)
-        {
-            bool isActive = optionsPanel.activeSelf;
-            optionsPanel.SetActive(!isActive);
-        }
-        else
-        {
-            Debug.LogWarning("Options Panel not assigned in the Inspector!");
-        }
-    }
-
-    public void ToggleOptionsOff()
-    {
-        if (optionsPanel != null)
-        {
-            optionsPanel.SetActive(false);
-        }
-        else
-        {
-            Debug.LogWarning("Options Panel not assigned in the Inspector!");
-        }
+        AudioManager.Play("MainMenuMusic");
     }
 }

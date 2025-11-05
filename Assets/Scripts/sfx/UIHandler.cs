@@ -7,16 +7,16 @@ using Slider = UnityEngine.UI.Slider;
 
 public class UIHandler : MonoBehaviour
 {
-    [SerializeField] GameObject pauseUI;
-    [SerializeField] GameObject gameplayUI;
+    [SerializeField] GameObject optionsUI;
+    [SerializeField] GameObject pauseMenu;
     [SerializeField] MixerManager mixerMngr;
     [SerializeField] Slider masterVolSLDR;
     [SerializeField] Slider musicVolSLDR;
     [SerializeField] Slider sfxVolSLDR;
 
-    float ogMasterVol;
-    float ogMusicVol;
-    float ogSfxVol;
+    private float ogMasterVol;
+    private float ogMusicVol;
+    private float ogSfxVol;
 
     private void Start()
     {
@@ -31,66 +31,37 @@ public class UIHandler : MonoBehaviour
         sfxVolSLDR.value = ogSfxVol;
     }
 
-    public void OkButtonHandler()
+    public void UpdateAudioSettings()
     {
-        //update mixer manager value
+        SetMasterVolume();
+        SetMusicVolume();
+        SetSFXVolume();
+    }
+
+    private void SetMasterVolume()
+    {
         mixerMngr.SetMasterVolume(masterVolSLDR.value);
-        mixerMngr.SetMusicVolume(musicVolSLDR.value);
-        mixerMngr.SetSFXVolume(sfxVolSLDR.value);
-
-        //update original value
         ogMasterVol = masterVolSLDR.value;
-        ogMusicVol = musicVolSLDR.value;
-        ogSfxVol = sfxVolSLDR.value;
-
-        //set audioMixer values
         mixerMngr.SetMixer_Master();
-        mixerMngr.SetMixer_Music();
+    }
+
+    private void SetSFXVolume()
+    {
+        mixerMngr.SetSFXVolume(sfxVolSLDR.value);
+        ogSfxVol = sfxVolSLDR.value;
         mixerMngr.SetMixer_SFX();
     }
-
-    public void ChooseLevel(string currentScene)
+    private void SetMusicVolume()
     {
-        SceneManager.LoadScene(currentScene);
-        OkButtonHandler();
-    }
-
-    public void QuitGame()
-    {
-        Application.Quit();
+        mixerMngr.SetMusicVolume(musicVolSLDR.value);
+        ogMusicVol = musicVolSLDR.value;
+        mixerMngr.SetMixer_Music();
     }
 
     public void ToggleSettings()
     {
-        pauseUI.SetActive(!pauseUI.activeSelf);
-        OkButtonHandler();
-    }
 
-    public void ToggleLevelSelect()
-    {
-        gameplayUI.SetActive(!gameplayUI.activeSelf);
-
-    }
-
-    public void PauseGame()
-    {
-        pauseUI.SetActive(true);
-        gameplayUI.SetActive(false);
-    }
-
-    public void ResumeGame()
-    {
-        pauseUI.SetActive(false);
-        gameplayUI.SetActive(true);
-
-        OkButtonHandler();
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            PauseGame();
-        }
+        optionsUI.SetActive(!optionsUI.activeSelf);
+        //UpdateAudioSettings();
     }
 }

@@ -22,15 +22,42 @@ public class PauseMenu : MonoBehaviour
         if (pausePanel != null)
         {
             pausePanel.SetActive(false);
+            
+            // Ensure pause panel UI works during pause (uses unscaled time)
+            EnsurePauseUIWorksWithTimeScale();
         }
     }
-    void Update()
+    
+    /// <summary>
+    /// Ensures all UI elements in the pause menu work properly when Time.timeScale = 0
+    /// </summary>
+    private void EnsurePauseUIWorksWithTimeScale()
+    {
+        if (pausePanel == null) return;
+        
+        // Ensure canvas group is properly configured
+        CanvasGroup cg = pausePanel.GetComponent<CanvasGroup>();
+        if (cg == null)
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                TogglePausePanel();
-            }
+            cg = pausePanel.AddComponent<CanvasGroup>();
         }
+        
+        // Set all Animators in pause panel to use unscaled time
+        Animator[] animators = pausePanel.GetComponentsInChildren<Animator>(true);
+        foreach (Animator animator in animators)
+        {
+            animator.updateMode = AnimatorUpdateMode.UnscaledTime;
+        }
+        
+        Debug.Log($"Pause menu UI configured with {animators.Length} animators set to UnscaledTime");
+    }
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            TogglePausePanel();
+        }
+    }
 
     public void TogglePausePanel()
     {
@@ -57,6 +84,8 @@ public class PauseMenu : MonoBehaviour
     
     public void OpenMainMenu()
     {
+        // Ensure time is restored before loading new scene
+        Time.timeScale = 1f;
         SceneManager.LoadScene("TitleScreen");
     }
     
