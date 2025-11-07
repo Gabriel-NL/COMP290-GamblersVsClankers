@@ -76,4 +76,15 @@ public static class AudioManager
         Debug.Log($"Error: No AudioSources available, maybe increase {numOfSources}");
         return null;
     }
+
+    internal static void StopAllSounds()
+    {
+        foreach (AudioSource source in sources)
+        {
+            if (source.isPlaying)
+            {
+                source.Stop();
+            }
+        }
+    }
 }
