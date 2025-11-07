@@ -5,6 +5,7 @@ using UnityEngine;
 public class DeathZone : MonoBehaviour
 {
     public int lives = 3; //number of enemies that can enter the casino before player loses
+    [SerializeField] GameObject gameOverScreen;
     [Header("Audio")]
     [Tooltip("Sound to play when an enemy crosses the line")]
     public string crossingClipname;
@@ -21,6 +22,7 @@ public class DeathZone : MonoBehaviour
     public void GameOver()
     {
         lives = 0;
+        gameOverScreen.SetActive(true);
         Debug.Log("Game Over");
         //Insert logic to display game over screen or restart level
     }
