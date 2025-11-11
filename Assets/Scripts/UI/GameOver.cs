@@ -1,16 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 public class GameOver : MonoBehaviour
 {
     public void RestartGame()
     {
-        Debug.Log("Restart Button Pressed.");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
     
     public void ExitGame()
     {
-        Debug.Log("Exit Button Pressed.");
+        SceneManager.LoadScene("TitleScreen");
     }
 }
