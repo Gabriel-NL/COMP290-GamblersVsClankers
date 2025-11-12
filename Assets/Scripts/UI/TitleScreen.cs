@@ -14,6 +14,7 @@ public class TitleScreen : MonoBehaviour
     // Called when Start button is pressed
     public void StartGame()
     {
+        AudioManager.StopAllSounds();
         SceneManager.LoadScene(sceneToLoad);
     }
 
