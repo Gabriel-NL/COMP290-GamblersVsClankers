@@ -13,10 +13,7 @@ public class DeathZone : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (lives <= 0)
-        {
-            GameOver();
-        }
+        
     }
 
     public void GameOver()
@@ -24,6 +21,8 @@ public class DeathZone : MonoBehaviour
         lives = 0;
         gameOverScreen.SetActive(true);
         Debug.Log("Game Over");
+        GameObject.FindFirstObjectByType<SavingSystem>().SaveData();
+        GameObject.FindFirstObjectByType<PauseMenu>().PauseGame();
         //Insert logic to display game over screen or restart level
     }
 
@@ -51,8 +50,13 @@ public class DeathZone : MonoBehaviour
             }
 
             lives--;
+            
             Debug.Log($"[DeathZone] Lives after: {lives}");
             Destroy(collision.gameObject);
+            if (lives <= 0)
+            {
+                GameOver();
+            }
         }
     }
 
