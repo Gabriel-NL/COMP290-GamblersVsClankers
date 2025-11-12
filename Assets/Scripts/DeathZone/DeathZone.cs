@@ -11,9 +11,17 @@ public class DeathZone : MonoBehaviour
     public string crossingClipname;
 
     // Update is called once per frame
-    void Update()
+    // void Update()
+    // {
+    //     if (lives <= 0)
+    //     {
+    //         GameOver();
+    //     }
+    // }
+
+    void CheckIsDead()
     {
-        if (lives <= 0)
+        if (lives < 0)
         {
             GameOver();
         }
@@ -21,9 +29,12 @@ public class DeathZone : MonoBehaviour
 
     public void GameOver()
     {
+        AudioManager.StopAllSounds();
         lives = 0;
+        Time.timeScale = 0f;
         gameOverScreen.SetActive(true);
         Debug.Log("Game Over");
+        AudioManager.Play("Death");
         //Insert logic to display game over screen or restart level
     }
 
@@ -53,6 +64,7 @@ public class DeathZone : MonoBehaviour
             lives--;
             Debug.Log($"[DeathZone] Lives after: {lives}");
             Destroy(collision.gameObject);
+            CheckIsDead();
         }
     }
 

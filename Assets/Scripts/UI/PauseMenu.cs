@@ -86,6 +86,7 @@ public class PauseMenu : MonoBehaviour
     {
         // Ensure time is restored before loading new scene
         Time.timeScale = 1f;
+        AudioManager.StopAllSounds();
         SceneManager.LoadScene("TitleScreen");
     }
     
