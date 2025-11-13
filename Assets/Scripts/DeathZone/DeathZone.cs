@@ -10,14 +10,10 @@ public class DeathZone : MonoBehaviour
     [Tooltip("Sound to play when an enemy crosses the line")]
     public string crossingClipname;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public void GameOver()
     {
+        AudioManager.StopAllSounds();
         lives = 0;
         Time.timeScale = 0f;
         gameOverScreen.SetActive(true);
