@@ -10,7 +10,7 @@ public class ScoreManager : MonoBehaviour
     private int score;
     public TMP_Text scoreText;
     [Tooltip("Starting coins for the player")]
-    public int startingScore = 350;
+    public int startingScore = 500;
 
     private void Awake()
     {
