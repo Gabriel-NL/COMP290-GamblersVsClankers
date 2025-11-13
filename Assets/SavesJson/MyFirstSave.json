@@ -1,0 +1,26 @@
+{
+    "metadata": [
+        {
+            "key": "points",
+            "value": "80"
+        }
+    ],
+    "entries": [
+        {
+            "x": 0,
+            "y": 3,
+            "value": {
+                "soldierType": "Pistol Soldier",
+                "tier": "Common"
+            }
+        },
+        {
+            "x": 0,
+            "y": 1,
+            "value": {
+                "soldierType": "Rifle Soldier",
+                "tier": "Common"
+            }
+        }
+    ]
+}

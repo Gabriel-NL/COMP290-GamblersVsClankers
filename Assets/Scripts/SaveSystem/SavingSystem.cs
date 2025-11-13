@@ -1,6 +1,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -20,7 +21,7 @@ public class SavingSystem : MonoBehaviour
             tier = newTier;
         }
     }
-    public List<SoldierDataForSerialization> datanew = new List<SoldierDataForSerialization>();
+    private List<SoldierDataForSerialization> datanew = new List<SoldierDataForSerialization>();
     public void SaveData()
     {
         GridBuilder<ItemSlot> gridBuilder = new GridBuilder<ItemSlot>(slotsParent);
@@ -50,21 +51,26 @@ public class SavingSystem : MonoBehaviour
             }
         }
         
+        // === HERE: save inside the project ===
+        string projectSavesFolder = Path.Combine(Application.dataPath, "SavesJson");
+        Directory.CreateDirectory(projectSavesFolder);
+
+        string fullPath = Path.Combine(projectSavesFolder, "MyFirstSave.json");
+
+        serializer.SaveToFile(grid, meta, fullPath);
+
+        Debug.Log($"Saved grid to: {fullPath}");
+
+#if UNITY_EDITOR
+        // So the file appears in the Project window immediately
+        UnityEditor.AssetDatabase.Refresh();
+#endif
+        /*
+        serializer.SaveToFile(grid, meta, "MyFirstSave"); 
         string json = serializer.ToJson(grid, meta);
         Debug.Log(json);
+         */
+        
     }
-
-    void OnSceneUnloaded(Scene scene)
-        {
-            // Sua função aqui
-            Debug.Log($"Cena descarregada: {scene.name}");
-            SaveData();
-        }
-        void OnEnable()
-        {
-            SceneManager.sceneUnloaded += OnSceneUnloaded;
-        }
-    
-    
     
 }
