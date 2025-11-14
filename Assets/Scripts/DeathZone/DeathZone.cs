@@ -10,22 +10,6 @@ public class DeathZone : MonoBehaviour
     [Tooltip("Sound to play when an enemy crosses the line")]
     public string crossingClipname;
 
-    // Update is called once per frame
-    // void Update()
-    // {
-    //     if (lives <= 0)
-    //     {
-    //         GameOver();
-    //     }
-    // }
-
-    void CheckIsDead()
-    {
-        if (lives < 0)
-        {
-            GameOver();
-        }
-    }
 
     public void GameOver()
     {
@@ -34,6 +18,9 @@ public class DeathZone : MonoBehaviour
         Time.timeScale = 0f;
         gameOverScreen.SetActive(true);
         Debug.Log("Game Over");
+
+        GameObject.FindFirstObjectByType<SavingSystem>().SaveData();
+        GameObject.FindFirstObjectByType<PauseMenu>().PauseGame();
         AudioManager.Play("Death");
         //Insert logic to display game over screen or restart level
     }
@@ -62,9 +49,15 @@ public class DeathZone : MonoBehaviour
             }
 
             lives--;
+            
             Debug.Log($"[DeathZone] Lives after: {lives}");
             Destroy(collision.gameObject);
-            CheckIsDead();
+            if (lives <= 0)
+            {
+                GameOver();
+            }
+
+
         }
     }
 

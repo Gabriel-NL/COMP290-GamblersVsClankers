@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 public class ItemSlot : MonoBehaviour, IDropHandler
 {
     private bool isOccupied = false;
-    private GameObject occupyingObject = null;
+    [HideInInspector]public GameObject occupyingObject = null;
 
     public void OnDrop(PointerEventData eventData)
     {

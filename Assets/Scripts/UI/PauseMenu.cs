@@ -90,7 +90,7 @@ public class PauseMenu : MonoBehaviour
         SceneManager.LoadScene("TitleScreen");
     }
     
-    private void PauseGame()
+    public void PauseGame()
     {
         Time.timeScale = 0f; // Stops all Time.deltaTime dependent operations
         isPaused = true;
