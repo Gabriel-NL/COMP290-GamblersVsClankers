@@ -3834,7 +3834,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c74103702266644eb4205abe99295a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneToLoad: JD_Gameplay_AlmostDone
+  sceneToLoad: Gameplay
   optionsPanel: {fileID: 13863583}
 --- !u!114 &2077012343
 MonoBehaviour:

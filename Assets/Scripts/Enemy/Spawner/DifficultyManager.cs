@@ -31,12 +31,12 @@ public class DifficultyManager : MonoBehaviour
     public float pointsPerEnemyKilled = 0.5f;
     
     [Header("Current Difficulty (Read-Only)")]
-    [SerializeField][ReadOnlyInInspector] private float totalProgressionPoints = 0f;
-    [SerializeField][ReadOnlyInInspector] private int soldiersPlaced = 0;
-    [SerializeField][ReadOnlyInInspector] private int enemiesKilled = 0;
-    [SerializeField][ReadOnlyInInspector] private float currentHealthMultiplier = 1f;
-    [SerializeField][ReadOnlyInInspector] private float currentDamageMultiplier = 1f;
-    [SerializeField][ReadOnlyInInspector] private float currentCooldownMultiplier = 1f;
+    [SerializeField] private float totalProgressionPoints = 0f;
+    [SerializeField] private int soldiersPlaced = 0;
+    [SerializeField] private int enemiesKilled = 0;
+    [SerializeField] private float currentHealthMultiplier = 1f;
+    [SerializeField] private float currentDamageMultiplier = 1f;
+    [SerializeField] private float currentCooldownMultiplier = 1f;
     
     void Awake()
     {
