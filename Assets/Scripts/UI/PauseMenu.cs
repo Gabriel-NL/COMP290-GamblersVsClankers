@@ -1,18 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
     [SerializeField] private GameObject pausePanel;
+    [SerializeField] private GameObject overwritePanel;
     private bool isPaused = false;
 
     void Start()
     {
         if (pausePanel == null)
         {
-            pausePanel = GameObject.Find("PausePanel"); // optional fallback
+            pausePanel = GameObject.Find("PauseMenu"); // optional fallback
+        }
+        if (overwritePanel == null)
+        {
+            overwritePanel = GameObject.Find("OverwritePrompt"); // optional fallback
         }
         
         // Ensure game starts unpaused
@@ -81,7 +87,14 @@ public class PauseMenu : MonoBehaviour
             Debug.LogWarning("Pause Panel not assigned in the Inspector!");
         }
     }
-    
+
+    public void SaveGame()
+    {
+        overwritePanel.SetActive(true);
+        //GameObject.FindFirstObjectByType<SavingSystem>().SaveData();
+        //Debug.Log("Game Saved");
+    }
+
     public void OpenMainMenu()
     {
         // Ensure time is restored before loading new scene

@@ -5,53 +5,57 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Handles saving game data to JSON files
+/// For loading, see LoadingSystem.cs
+/// </summary>
 public class SavingSystem : MonoBehaviour
 {
     [Header("Collection root")]
     public Transform slotsParent; // <-- target parent exposed in Inspector
-    [System.Serializable]
-    public class SoldierDataForSerialization
-    {
-        public string soldierType;
-        public string tier;
-
-        public SoldierDataForSerialization(string newSoldier,string newTier)
-        {
-            soldierType=newSoldier;
-            tier = newTier;
-        }
-    }
-    private List<SoldierDataForSerialization> datanew = new List<SoldierDataForSerialization>();
+    
+    /// <summary>
+    /// Save the current game state (soldiers, tier, score) to a JSON file
+    /// </summary>
     public void SaveData()
     {
         GridBuilder<ItemSlot> gridBuilder = new GridBuilder<ItemSlot>(slotsParent);
         GridSerializer serializer = new GridSerializer();
         ScoreManager scoreManager = FindObjectOfType<ScoreManager>();
-        
+
+        // Create metadata (score)
         var meta = new Dictionary<string, string>
         {
-            { "points",scoreManager.GetCurrentScore().ToString() }
+            { "points", scoreManager.CurrentScore.ToString() }
         };
+
+        // Create grid of soldier data
         var grid = new Dictionary<(int, int), SoldierDataForSerialization>();
-        
+
         foreach (KeyValuePair<(int, int), ItemSlot> keyValuePair in gridBuilder.customGrid)
         {
-            if (keyValuePair.Value==null|| keyValuePair.Value.occupyingObject==null)
+            if (keyValuePair.Value == null || keyValuePair.Value.occupyingObject == null)
             {
                 continue;
             }
+            
             if (keyValuePair.Value.occupyingObject.TryGetComponent<SoldierBehaviour>(out SoldierBehaviour soldierBehaviour))
             {
-                
-                string type = soldierBehaviour.name;
-                string tier =soldierBehaviour.tier.ToString();
-                SoldierDataForSerialization entry = new SoldierDataForSerialization(type,tier);
-                grid.Add(keyValuePair.Key,entry );
- 
+                // Get the ScriptableObject asset name (not the display name) and tier enum
+                // Use "as Object" to access the base ScriptableObject.name property
+                string soldierTypeName = soldierBehaviour.SoldierType != null 
+                    ? (soldierBehaviour.SoldierType as Object).name 
+                    : "Unknown";
+                string tierName = soldierBehaviour.tier.ToString();
+
+                SoldierDataForSerialization entry = new SoldierDataForSerialization(soldierTypeName, tierName);
+                grid.Add(keyValuePair.Key, entry);
+
+                Debug.Log($"Saved soldier: {soldierTypeName} with tier {tierName} at grid position {keyValuePair.Key}");
             }
         }
-        
-        // === HERE: save inside the project ===
+
+        // Save to file inside the project
         string projectSavesFolder = Path.Combine(Application.dataPath, "SavesJson");
         Directory.CreateDirectory(projectSavesFolder);
 
@@ -65,12 +69,5 @@ public class SavingSystem : MonoBehaviour
         // So the file appears in the Project window immediately
         UnityEditor.AssetDatabase.Refresh();
 #endif
-        /*
-        serializer.SaveToFile(grid, meta, "MyFirstSave"); 
-        string json = serializer.ToJson(grid, meta);
-        Debug.Log(json);
-         */
-        
     }
-    
 }
