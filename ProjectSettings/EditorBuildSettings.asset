@@ -12,18 +12,18 @@ EditorBuildSettings:
     path: Assets/Scenes/Archive/GameplayOLD.unity
     guid: 1ece802a13a283f43b470f93b165b8b1
   - enabled: 0
-    path: Assets/Scenes/JD_Gameplay_Deathzone.unity
+    path: Assets/Scenes/Archive2/JD_Gameplay_Deathzone.unity
     guid: 122879c27682edf4991fccceb861087c
   - enabled: 1
-    path: Assets/Scenes/JD_Gameplay_Deathzone_NewAudio.unity
+    path: Assets/Scenes/Archive2/JD_Gameplay_Deathzone_NewAudio.unity
     guid: e4e65cc3f4731b248b7e4475266805cc
   - enabled: 1
-    path: Assets/Scenes/JD_EnemyTypes.unity
+    path: Assets/Scenes/Archive2/JD_EnemyTypes.unity
     guid: a70bc108611b69d41bb0158763870118
   - enabled: 1
-    path: Assets/Scenes/JD_Gameplay_AlmostDone.unity
+    path: Assets/Scenes/Gameplay.unity
     guid: ab8666dc24f21d64890367b3669c8a2b
   - enabled: 1
-    path: Assets/Scenes/JD_SoldierWithHealth.unity
+    path: Assets/Scenes/Archive2/JD_SoldierWithHealth.unity
     guid: 7b24e8fa735bf974cbd261e1d5c707dc
   m_configObjects: {}

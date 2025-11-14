@@ -19,8 +19,7 @@ public class DeathZone : MonoBehaviour
         gameOverScreen.SetActive(true);
         Debug.Log("Game Over");
 
-        GameObject.FindFirstObjectByType<SavingSystem>().SaveData();
-        GameObject.FindFirstObjectByType<PauseMenu>().PauseGame();
+        
         AudioManager.Play("Death");
         //Insert logic to display game over screen or restart level
     }

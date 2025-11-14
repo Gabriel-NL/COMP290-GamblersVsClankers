@@ -404,7 +404,14 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
                             Debug.Log($"Parent source '{parentSource.gameObject.name}' marked as used (one-time only)");
                         }
                         
-                        Destroy(this);
+                        // Deselect before destroying to prevent Unity Editor errors
+#if UNITY_EDITOR
+                        if (UnityEditor.Selection.activeGameObject == gameObject)
+                        {
+                            UnityEditor.Selection.activeObject = null;
+                        }
+#endif
+                        Destroy(gameObject);
                         Debug.Log("Locked UI element to slot: " + targetSlot.gameObject.name);
                         return;
                     }
@@ -428,7 +435,14 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
                         Debug.Log($"Parent source '{parentSource.gameObject.name}' marked as used (one-time only)");
                     }
                     
-                    Destroy(this);
+                    // Deselect before destroying to prevent Unity Editor errors
+#if UNITY_EDITOR
+                    if (UnityEditor.Selection.activeGameObject == gameObject)
+                    {
+                        UnityEditor.Selection.activeObject = null;
+                    }
+#endif
+                    Destroy(gameObject);
                     Debug.Log("Locked world GameObject to slot: " + targetSlot.gameObject.name);
                     return;
                 }

@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c211e497149a7cc4a8f72b8281c9a8be, type: 3}
+  m_Name: SoldierTypeRegistry
+  m_EditorClassIdentifier: 
+  allSoldierTypes:
+  - {fileID: 11400000, guid: 27c1fbafe0e09cb4db5973cb2554c271, type: 2}
+  - {fileID: 11400000, guid: 230a6661fcc9d2f4b967dc75cbd6846f, type: 2}
+  - {fileID: 11400000, guid: a0cc2d97a4ea5054cb227062473176db, type: 2}
+  - {fileID: 11400000, guid: 9fcc17ea4a17e3340885ca8080388207, type: 2}
