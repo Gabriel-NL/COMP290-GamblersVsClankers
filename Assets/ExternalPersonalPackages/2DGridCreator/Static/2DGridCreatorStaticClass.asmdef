@@ -1,5 +1,5 @@
 {
-  "name": "2DGridCreatorMBH",
+  "name": "2DGridCreatorStaticClass",
   "rootNamespace": "2DGridCreator",
   "references": [],
     "includePlatforms": [],

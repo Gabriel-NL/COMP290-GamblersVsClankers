@@ -2,12 +2,6 @@ using System;
 using UnityEngine;
 using System.Collections.Generic;
 
-
-#if UNITY_EDITOR
-using UnityEditor;
-[ExecuteInEditMode]
-#endif
-
 public class MBH_GridSpawner : MonoBehaviour
 {
     // ── Enums ───────────────────────────────────────────────────────────────────

@@ -1,16 +1,17 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
+using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
 
-public class GridBuilder<GenericType> where GenericType : UnityEngine.Component
+public class GridBuilderClass<GenericType> where GenericType : UnityEngine.Component
 {
     public Dictionary<(int,int) ,GenericType> customGrid;
     private Dictionary<float, int> xIndex ;
     private Dictionary<float, int> yIndex;
 
 
-    public GridBuilder(Transform parent)
+    public GridBuilderClass(Transform parent)
     {
         Transform[] children;
         if (parent.GetComponentsInChildren<Transform>()==null)
@@ -26,7 +27,7 @@ public class GridBuilder<GenericType> where GenericType : UnityEngine.Component
         InitializeEmptyGrid(children);
         AddValuesToGrid(objects);
     }
-    public GridBuilder(Transform[] children)
+    public GridBuilderClass(Transform[] children)
     {
         InitializeEmptyGrid(children);
 
@@ -42,7 +43,7 @@ public class GridBuilder<GenericType> where GenericType : UnityEngine.Component
         }
     }
 
-    public GridBuilder()
+    public GridBuilderClass()
     {
         customGrid=new Dictionary<(int,int) ,GenericType>();
     }

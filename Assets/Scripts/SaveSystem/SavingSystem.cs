@@ -1,9 +1,6 @@
-
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class SavingSystem : MonoBehaviour
 {
@@ -24,7 +21,7 @@ public class SavingSystem : MonoBehaviour
     private List<SoldierDataForSerialization> datanew = new List<SoldierDataForSerialization>();
     public void SaveData()
     {
-        GridBuilder<ItemSlot> gridBuilder = new GridBuilder<ItemSlot>(slotsParent);
+        GridBuilderClass<ItemSlot> gridBuilder = new GridBuilderClass<ItemSlot>(slotsParent);
         GridSerializer serializer = new GridSerializer();
         ScoreManager scoreManager = FindObjectOfType<ScoreManager>();
         
