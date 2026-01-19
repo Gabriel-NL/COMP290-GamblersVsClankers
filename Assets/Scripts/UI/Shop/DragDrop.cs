@@ -330,7 +330,7 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
                 GameObject spawnedSoldier = Instantiate(soldierPrefab, spawnPosition, Quaternion.identity);
                 spawnedSoldier.transform.SetParent(parentTransform);
                 var rb = spawnedSoldier.GetComponent<Rigidbody2D>();
-                if (rb != null) { rb.bodyType = RigidbodyType2D.Kinematic; rb.velocity = Vector2.zero; }
+                if (rb != null) { rb.bodyType = RigidbodyType2D.Kinematic; rb.linearVelocity = Vector2.zero; }
                 
                 // Apply the tier to the spawned soldier BEFORE Start() is called
                 var soldierBehaviour = spawnedSoldier.GetComponent<SoldierBehaviour>();
