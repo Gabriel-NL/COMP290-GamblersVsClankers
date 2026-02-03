@@ -5,6 +5,7 @@ using UnityEngine;
 public class DeathZone : MonoBehaviour
 {
     public int lives = 3; //number of enemies that can enter the casino before player loses
+    [SerializeField] GameObject livesDisplay;
     [SerializeField] GameObject gameOverScreen;
     [Header("Audio")]
     [Tooltip("Sound to play when an enemy crosses the line")]
@@ -48,6 +49,8 @@ public class DeathZone : MonoBehaviour
             }
 
             lives--;
+            //Update the draw mode width of the to display only the remaining lives
+            livesDisplay.GetComponent<SpriteRenderer>().size -= new Vector2(15.8f, 0);
             
             Debug.Log($"[DeathZone] Lives after: {lives}");
             Destroy(collision.gameObject);

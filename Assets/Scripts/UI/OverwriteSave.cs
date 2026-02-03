@@ -22,7 +22,7 @@ public class OverwriteSave : MonoBehaviour
 
     public void YesOption()
     {
-        SavingSystem savingSystem = FindObjectOfType<SavingSystem>();
+        SavingSystem savingSystem = Object.FindFirstObjectByType<SavingSystem>();
         if (savingSystem != null)
         {
             savingSystem.SaveData();

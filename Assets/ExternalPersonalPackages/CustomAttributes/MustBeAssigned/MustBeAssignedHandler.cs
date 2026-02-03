@@ -40,7 +40,7 @@ public class MustBeAssignedHandler
         bool isValid = true;
 
         // Iterate through all active GameObjects in the scene
-        foreach (GameObject obj in Object.FindObjectsOfType<GameObject>())
+        foreach (GameObject obj in Object.FindObjectsByType<GameObject>(FindObjectsSortMode.None))
         {
             MonoBehaviour[] components = obj.GetComponents<MonoBehaviour>();
             foreach (MonoBehaviour component in components)

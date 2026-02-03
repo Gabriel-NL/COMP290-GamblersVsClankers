@@ -191,7 +191,7 @@ public class LoadingSystem : MonoBehaviour
         // Step 3: Restore the score
         if (meta != null && meta.TryGetValue("points", out string pointsStr) && int.TryParse(pointsStr, out int points))
         {
-            ScoreManager scoreManager = FindObjectOfType<ScoreManager>();
+            ScoreManager scoreManager = Object.FindFirstObjectByType<ScoreManager>();
             if (scoreManager != null)
             {
                 int currentScore = scoreManager.CurrentScore;

@@ -63,7 +63,7 @@ public class UIHandler : MonoBehaviour
         bool isActive = optionsUI.activeSelf;
         optionsUI.SetActive(!isActive);
         // Re-enable pause if it was paused
-        PauseMenu pauseMenu = FindObjectOfType<PauseMenu>();
+        PauseMenu pauseMenu = Object.FindFirstObjectByType<PauseMenu>();
         if (pauseMenu != null && pauseMenu.IsPaused())
         {
             Time.timeScale = 0f; // Resume pause
