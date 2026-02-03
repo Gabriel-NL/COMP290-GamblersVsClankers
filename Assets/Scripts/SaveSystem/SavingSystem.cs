@@ -21,7 +21,7 @@ public class SavingSystem : MonoBehaviour
     {
         GridBuilder<ItemSlot> gridBuilder = new GridBuilder<ItemSlot>(slotsParent);
         GridSerializer serializer = new GridSerializer();
-        ScoreManager scoreManager = FindObjectOfType<ScoreManager>();
+        ScoreManager scoreManager = Object.FindFirstObjectByType<ScoreManager>();
 
         // Create metadata (score)
         var meta = new Dictionary<string, string>

@@ -10,7 +10,7 @@ public class EnableCheatmode : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F11))
         {
             Debug.Log("Cheat mode enabled: INFINITE MONEY");
-            ScoreManager scoreManager = FindObjectOfType<ScoreManager>();
+            ScoreManager scoreManager = Object.FindFirstObjectByType<ScoreManager>();
             if (scoreManager != null)
             {
                 scoreManager.AddPoints(999999);

@@ -259,7 +259,7 @@ public class ShopINIT : MonoBehaviour
         // Attempt to find the best Canvas in the scene to parent the UI element.
         // Prefer a top-level/root canvas or the one with the highest sort order so the spawned
         // draggable appears above nested shop UI elements.
-        Canvas[] canvases = FindObjectsOfType<Canvas>();
+        Canvas[] canvases = Object.FindObjectsByType<Canvas>(FindObjectsSortMode.None);
         Canvas canvas = null;
         if (canvases != null && canvases.Length > 0)
         {
@@ -296,7 +296,7 @@ public class ShopINIT : MonoBehaviour
         }
 
         // Ensure there's a dedicated DragCanvas at top layer so drags always appear above other UI.
-        Canvas dragCanvas = GameObject.FindObjectOfType<Canvas>() as Canvas; // placeholder
+        Canvas dragCanvas = Object.FindFirstObjectByType<Canvas>(); // placeholder
         // Try to find an existing GameObject named "DragCanvas"
         var existingDragCanvas = GameObject.Find("DragCanvas");
         if (existingDragCanvas != null)

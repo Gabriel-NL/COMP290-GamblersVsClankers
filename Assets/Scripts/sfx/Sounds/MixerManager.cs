@@ -27,6 +27,7 @@ public class MixerManager : MonoBehaviour
             return;
         }
         instance = this;
+        transform.SetParent(null);  // Unparent to root if nested
         DontDestroyOnLoad(gameObject);
     }
 
