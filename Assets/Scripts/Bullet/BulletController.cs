@@ -4,6 +4,8 @@ public class BulletController : MonoBehaviour
 {
     [HideInInspector]public float DamageAmount;
     public string audioName = "Shot";
+    public bool isShootThrough = false;
+
     //public float bulletScale = 1f;
 
     private void Start()
@@ -45,7 +47,11 @@ public class BulletController : MonoBehaviour
             }
         }
         
+        if (!isShootThrough)
+        {
+            Debug.Log($"[Bullet] Bullet is not shoot-through, destroying on collision.");
+            Destroy(this.gameObject);
+        }
         // Destroy bullet after collision
-        Destroy(this.gameObject);
     }
 }

@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 104216c16a8ae5b48961a24ac31c4b7b, type: 3}
-  m_Name: Pistol
+  m_Name: CrossbowDude
   m_EditorClassIdentifier: 
-  name: Pistol Soldier
-  characterSprite: {fileID: 21300000, guid: bb027010112c87b4daa38b0660f235eb, type: 3}
-  soldierPrefab: {fileID: 2547468567153757322, guid: 86fd6d68395bb054396e13d694bb48e4, type: 3}
+  name: Crossbow Soldier
+  characterSprite: {fileID: 2129950167499018804, guid: 17353af252dc23f42adee4496286e43d, type: 3}
+  soldierPrefab: {fileID: 7815089993619729977, guid: 0632766f979ec1640912e55fc178bb6d, type: 3}
   stats:
-    bulletSpeed: 10
+    bulletSpeed: 40
     bulletLife: 2
-    attackSpeed: 1.7
-    health: 50
-    dmg: 18
-    cost: 10
-    isShootThrough: 0
+    attackSpeed: 1.65
+    health: 70
+    dmg: 50
+    cost: 50
+    isShootThrough: 1
