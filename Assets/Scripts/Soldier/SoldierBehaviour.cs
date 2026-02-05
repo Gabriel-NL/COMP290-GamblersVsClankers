@@ -22,6 +22,7 @@ public class SoldierBehaviour : MonoBehaviour
     [ReadOnly] public float maxHealth; // Maximum health
     [ReadOnly] public float currentHealth; // Current health
     [ReadOnly] public float dmg;
+    [ReadOnly] public bool isShootThrough;
     // legacy public timer kept for inspector visibility if needed, but firing uses attackSpeed
 
     [Header("Timer")]
@@ -59,6 +60,7 @@ public class SoldierBehaviour : MonoBehaviour
         maxHealth = SoldierType.stats.health;
         currentHealth = maxHealth; // Initialize current health to max
         dmg = SoldierType.stats.dmg;
+        isShootThrough = SoldierType.stats.isShootThrough;
     }
     
     [NaughtyAttributes.Button("Test: Take 10 Damage")]
@@ -115,12 +117,13 @@ public class SoldierBehaviour : MonoBehaviour
         if (bulletController != null)
         {
             bulletController.DamageAmount = dmg;
+            bulletController.isShootThrough = isShootThrough;
         }
         else
         {
             Debug.LogWarning($"[SoldierBehaviour] Bullet prefab has no BulletController component on '{gameObject.name}'!");
         }
-        
+
         // Apply velocity
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         if (rb != null)

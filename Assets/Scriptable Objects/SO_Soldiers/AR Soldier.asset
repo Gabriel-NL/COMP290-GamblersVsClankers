@@ -22,3 +22,4 @@ MonoBehaviour:
     health: 100
     dmg: 25
     cost: 100
+    isShootThrough: 0
