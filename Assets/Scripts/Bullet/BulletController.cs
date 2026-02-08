@@ -5,6 +5,7 @@ public class BulletController : MonoBehaviour
     [HideInInspector]public float DamageAmount;
     public string audioName = "Shot";
     public bool isShootThrough = false;
+    public bool canShootAir = false;
 
     //public float bulletScale = 1f;
 
@@ -28,12 +29,8 @@ public class BulletController : MonoBehaviour
             EnemyBehaviour enemy = collision.gameObject.GetComponent<EnemyBehaviour>();
             if (enemy != null)
             {
-                enemy.TakeDamage(DamageAmount);
+                enemy.TakeDamage(enemy.isFlying == canShootAir ? DamageAmount*1.3f : DamageAmount);
                 Debug.Log($"[Bullet] Applied {DamageAmount} damage to enemy '{collision.gameObject.name}'");
-            }
-            else
-            {
-                Debug.LogWarning($"[Bullet] Enemy '{collision.gameObject.name}' has no EnemyBehaviour component!");
             }
         }
         // Check if hit a soldier (friendly fire or enemy bullets)

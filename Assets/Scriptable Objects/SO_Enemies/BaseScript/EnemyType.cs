@@ -22,4 +22,5 @@ public struct EnemyStats
     public float dmg;
     public float reward;
     public float speed;
+    public bool isFlying;
 }

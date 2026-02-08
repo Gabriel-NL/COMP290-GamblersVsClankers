@@ -25,4 +25,5 @@ public struct SoldierStats
     public float dmg;
     public float cost;
     public bool isShootThrough;
+    public bool canShootAir;
 }
