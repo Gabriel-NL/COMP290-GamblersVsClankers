@@ -18,6 +18,7 @@ public class EnemyBehaviour : MonoBehaviour
     [ReadOnly] public float currentHealth;
     [ReadOnly] public float dmg;
     [ReadOnly] public float reward;
+    [ReadOnly] public bool isFlying;
 
     [Header("Combat")]
     [Tooltip("Time between attacks in seconds")]
