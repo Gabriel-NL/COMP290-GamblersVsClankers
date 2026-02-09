@@ -23,11 +23,14 @@ public class SoldierBehaviour : MonoBehaviour
     [ReadOnly] public float currentHealth; // Current health
     [ReadOnly] public float dmg;
     [ReadOnly] public bool isShootThrough;
+    [ReadOnly] public bool isShotgun;
     // legacy public timer kept for inspector visibility if needed, but firing uses attackSpeed
 
     [Header("Timer")]
     public float timer;
     private float cooldownTimer;
+    private float bulletOffsetValue = 1f;
+
 
     void Start()
     {
@@ -43,6 +46,11 @@ public class SoldierBehaviour : MonoBehaviour
         if (cooldownTimer <= 0f)
         {
             Fire();
+            if(isShotgun)
+            {                // For shotguns, we want to fire twice with a slight offset, so we call Fire() again with an offset
+                Fire(bulletOffsetValue); // Fire upper pellet
+                Fire(-bulletOffsetValue);  // Fire lower pellet
+            }
 
             cooldownTimer = (attackSpeed > 0f) ? attackSpeed : ((timer > 0f) ? timer : 1f);
         }
@@ -61,6 +69,7 @@ public class SoldierBehaviour : MonoBehaviour
         currentHealth = maxHealth; // Initialize current health to max
         dmg = SoldierType.stats.dmg;
         isShootThrough = SoldierType.stats.isShootThrough;
+        isShotgun = SoldierType.stats.isShotgun;
     }
     
     [NaughtyAttributes.Button("Test: Take 10 Damage")]
@@ -108,10 +117,10 @@ public class SoldierBehaviour : MonoBehaviour
         
         Debug.Log($"[SoldierINIT] Initialized attackSpeed={attackSpeed}, legacy timer={timer}, cooldownTimer={cooldownTimer}, health={currentHealth}/{maxHealth} on '{gameObject.name}'");
     }
-    public void Fire()
+    public void Fire(float firePointOffset = 0f)
     {
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-        
+        GameObject bullet = Instantiate(bulletPrefab, new Vector3(firePoint.position.x, firePoint.position.y + firePointOffset, firePoint.position.z), firePoint.rotation);
+
         // Set bullet damage
         BulletController bulletController = bullet.GetComponent<BulletController>();
         if (bulletController != null)

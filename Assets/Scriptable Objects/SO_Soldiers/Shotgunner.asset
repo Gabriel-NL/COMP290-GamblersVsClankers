@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 104216c16a8ae5b48961a24ac31c4b7b, type: 3}
-  m_Name: CrossbowDude
+  m_Name: Shotgunner
   m_EditorClassIdentifier: 
-  name: Crossbow Soldier
-  characterSprite: {fileID: 2129950167499018804, guid: 17353af252dc23f42adee4496286e43d, type: 3}
-  soldierPrefab: {fileID: 7815089993619729977, guid: 0632766f979ec1640912e55fc178bb6d, type: 3}
+  name: Shotgunner
+  characterSprite: {fileID: 21300000, guid: 5f306fc6b48a57149ab54d5cec980a04, type: 3}
+  soldierPrefab: {fileID: 8840613795720796342, guid: 93768b803ec9f2442b37e23e3ab25473, type: 3}
   stats:
-    bulletSpeed: 40
+    bulletSpeed: 25
     bulletLife: 2
-    attackSpeed: 1.65
-    health: 70
-    dmg: 50
-    cost: 50
-    isShootThrough: 1
-    canShootAir: 1
-    isShotgun: 0
+    attackSpeed: 1.2
+    health: 80
+    dmg: 30
+    cost: 100
+    isShootThrough: 0
+    canShootAir: 0
+    isShotgun: 1

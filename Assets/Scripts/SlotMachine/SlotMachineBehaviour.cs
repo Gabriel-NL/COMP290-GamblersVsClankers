@@ -16,20 +16,6 @@ public class SlotMachineBehaviour : MonoBehaviour
     public Image[] slotMachineBGImages = new Image[3];
     public Image rewardSlotImage;
     public Canvas dragCanvas; // Canvas for drag operations
-    // Note: scoreText removed - now using ScoreManager.instance instead
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 
     public SoldierType WeightedRandomSoldierSelection()
     {

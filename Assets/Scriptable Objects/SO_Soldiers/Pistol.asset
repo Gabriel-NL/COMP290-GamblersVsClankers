@@ -23,3 +23,5 @@ MonoBehaviour:
     dmg: 18
     cost: 10
     isShootThrough: 0
+    canShootAir: 0
+    isShotgun: 0

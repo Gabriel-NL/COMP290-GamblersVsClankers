@@ -24,3 +24,4 @@ MonoBehaviour:
     cost: 50
     isShootThrough: 0
     canShootAir: 1
+    isShotgun: 0
