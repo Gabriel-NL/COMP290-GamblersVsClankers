@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 104216c16a8ae5b48961a24ac31c4b7b, type: 3}
+  m_Name: Solaridon Soldier
+  m_EditorClassIdentifier: Assembly-CSharp::SoldierType
+  name: Solaridon Soldier
+  characterSprite: {fileID: -7909485441146164443, guid: 078af7ff027d2b24ea25c390193ab446, type: 3}
+  soldierPrefab: {fileID: 4320091639262341063, guid: d47fc3b7199cb0f4bb4e45df894a3512, type: 3}
+  stats:
+    bulletSpeed: 10
+    bulletLife: 2
+    attackSpeed: 3
+    health: 1000
+    dmg: 50
+    cost: 0
+    isShootThrough: 0
+    canShootAir: 0
+    isShotgun: 0
