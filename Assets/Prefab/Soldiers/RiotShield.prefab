@@ -54,6 +54,10 @@ MonoBehaviour:
   spriteRenderer: {fileID: 6410930928580191114}
   bulletPrefab: {fileID: 4913968032916151816, guid: 3c1f4cd762919934488023d0aeac8e37, type: 3}
   healthBar: {fileID: 3511090679881700113}
+  detectionRange: 20
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 64
   bulletSpeed: 0
   bulletLife: 0
   attackSpeed: 0

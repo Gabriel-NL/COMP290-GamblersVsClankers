@@ -13,6 +13,10 @@ public class SoldierBehaviour : MonoBehaviour
     [MustBeAssigned] public GameObject bulletPrefab;
     public SoldierHealthBar healthBar; // Health bar component (optional)
 
+    [Header("Detection")]
+    public float detectionRange = 10f;
+    public LayerMask enemyLayer;
+
     //[HideInInspector] public string shootAudioName;
 
     [Header("Soldier Stats (Read-Only)")]
@@ -43,17 +47,32 @@ public class SoldierBehaviour : MonoBehaviour
         {
             cooldownTimer -= Time.deltaTime;
         }
-        if (cooldownTimer <= 0f)
-        {
-            Fire();
-            if(isShotgun)
-            {                // For shotguns, we want to fire twice with a slight offset, so we call Fire() again with an offset
-                Fire(bulletOffsetValue); // Fire upper pellet
-                Fire(-bulletOffsetValue);  // Fire lower pellet
-            }
 
-            cooldownTimer = (attackSpeed > 0f) ? attackSpeed : ((timer > 0f) ? timer : 1f);
+        if (IsEnemyInLane())
+        {
+            if (cooldownTimer <= 0f)
+            {
+                Fire();
+                if(isShotgun)
+                {                // For shotguns, we want to fire twice with a slight offset, so we call Fire() again with an offset
+                    Fire(bulletOffsetValue); // Fire upper pellet
+                    Fire(-bulletOffsetValue);  // Fire lower pellet
+                }
+
+                cooldownTimer = (attackSpeed > 0f) ? attackSpeed : ((timer > 0f) ? timer : 1f);
+            }
         }
+    }
+
+    private bool IsEnemyInLane()
+    {
+        // Use Raycast to detect enemies in the lane
+        RaycastHit2D hit = Physics2D.Raycast(firePoint.position, firePoint.up, detectionRange, enemyLayer);
+
+        // For debugging, draw the ray in the scene view
+        Debug.DrawRay(firePoint.position, firePoint.up * detectionRange, Color.green);
+
+        return hit.collider != null;
     }
 
     [NaughtyAttributes.Button("Import data from SoldierType SO")]
