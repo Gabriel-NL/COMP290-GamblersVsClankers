@@ -19,29 +19,55 @@ public class SlotMachineBehaviour : MonoBehaviour
 
     public SoldierType WeightedRandomSoldierSelection()
     {
-        float randomIndex = Random.Range(0.01f, 100.00f);
-
+        // Calculate total weight
+        float totalWeight = 0f;
         foreach (CharactherAndProbability characther in possibleResults)
         {
-            if (randomIndex >= characther.probability)
+            totalWeight += characther.probability;
+        }
+
+        // Generate random value between 0 and total weight
+        float randomValue = Random.Range(0f, totalWeight);
+        float cumulativeWeight = 0f;
+
+        // Find which item the random value falls into
+        foreach (CharactherAndProbability characther in possibleResults)
+        {
+            cumulativeWeight += characther.probability;
+            if (randomValue < cumulativeWeight)
             {
                 return characther.soldierType;
             }
         }
+        
+        // Fallback (should never reach here if probabilities are set correctly)
         return possibleResults[possibleResults.Length - 1].soldierType;
     }
 
     public SoldierTier WeightedRaritySelection()
     {
-        float randomIndex = Random.Range(0.01f, 100.00f);
+        // Calculate total weight
+        float totalWeight = 0f;
         foreach (RarityAndProbability rarity in possibleRarities)
         {
-            if (randomIndex >= rarity.probability)
-            {
+            totalWeight += rarity.probability;
+        }
 
+        // Generate random value between 0 and total weight
+        float randomValue = Random.Range(0f, totalWeight);
+        float cumulativeWeight = 0f;
+
+        // Find which rarity the random value falls into
+        foreach (RarityAndProbability rarity in possibleRarities)
+        {
+            cumulativeWeight += rarity.probability;
+            if (randomValue < cumulativeWeight)
+            {
                 return SoldierTierList.tierDictionary[rarity.type];
             }
         }
+        
+        // Fallback (should never reach here if probabilities are set correctly)
         SoldierTierList.TierEnum lastType = possibleRarities[possibleRarities.Length - 1].type;
         return SoldierTierList.tierDictionary[lastType];
     }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Shotgunner
   m_EditorClassIdentifier: 
   name: Shotgunner
-  characterSprite: {fileID: 21300000, guid: 5f306fc6b48a57149ab54d5cec980a04, type: 3}
+  characterSprite: {fileID: -119426502, guid: ac560e0bc9c140248834f9e1858d0577, type: 3}
   soldierPrefab: {fileID: 8840613795720796342, guid: 93768b803ec9f2442b37e23e3ab25473, type: 3}
   stats:
     bulletSpeed: 25
