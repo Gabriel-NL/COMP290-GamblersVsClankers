@@ -8459,6 +8459,8 @@ MonoBehaviour:
     probability: 45
   - soldierType: {fileID: 11400000, guid: bd6adab3d859e7248abbaa68b43902bb, type: 2}
     probability: 25
+  - soldierType: {fileID: 11400000, guid: 81cdb19f43fffe6468350dc1a529bd2b, type: 2}
+    probability: 27.5
   possibleRarities:
   - type: 0
     probability: 60
