@@ -293,6 +293,7 @@ MonoBehaviour:
   currentHealth: 75
   dmg: 35
   isShootThrough: 0
+  isShotgun: 0
   timer: 0
 --- !u!61 &5149487190352315202
 BoxCollider2D:

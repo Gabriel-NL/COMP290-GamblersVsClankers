@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6321955124972998618}
   - component: {fileID: 6329072092258677603}
+  - component: {fileID: 1279917371672443065}
   m_Layer: 7
   m_Name: Sprite
   m_TagString: Untagged
@@ -81,16 +82,38 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 2
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 83ab198af00869c4cb267e544d51c351, type: 3}
+  m_Sprite: {fileID: -119426502, guid: ac560e0bc9c140248834f9e1858d0577, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 10.24, y: 10.24}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!95 &1279917371672443065
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 404647221939757030}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8ff2c8822db8b3e49bdd050f62aab70f, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &3540929256551037961
 GameObject:
   m_ObjectHideFlags: 0
@@ -149,7 +172,7 @@ Transform:
   m_GameObject: {fileID: 5389578635553720940}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.8, y: 4.33, z: 0}
+  m_LocalPosition: {x: -0.28, y: 3.92, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -244,7 +267,7 @@ GameObject:
   - component: {fileID: 1022681853174316796}
   - component: {fileID: -640808890354053474}
   m_Layer: 7
-  m_Name: Assault Rifle
+  m_Name: Shotgunner
   m_TagString: Soldier
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -280,20 +303,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71ab35206f1356448a254053ad475774, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SoldierType: {fileID: 11400000, guid: 230a6661fcc9d2f4b967dc75cbd6846f, type: 2}
+  SoldierType: {fileID: 11400000, guid: bd6adab3d859e7248abbaa68b43902bb, type: 2}
   tier: 0
   firePoint: {fileID: 2135843433926487458}
   spriteRenderer: {fileID: 6329072092258677603}
   bulletPrefab: {fileID: 4913968032916151816, guid: 3c1f4cd762919934488023d0aeac8e37, type: 3}
   healthBar: {fileID: 7494417473944264506}
-  bulletSpeed: 30
+  bulletSpeed: 25
   bulletLife: 2
-  attackSpeed: 1
-  maxHealth: 100
-  currentHealth: 100
-  dmg: 25
+  attackSpeed: 1.2
+  maxHealth: 80
+  currentHealth: 80
+  dmg: 30
   isShootThrough: 0
-  isShotgun: 0
+  isShotgun: 1
   timer: 0
 --- !u!61 &-640808890354053474
 BoxCollider2D:

@@ -1,19 +1,10 @@
 fileFormatVersion: 2
-guid: 5f306fc6b48a57149ab54d5cec980a04
+guid: 5c363459216707e41b577ae59f34459a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4218678886978705525
-    second: Shotgunner_0
-  - first:
-      213: 5067877299636295959
-    second: Shotgunner_1
-  - first:
-      213: 3697221684044736609
-    second: Shotgunner_2
-  - first:
-      213: -1289819129017188766
-    second: Shotgunner_3
+      213: -3781910019033479378
+    second: Idle1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -55,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -84,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -122,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Shotgunner_0
+      name: Idle1_0
       rect:
         serializedVersion: 2
         x: 200
-        y: 14
+        y: 42
         width: 722
-        height: 962
+        height: 934
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -137,74 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b87a13067ed3475c0800000000000000
-      internalID: -4218678886978705525
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Shotgunner_1
-      rect:
-        serializedVersion: 2
-        x: 534
-        y: 10
-        width: 18
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 7195612ad87b45640800000000000000
-      internalID: 5067877299636295959
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Shotgunner_2
-      rect:
-        serializedVersion: 2
-        x: 612
-        y: 14
-        width: 12
-        height: 6
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 168ab5d688b2f4330800000000000000
-      internalID: 3697221684044736609
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Shotgunner_3
-      rect:
-        serializedVersion: 2
-        x: 734
-        y: 14
-        width: 6
-        height: 6
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 26e3d6ef554a91ee0800000000000000
-      internalID: -1289819129017188766
+      spriteID: e27c40700e4f38bc0800000000000000
+      internalID: -3781910019033479378
       vertices: []
       indices: 
       edges: []
@@ -213,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -223,10 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Shotgunner_0: -4218678886978705525
-      Shotgunner_1: 5067877299636295959
-      Shotgunner_2: 3697221684044736609
-      Shotgunner_3: -1289819129017188766
+      Idle1_0: -3781910019033479378
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

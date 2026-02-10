@@ -332,6 +332,36 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
                 var rb = spawnedSoldier.GetComponent<Rigidbody2D>();
                 if (rb != null) { rb.bodyType = RigidbodyType2D.Kinematic; rb.linearVelocity = Vector2.zero; }
                 
+                // Scale the soldier to fit within the slot
+                RectTransform slotRect = targetSlot.GetComponent<RectTransform>();
+                if (slotRect != null)
+                {
+                    SpriteRenderer soldierSprite = spawnedSoldier.GetComponent<SpriteRenderer>();
+                    if (soldierSprite == null)
+                    {
+                        soldierSprite = spawnedSoldier.GetComponentInChildren<SpriteRenderer>();
+                    }
+                    
+                    if (soldierSprite != null && soldierSprite.sprite != null)
+                    {
+                        // Get slot dimensions
+                        Vector2 slotSize = slotRect.rect.size;
+                        
+                        // Get sprite dimensions in world units
+                        Vector2 spriteSize = soldierSprite.sprite.bounds.size;
+                        
+                        // Calculate scale factor to fit sprite within slot (with some padding)
+                        float paddingFactor = 0.95f; // 95% of slot size to leave some margin
+                        float scaleX = (slotSize.x * paddingFactor) / spriteSize.x;
+                        float scaleY = (slotSize.y * paddingFactor) / spriteSize.y;
+                        float scaleFactor = Mathf.Min(scaleX, scaleY); // Use the smaller scale to fit both dimensions
+                        
+                        // Apply the scale
+                        spawnedSoldier.transform.localScale = Vector3.one * scaleFactor;
+                        Debug.Log($"Scaled soldier by {scaleFactor} to fit slot (slot: {slotSize}, sprite: {spriteSize})");
+                    }
+                }
+                
                 // Apply the tier to the spawned soldier BEFORE Start() is called
                 var soldierBehaviour = spawnedSoldier.GetComponent<SoldierBehaviour>();
                 if (soldierBehaviour != null)
@@ -391,8 +421,35 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
                     {
                         transform.SetParent(slotRect, false);
                         rectTransform.anchoredPosition = Vector2.zero;
+                        
+                        // Scale to fit within slot
                         var image = GetComponent<UnityEngine.UI.Image>();
-                        if (image != null) { Color color = image.color; color.a = 1.0f; image.color = color; }
+                        if (image != null && image.sprite != null)
+                        {
+                            // Get slot and sprite dimensions
+                            Vector2 slotSize = slotRect.rect.size;
+                            Vector2 spriteSize = new Vector2(image.sprite.rect.width, image.sprite.rect.height);
+                            
+                            // Calculate scale factor to fit sprite within slot (with some padding)
+                            float paddingFactor = 0.95f; // 95% of slot size to leave some margin
+                            float scaleX = (slotSize.x * paddingFactor) / spriteSize.x;
+                            float scaleY = (slotSize.y * paddingFactor) / spriteSize.y;
+                            float scaleFactor = Mathf.Min(scaleX, scaleY);
+                            
+                            // Apply the scale
+                            rectTransform.localScale = Vector3.one * scaleFactor;
+                            Debug.Log($"Scaled UI element by {scaleFactor} to fit slot (slot: {slotSize}, sprite: {spriteSize})");
+                            
+                            // Restore full opacity
+                            Color color = image.color;
+                            color.a = 1.0f;
+                            image.color = color;
+                        }
+                        else
+                        {
+                            // Fallback: just restore opacity if no sprite
+                            if (image != null) { Color color = image.color; color.a = 1.0f; image.color = color; }
+                        }
                         
                         // Mark the slot as occupied
                         targetSlot.SetOccupied(gameObject);
@@ -422,8 +479,38 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
                     slotWorldPos.z = transform.position.z;
                     transform.position = slotWorldPos;
                     transform.SetParent(targetSlot.transform);
+                    
+                    // Scale to fit within slot
+                    RectTransform slotRect = targetSlot.GetComponent<RectTransform>();
                     var spriteRenderer = GetComponent<SpriteRenderer>();
-                    if (spriteRenderer != null) { Color color = spriteRenderer.color; color.a = 1.0f; spriteRenderer.color = color; }
+                    if (slotRect != null && spriteRenderer != null && spriteRenderer.sprite != null)
+                    {
+                        // Get slot dimensions
+                        Vector2 slotSize = slotRect.rect.size;
+                        
+                        // Get sprite dimensions in world units
+                        Vector2 spriteSize = spriteRenderer.sprite.bounds.size;
+                        
+                        // Calculate scale factor to fit sprite within slot (with some padding)
+                        float paddingFactor = 0.95f; // 95% of slot size to leave some margin
+                        float scaleX = (slotSize.x * paddingFactor) / spriteSize.x;
+                        float scaleY = (slotSize.y * paddingFactor) / spriteSize.y;
+                        float scaleFactor = Mathf.Min(scaleX, scaleY);
+                        
+                        // Apply the scale
+                        transform.localScale = Vector3.one * scaleFactor;
+                        Debug.Log($"Scaled world sprite by {scaleFactor} to fit slot (slot: {slotSize}, sprite: {spriteSize})");
+                        
+                        // Restore full opacity
+                        Color color = spriteRenderer.color;
+                        color.a = 1.0f;
+                        spriteRenderer.color = color;
+                    }
+                    else
+                    {
+                        // Fallback: just restore opacity if no sprite
+                        if (spriteRenderer != null) { Color color = spriteRenderer.color; color.a = 1.0f; spriteRenderer.color = color; }
+                    }
                     
                     // Mark the slot as occupied
                     targetSlot.SetOccupied(gameObject);
