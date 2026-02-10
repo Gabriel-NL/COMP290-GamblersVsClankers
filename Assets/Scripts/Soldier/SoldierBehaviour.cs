@@ -33,7 +33,7 @@ public class SoldierBehaviour : MonoBehaviour
     [Header("Timer")]
     public float timer;
     private float cooldownTimer;
-    private float bulletOffsetValue = 1f;
+    private float bulletOffsetValue = 2f;
 
 
     void Start()
