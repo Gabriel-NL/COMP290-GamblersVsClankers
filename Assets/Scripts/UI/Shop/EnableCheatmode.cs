@@ -14,6 +14,7 @@ public class EnableCheatmode : MonoBehaviour
             if (scoreManager != null)
             {
                 scoreManager.AddPoints(999999);
+                GameObject.Find("DeathZone").GetComponent<DeathZone>().lives = 999999;
             }
             else
             {
