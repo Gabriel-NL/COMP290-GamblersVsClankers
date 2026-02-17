@@ -8462,7 +8462,7 @@ MonoBehaviour:
   - soldierType: {fileID: 11400000, guid: 81cdb19f43fffe6468350dc1a529bd2b, type: 2}
     probability: 27.5
   - soldierType: {fileID: 11400000, guid: 99baa54a9d35e8d4cac756bc3175bbf7, type: 2}
-    probability: 3
+    probability: 80
   possibleRarities:
   - type: 0
     probability: 60

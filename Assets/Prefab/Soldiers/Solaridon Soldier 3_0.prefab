@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 543524016792167533}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.497724, y: -7.5639486, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.8485, y: 1.101, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -81,12 +81,12 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 2
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -7909485441146164443, guid: 078af7ff027d2b24ea25c390193ab446, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 078af7ff027d2b24ea25c390193ab446, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 10.14, y: 10.24}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -118,7 +118,7 @@ Transform:
   m_GameObject: {fileID: 4034882113529928769}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.025024, y: -2.7966187, z: 0}
+  m_LocalPosition: {x: -1.91, y: 5.04, z: 0}
   m_LocalScale: {x: 0.8485, y: 1.101, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -259,14 +259,14 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 64
-  bulletSpeed: 10
+  bulletSpeed: 30
   bulletLife: 2
-  attackSpeed: 1.2
-  maxHealth: 400
-  currentHealth: 400
+  attackSpeed: 0.8
+  maxHealth: 1000
+  currentHealth: 1000
   dmg: 50
-  isShootThrough: 1
-  isShotgun: 1
+  isShootThrough: 0
+  isShotgun: 0
   timer: 0
 --- !u!61 &2007938802784805120
 BoxCollider2D:
@@ -302,7 +302,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -1.9572209, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -312,7 +312,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 14.94, y: 10.24}
+  m_Size: {x: 2.9906504, y: 10.24}
   m_EdgeRadius: 0
 --- !u!1 &7895184136842679374
 GameObject:
@@ -339,7 +339,7 @@ Transform:
   m_GameObject: {fileID: 7895184136842679374}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 1.69, y: -6.36, z: 0}
+  m_LocalPosition: {x: 2.51, y: 1.11, z: 0}
   m_LocalScale: {x: 1.101, y: 0.8484999, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
