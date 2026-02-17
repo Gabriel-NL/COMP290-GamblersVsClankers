@@ -23,4 +23,5 @@ public struct EnemyStats
     public float reward;
     public float speed;
     public bool isFlying;
+    public bool isRCCar;
 }

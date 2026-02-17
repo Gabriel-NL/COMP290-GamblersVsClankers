@@ -13813,6 +13813,7 @@ MonoBehaviour:
   - {fileID: 8129901452232044080, guid: d1b7ac40278827741a0ef19de094f8d8, type: 3}
   - {fileID: 1942547105517165933, guid: 45b3fdae14868f046916fc2714f2bb26, type: 3}
   - {fileID: 9204518505934783331, guid: 08b662762cea5c34d9dfa301d3d6abc8, type: 3}
+  - {fileID: 4874827477642571900, guid: 7972091e90d2d8044b645b4d3b97078e, type: 3}
   numberOfLanes: 5
   laneSpacing: 1.4
   firstLaneOffset: -2
