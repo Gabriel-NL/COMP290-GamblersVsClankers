@@ -19,6 +19,7 @@ public class EnemyBehaviour : MonoBehaviour
     [ReadOnly] public float dmg;
     [ReadOnly] public float reward;
     [ReadOnly] public bool isFlying;
+    [ReadOnly] public bool isRCCar;
 
     [Header("Combat")]
     [Tooltip("Time between attacks in seconds")]
@@ -169,7 +170,7 @@ public class EnemyBehaviour : MonoBehaviour
         float baseDamage = enemyType.stats.dmg;
         float baseAttackCooldown = attackCooldown;
         
-        if (DifficultyManager.instance != null)
+        if (Application.isPlaying && DifficultyManager.instance != null)
         {
             maxHealth = DifficultyManager.instance.GetScaledHealth(baseHealth);
             dmg = DifficultyManager.instance.GetScaledDamage(baseDamage);
@@ -183,6 +184,8 @@ public class EnemyBehaviour : MonoBehaviour
         
         currentHealth = maxHealth; // Initialize current health to max
         reward = enemyType.stats.reward;
+        isFlying = enemyType.stats.isFlying;
+        isRCCar = enemyType.stats.isRCCar;
     }
     
     [NaughtyAttributes.Button("Test: Take 10 Damage")]
@@ -272,6 +275,23 @@ public class EnemyBehaviour : MonoBehaviour
     /// </summary>
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        // RC Car explosive behavior
+        if (isRCCar && collision.gameObject.CompareTag("Soldier"))
+        {
+            Debug.Log($"[EnemyBehaviour] RC Car '{gameObject.name}' collided with '{collision.gameObject.name}'. Detonating.");
+
+            SoldierBehaviour soldier = collision.gameObject.GetComponent<SoldierBehaviour>();
+            if (soldier != null)
+            {
+                // Use the soldier's TakeDamage to ensure its death sequence is handled correctly
+                soldier.TakeDamage(99999f);
+            }
+
+            Die(); // Trigger this enemy's own death sequence
+            return; // Done with this collision
+        }
+
+        // Standard attack logic for non-RC cars
         if (collision.gameObject.CompareTag("Soldier"))
         {
             SoldierBehaviour soldier = collision.gameObject.GetComponent<SoldierBehaviour>();

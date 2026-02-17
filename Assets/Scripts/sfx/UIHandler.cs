@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Slider = UnityEngine.UI.Slider;
+using Toggle = UnityEngine.UI.Toggle;
 
 public class UIHandler : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class UIHandler : MonoBehaviour
     [SerializeField] Slider masterVolSLDR;
     [SerializeField] Slider musicVolSLDR;
     [SerializeField] Slider sfxVolSLDR;
+    [SerializeField] Toggle fullscreenToggle;
 
     private float ogMasterVol;
     private float ogMusicVol;
@@ -29,6 +31,23 @@ public class UIHandler : MonoBehaviour
         masterVolSLDR.value = ogMasterVol;
         musicVolSLDR.value = ogMusicVol;
         sfxVolSLDR.value = ogSfxVol;
+
+        if (fullscreenToggle != null)
+        {
+            fullscreenToggle.isOn = Screen.fullScreenMode == FullScreenMode.FullScreenWindow;
+            fullscreenToggle.onValueChanged.AddListener(SetFullscreen);
+            Debug.Log("Fullscreen toggle set to: " + fullscreenToggle.isOn);
+        }
+        else
+        {
+            Debug.LogWarning("Fullscreen toggle reference is missing in UIHandler.");
+        }
+    }
+
+    public void SetFullscreen(bool isFullscreen)
+    {
+        Screen.fullScreenMode = isFullscreen ? FullScreenMode.FullScreenWindow : FullScreenMode.Windowed;
+        
     }
 
     public void UpdateAudioSettings()
