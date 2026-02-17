@@ -128,6 +128,7 @@ public class SoldierBehaviour : MonoBehaviour
         if (healthBar != null)
         {
             healthBar.Initialize(maxHealth);
+            healthBar.SetTier(tier);
         }
         else
         {
