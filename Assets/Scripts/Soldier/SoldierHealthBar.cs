@@ -1,9 +1,12 @@
 using UnityEngine;
+using TMPro;
+using NaughtyAttributes;
 
 public class SoldierHealthBar : MonoBehaviour
 {
     [Header("References")]
     [MustBeAssigned] public SpriteRenderer healthCircle; // The circle sprite renderer
+    [MustBeAssigned] public TMP_Text tierText;
     
     [Header("Color Gradient")]
     [Tooltip("Health percentage thresholds and their colors")]
@@ -27,6 +30,17 @@ public class SoldierHealthBar : MonoBehaviour
     {
         currentHealth = Mathf.Clamp(health, 0f, maxHealth);
         UpdateHealthBar();
+    }
+
+    public void SetTier(SoldierTierList.TierEnum tier)
+    {
+        if (tierText == null) return;
+
+        int tierNumber = (int)tier + 1;
+
+        tierText.text = $"T{tierNumber}";
+
+        tierText.color = SoldierTierList.tierDictionary[tier].tierColor;
     }
 
     public float GetCurrentHealth()
