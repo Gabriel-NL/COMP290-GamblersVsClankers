@@ -276,6 +276,7 @@ GameObject:
   - component: {fileID: 6485554859113414377}
   - component: {fileID: 5149487190352315202}
   - component: {fileID: 5594346813926287218}
+  - component: {fileID: 6597472513416973251}
   m_Layer: 7
   m_Name: Rifle Soldier
   m_TagString: Soldier
@@ -401,6 +402,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6597472513416973251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7815089993619729977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4862271fe41ab3246b754f6aa2197056, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!1 &7917494253150125171
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: AR Soldier
   m_EditorClassIdentifier: 
   name: Assault Rifle Soldier
-  characterSprite: {fileID: 21300000, guid: 83ab198af00869c4cb267e544d51c351, type: 3}
+  characterSprite: {fileID: -4361394508484713819, guid: 8e76ef4f43bf0294ebbfbc992345b8b9, type: 3}
   soldierPrefab: {fileID: 8840613795720796342, guid: b329b3a5fb772fb4ea8847d5e73048a3, type: 3}
   stats:
     bulletSpeed: 30
