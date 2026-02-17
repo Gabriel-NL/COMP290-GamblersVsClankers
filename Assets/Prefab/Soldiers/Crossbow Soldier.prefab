@@ -266,6 +266,7 @@ GameObject:
   - component: {fileID: 2370143096552222355}
   - component: {fileID: 6485554859113414377}
   - component: {fileID: 5149487190352315202}
+  - component: {fileID: 2506445358989392510}
   m_Layer: 7
   m_Name: Crossbow Soldier
   m_TagString: Soldier
@@ -308,7 +309,7 @@ MonoBehaviour:
   firePoint: {fileID: 5726262868087159350}
   spriteRenderer: {fileID: 349481681458533966}
   bulletPrefab: {fileID: 6524804497731942337, guid: d55dde61ad148ba47b6745d09c474258, type: 3}
-  healthBar: {fileID: 1071286086067878559}
+  healthBlinkIndicator: {fileID: 0}
   detectionRange: 20
   enemyLayer:
     serializedVersion: 2
@@ -368,3 +369,22 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &2506445358989392510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7815089993619729977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4862271fe41ab3246b754f6aa2197056, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthBlinkIndicator
+  blinkColor: {r: 1, g: 0, b: 0, a: 1}
+  initialBlinkDuration: 0.2
+  initialBlinkCooldown: 0.2
+  enableScalingStartHealth: 1
+  minimumPercentageOfHealth: 50
+  hitBlinkDuration: 1
+  hitBlinkSpeed: 10

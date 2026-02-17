@@ -266,6 +266,7 @@ GameObject:
   - component: {fileID: 7905570568522773899}
   - component: {fileID: 1022681853174316796}
   - component: {fileID: -640808890354053474}
+  - component: {fileID: -5792143857434590552}
   m_Layer: 7
   m_Name: Shotgunner
   m_TagString: Soldier
@@ -308,7 +309,7 @@ MonoBehaviour:
   firePoint: {fileID: 2135843433926487458}
   spriteRenderer: {fileID: 6329072092258677603}
   bulletPrefab: {fileID: 4913968032916151816, guid: 3c1f4cd762919934488023d0aeac8e37, type: 3}
-  healthBar: {fileID: 7494417473944264506}
+  healthBlinkIndicator: {fileID: 0}
   detectionRange: 20
   enemyLayer:
     serializedVersion: 2
@@ -368,3 +369,22 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &-5792143857434590552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8840613795720796342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4862271fe41ab3246b754f6aa2197056, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthBlinkIndicator
+  blinkColor: {r: 1, g: 0, b: 0, a: 1}
+  initialBlinkDuration: 0.2
+  initialBlinkCooldown: 0.2
+  enableScalingStartHealth: 1
+  minimumPercentageOfHealth: 50
+  hitBlinkDuration: 1
+  hitBlinkSpeed: 10

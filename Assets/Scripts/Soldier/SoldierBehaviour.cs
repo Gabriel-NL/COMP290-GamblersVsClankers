@@ -11,7 +11,8 @@ public class SoldierBehaviour : MonoBehaviour
     [MustBeAssigned] public Transform firePoint;
     [MustBeAssigned] public SpriteRenderer spriteRenderer;
     [MustBeAssigned] public GameObject bulletPrefab;
-    public SoldierHealthBar healthBar; // Health bar component (optional)
+    //public SoldierHealthBar healthBar; // Health bar component (optional)
+    [MustBeAssigned]public HealthBlinkIndicator healthBlinkIndicator;
 
     [Header("Detection")]
     public float detectionRange = 10f;
@@ -123,11 +124,11 @@ public class SoldierBehaviour : MonoBehaviour
         SetSoldierType();
         ApplyTierChanges();
         cooldownTimer = (attackSpeed > 0f) ? attackSpeed : ((timer > 0f) ? timer : 0f);
-        
+        healthBlinkIndicator= gameObject.GetComponent<HealthBlinkIndicator>();
         // Initialize health bar
-        if (healthBar != null)
+        if (healthBlinkIndicator != null)
         {
-            healthBar.Initialize(maxHealth);
+            healthBlinkIndicator.Initialize(maxHealth, spriteRenderer);
         }
         else
         {
@@ -180,9 +181,9 @@ public class SoldierBehaviour : MonoBehaviour
         currentHealth = Mathf.Max(0f, currentHealth);
 
         // Update health bar
-        if (healthBar != null)
+        if (healthBlinkIndicator != null)
         {
-            healthBar.SetHealth(currentHealth);
+            healthBlinkIndicator.SetHealth(currentHealth);
         }
 
         Debug.Log($"[SoldierBehaviour] '{gameObject.name}' took {damage} damage. Health: {currentHealth}/{maxHealth}");
@@ -205,9 +206,9 @@ public class SoldierBehaviour : MonoBehaviour
         currentHealth = Mathf.Min(currentHealth, maxHealth);
 
         // Update health bar
-        if (healthBar != null)
+        if (healthBlinkIndicator != null)
         {
-            healthBar.SetHealth(currentHealth);
+            healthBlinkIndicator.SetHealth(currentHealth);
         }
 
         Debug.Log($"[SoldierBehaviour] '{gameObject.name}' healed {amount}. Health: {currentHealth}/{maxHealth}");

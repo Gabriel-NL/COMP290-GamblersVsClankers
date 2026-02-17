@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5295753241947847384}
   - component: {fileID: 5967699214372368038}
   - component: {fileID: -4535127890272362724}
+  - component: {fileID: -172210398566092583}
   m_Layer: 7
   m_Name: RiotShield
   m_TagString: Soldier
@@ -53,7 +54,7 @@ MonoBehaviour:
   firePoint: {fileID: 1035879126396289407}
   spriteRenderer: {fileID: 6410930928580191114}
   bulletPrefab: {fileID: 4913968032916151816, guid: 3c1f4cd762919934488023d0aeac8e37, type: 3}
-  healthBar: {fileID: 3511090679881700113}
+  healthBlinkIndicator: {fileID: 0}
   detectionRange: 20
   enemyLayer:
     serializedVersion: 2
@@ -113,6 +114,25 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &-172210398566092583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1304353129378444638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4862271fe41ab3246b754f6aa2197056, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthBlinkIndicator
+  blinkColor: {r: 1, g: 0, b: 0, a: 1}
+  initialBlinkDuration: 0.2
+  initialBlinkCooldown: 0.2
+  enableScalingStartHealth: 1
+  minimumPercentageOfHealth: 50
+  hitBlinkDuration: 1
+  hitBlinkSpeed: 10
 --- !u!1 &2057219990124605643
 GameObject:
   m_ObjectHideFlags: 0

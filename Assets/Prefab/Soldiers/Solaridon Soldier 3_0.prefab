@@ -212,6 +212,7 @@ GameObject:
   - component: {fileID: 133344072790324538}
   - component: {fileID: 4726827177815626217}
   - component: {fileID: 2007938802784805120}
+  - component: {fileID: 3802030614880669852}
   m_Layer: 0
   m_Name: Solaridon Soldier 3_0
   m_TagString: Untagged
@@ -254,7 +255,7 @@ MonoBehaviour:
   firePoint: {fileID: 4459994161765790829}
   spriteRenderer: {fileID: 7195139305198300169}
   bulletPrefab: {fileID: 755093030160454776, guid: 3ba4023e729eb3b4185c0c521fae36a7, type: 3}
-  healthBar: {fileID: 1275469828491702795}
+  healthBlinkIndicator: {fileID: 0}
   detectionRange: 20
   enemyLayer:
     serializedVersion: 2
@@ -314,6 +315,25 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 2.9906504, y: 10.24}
   m_EdgeRadius: 0
+--- !u!114 &3802030614880669852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4320091639262341063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4862271fe41ab3246b754f6aa2197056, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthBlinkIndicator
+  blinkColor: {r: 1, g: 0, b: 0, a: 1}
+  initialBlinkDuration: 0.2
+  initialBlinkCooldown: 0.2
+  enableScalingStartHealth: 1
+  minimumPercentageOfHealth: 50
+  hitBlinkDuration: 1
+  hitBlinkSpeed: 10
 --- !u!1 &7895184136842679374
 GameObject:
   m_ObjectHideFlags: 0
