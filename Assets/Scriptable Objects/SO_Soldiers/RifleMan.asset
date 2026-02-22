@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RifleMan
   m_EditorClassIdentifier: 
   name: Rifle Soldier
-  characterSprite: {fileID: 3674923826691029736, guid: b9142a955f2ce2f489c1dfc968ad5839, type: 3}
+  characterSprite: {fileID: -6860543654216940503, guid: 8b1747923a446bc4e92c19c7e22241aa, type: 3}
   soldierPrefab: {fileID: 7815089993619729977, guid: 673777f7e0db93946a07bb6ee33cb37b, type: 3}
   stats:
     bulletSpeed: 20

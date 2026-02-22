@@ -16,9 +16,9 @@ MonoBehaviour:
   characterSprite: {fileID: 21300000, guid: 3f6a5319e2a29704eba40b015b1b45d5, type: 3}
   enemyPrefab: {fileID: 4874827477642571900, guid: 7972091e90d2d8044b645b4d3b97078e, type: 3}
   stats:
-    health: 95
+    health: 50
     dmg: 0
-    reward: 15
-    speed: 5
+    reward: 30
+    speed: 3
     isFlying: 0
     isRCCar: 1

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RiotShield
   m_EditorClassIdentifier: 
   name: RiotShield
-  characterSprite: {fileID: 2134122539332210083, guid: ad82107860c96bf488b871b626e2a284, type: 3}
+  characterSprite: {fileID: -6631727666802798970, guid: c024e109b7ca94f4e979100f41c30695, type: 3}
   soldierPrefab: {fileID: 1304353129378444638, guid: 4069d8e0e8ec27846af29cf9712c7c57, type: 3}
   stats:
     bulletSpeed: 0

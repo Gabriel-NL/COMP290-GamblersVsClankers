@@ -214,11 +214,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyBehaviour
   enemyType: {fileID: 11400000, guid: 4174b96214255da49a7ccc643588668b, type: 2}
   spriteRenderer: {fileID: 5748584129296548161}
-  speed: 5
-  maxHealth: 95
-  currentHealth: 95
+  speed: 3
+  maxHealth: 50
+  currentHealth: 50
   dmg: 0
-  reward: 15
+  reward: 30
   isFlying: 0
   isRCCar: 1
   attackCooldown: 1

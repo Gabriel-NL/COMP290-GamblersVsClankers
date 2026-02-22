@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Pistol
   m_EditorClassIdentifier: 
   name: Pistol Soldier
-  characterSprite: {fileID: 2301689522361797429, guid: 296a8a0877766944aaf3e759d96a9db8, type: 3}
+  characterSprite: {fileID: 5815400169075114087, guid: 438d634f052f27547ac67a2571853130, type: 3}
   soldierPrefab: {fileID: 2547468567153757322, guid: 86fd6d68395bb054396e13d694bb48e4, type: 3}
   stats:
     bulletSpeed: 10
