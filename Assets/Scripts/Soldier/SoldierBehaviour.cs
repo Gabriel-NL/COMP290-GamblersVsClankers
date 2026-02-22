@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
+using TMPro;
 
 public class SoldierBehaviour : MonoBehaviour
 {
@@ -11,14 +12,12 @@ public class SoldierBehaviour : MonoBehaviour
     [MustBeAssigned] public Transform firePoint;
     [MustBeAssigned] public SpriteRenderer spriteRenderer;
     [MustBeAssigned] public GameObject bulletPrefab;
-    //public SoldierHealthBar healthBar; // Health bar component (optional)
     [MustBeAssigned]public HealthBlinkIndicator healthBlinkIndicator;
+    [MustBeAssigned] public TMP_Text tierText;
 
     [Header("Detection")]
     public float detectionRange = 10f;
     public LayerMask enemyLayer;
-
-    //[HideInInspector] public string shootAudioName;
 
     [Header("Soldier Stats (Read-Only)")]
     [ReadOnly] public float bulletSpeed;
@@ -36,7 +35,6 @@ public class SoldierBehaviour : MonoBehaviour
     private float cooldownTimer;
     private float bulletOffsetValue = 2f;
 
-
     void Start()
     {
         Initialization();
@@ -51,6 +49,7 @@ public class SoldierBehaviour : MonoBehaviour
 
         if (IsEnemyInLane())
         {
+            
             if (cooldownTimer <= 0f)
             {
                 Fire();
@@ -92,17 +91,17 @@ public class SoldierBehaviour : MonoBehaviour
         isShotgun = SoldierType.stats.isShotgun;
     }
     
-    [NaughtyAttributes.Button("Test: Take 10 Damage")]
-    private void TestTakeDamage()
-    {
-        TakeDamage(10f);
-    }
+    // [NaughtyAttributes.Button("Test: Take 10 Damage")]
+    // private void TestTakeDamage()
+    // {
+    //     TakeDamage(10f);
+    // }
     
-    [NaughtyAttributes.Button("Test: Heal 10 Health")]
-    private void TestHeal()
-    {
-        Heal(10f);
-    }
+    // [NaughtyAttributes.Button("Test: Heal 10 Health")]
+    // private void TestHeal()
+    // {
+    //     Heal(10f);
+    // }
     
     [NaughtyAttributes.Button("Apply Tier Changes")]
     private void ApplyTierChanges()
@@ -117,6 +116,11 @@ public class SoldierBehaviour : MonoBehaviour
         maxHealth = soldierModdedStats.health;
         currentHealth = maxHealth; // Reset current health when applying tier changes
         dmg = soldierModdedStats.dmg;
+
+        // Update tier text
+        int tierNumber = (int)tier + 1;
+        tierText.text = $"T{tierNumber}";
+        tierText.color = SoldierTierList.tierDictionary[tier].tierColor;
     }
 
     private void Initialization()
@@ -139,8 +143,8 @@ public class SoldierBehaviour : MonoBehaviour
     }
     public void Fire(float firePointOffset = 0f)
     {
+        this.GetComponentInChildren<Animator>().SetBool("isShooting", true);
         GameObject bullet = Instantiate(bulletPrefab, new Vector3(firePoint.position.x, firePoint.position.y + firePointOffset, firePoint.position.z), firePoint.rotation);
-
         // Set bullet damage
         BulletController bulletController = bullet.GetComponent<BulletController>();
         if (bulletController != null)
@@ -167,6 +171,7 @@ public class SoldierBehaviour : MonoBehaviour
         // Draw a short debug ray showing firing direction in the Scene view
         Debug.DrawRay(firePoint.position, firePoint.up * 2f, Color.red, 0.5f);
 
+        this.GetComponentInChildren<Animator>().SetBool("isShooting", false);
         Destroy(bullet, bulletLife); // Destroy bullet after bulletLife seconds
     }
 
