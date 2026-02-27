@@ -1,0 +1,822 @@
+fileFormatVersion: 2
+guid: a049bbb5341e8694ead07ba645cf9dc7
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -8475100365341683075
+    second: EMP_explosion_0
+  - first:
+      213: -8729574997363763243
+    second: EMP_explosion_1
+  - first:
+      213: -2036587318912714573
+    second: EMP_explosion_2
+  - first:
+      213: -518104861378827159
+    second: EMP_explosion_3
+  - first:
+      213: 879084304438562557
+    second: EMP_explosion_4
+  - first:
+      213: -5645244953082226700
+    second: EMP_explosion_5
+  - first:
+      213: -7644232819630328279
+    second: EMP_explosion_6
+  - first:
+      213: -3150569884740445986
+    second: EMP_explosion_7
+  - first:
+      213: -8025603433936097106
+    second: EMP_explosion_8
+  - first:
+      213: 2724828769712887347
+    second: EMP_explosion_9
+  - first:
+      213: 2572870261902789706
+    second: EMP_explosion_10
+  - first:
+      213: -9170437797120224454
+    second: EMP_explosion_11
+  - first:
+      213: -7019220742157144252
+    second: EMP_explosion_12
+  - first:
+      213: -5491846723859244007
+    second: EMP_explosion_13
+  - first:
+      213: 8834057842883097543
+    second: EMP_explosion_14
+  - first:
+      213: 2356826008201645081
+    second: EMP_explosion_15
+  - first:
+      213: -4287268683243138949
+    second: EMP_explosion_16
+  - first:
+      213: 6176181111741100561
+    second: EMP_explosion_17
+  - first:
+      213: 919501220406898284
+    second: EMP_explosion_18
+  - first:
+      213: 8968562400472274920
+    second: EMP_explosion_19
+  - first:
+      213: -4285101507698925946
+    second: EMP_explosion_20
+  - first:
+      213: 4974708343853677769
+    second: EMP_explosion_21
+  - first:
+      213: 5244829107896415272
+    second: EMP_explosion_22
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: EMP_explosion_0
+      rect:
+        serializedVersion: 2
+        x: 74
+        y: 256
+        width: 91
+        height: 93
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d729608ee15626a80800000000000000
+      internalID: -8475100365341683075
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EMP_explosion_1
+      rect:
+        serializedVersion: 2
+        x: 106
+        y: 345
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d7500a8ac15ad680800000000000000
+      internalID: -8729574997363763243
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EMP_explosion_2
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 343
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b8742eaf969cb3e0800000000000000
+      internalID: -2036587318912714573
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EMP_explosion_3
+      rect:
+        serializedVersion: 2
+        x: 170
+        y: 251
+        width: 101
+        height: 106
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96cac15af525fc8f0800000000000000
+      internalID: -518104861378827159
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EMP_explosion_4
+      rect:
+        serializedVersion: 2
+        x: 272
+        y: 248
+        width: 98
+        height: 115
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dfe8ead6482233c00800000000000000
+      internalID: 879084304438562557
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EMP_explosion_5
+      rect:
+        serializedVersion: 2
+        x: 377
+        y: 253
+        width: 108
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f7977dff9f08a1b0800000000000000
+      internalID: -5645244953082226700
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EMP_explosion_6
+      rect:
+        serializedVersion: 2
+        x: 15
+        y: 276
+        width: 47
+        height: 51
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9263d8d50ca3ae590800000000000000
+      internalID: -7644232819630328279
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EMP_explosion_7
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 309
+        width: 4
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed8900cd16de644d0800000000000000
+      internalID: -3150569884740445986
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EMP_explosion_8
+      rect:
+        serializedVersion: 2
+        x: 269
+        y: 300
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea07514c2345f9090800000000000000
+      internalID: -8025603433936097106
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EMP_explosion_9
+      rect:
+        serializedVersion: 2
+        x: 371
+        y: 309
+        width: 11
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 336508c445980d520800000000000000
+      internalID: 2724828769712887347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EMP_explosion_10
+      rect:
+        serializedVersion: 2
+        x: 367
+        y: 289
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4cc1ed1fdba4b320800000000000000
+      internalID: 2572870261902789706
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EMP_explosion_11
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 269
+        width: 5
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3355db196f0cb080800000000000000
+      internalID: -9170437797120224454
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EMP_explosion_12
+      rect:
+        serializedVersion: 2
+        x: 69
+        y: 153
+        width: 96
+        height: 101
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 44f6ba7ace7b69e90800000000000000
+      internalID: -7019220742157144252
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EMP_explosion_13
+      rect:
+        serializedVersion: 2
+        x: 178
+        y: 156
+        width: 96
+        height: 94
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 91c1a7f608a09c3b0800000000000000
+      internalID: -5491846723859244007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EMP_explosion_14
+      rect:
+        serializedVersion: 2
+        x: 277
+        y: 161
+        width: 86
+        height: 84
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c3fc42adc0e89a70800000000000000
+      internalID: 8834057842883097543
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EMP_explosion_15
+      rect:
+        serializedVersion: 2
+        x: 325
+        y: 239
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 91cc24874c025b020800000000000000
+      internalID: 2356826008201645081
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EMP_explosion_16
+      rect:
+        serializedVersion: 2
+        x: 375
+        y: 156
+        width: 86
+        height: 90
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b70d2a6f8df8084c0800000000000000
+      internalID: -4287268683243138949
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EMP_explosion_17
+      rect:
+        serializedVersion: 2
+        x: 407
+        y: 235
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1123ec19ff336b550800000000000000
+      internalID: 6176181111741100561
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EMP_explosion_18
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 171
+        width: 54
+        height: 60
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6e24ecfc79b2cc00800000000000000
+      internalID: 919501220406898284
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EMP_explosion_19
+      rect:
+        serializedVersion: 2
+        x: 362
+        y: 225
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8e7131a5cfbb67c70800000000000000
+      internalID: 8968562400472274920
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EMP_explosion_20
+      rect:
+        serializedVersion: 2
+        x: 456
+        y: 222
+        width: 11
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 68e5d17d1e24884c0800000000000000
+      internalID: -4285101507698925946
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EMP_explosion_21
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 210
+        width: 5
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ccf190b1e6b90540800000000000000
+      internalID: 4974708343853677769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EMP_explosion_22
+      rect:
+        serializedVersion: 2
+        x: 166
+        y: 214
+        width: 12
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8247bcb094069c840800000000000000
+      internalID: 5244829107896415272
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EMP_explosion_23
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 190
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 117d88f2a539ba746b110b67f9bd6989
+      internalID: 998757782
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EMP_explosion_24
+      rect:
+        serializedVersion: 2
+        x: 464
+        y: 195
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9771f98b2bcfa4043a0b781bdef93905
+      internalID: 817402501
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EMP_explosion_25
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 162
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 78b916e3ad46d174ab3afb68a142a8cb
+      internalID: -1947510063
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EMP_explosion_26
+      rect:
+        serializedVersion: 2
+        x: 324
+        y: 156
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6a78d50b4107ccb4e82e3f056ef71ffb
+      internalID: -1919517334
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: e9ff87d8030492c4bbbaf383c12ad3af
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      EMP_explosion_0: -8475100365341683075
+      EMP_explosion_1: -8729574997363763243
+      EMP_explosion_10: 2572870261902789706
+      EMP_explosion_11: -9170437797120224454
+      EMP_explosion_12: -7019220742157144252
+      EMP_explosion_13: -5491846723859244007
+      EMP_explosion_14: 8834057842883097543
+      EMP_explosion_15: 2356826008201645081
+      EMP_explosion_16: -4287268683243138949
+      EMP_explosion_17: 6176181111741100561
+      EMP_explosion_18: 919501220406898284
+      EMP_explosion_19: 8968562400472274920
+      EMP_explosion_2: -2036587318912714573
+      EMP_explosion_20: -4285101507698925946
+      EMP_explosion_21: 4974708343853677769
+      EMP_explosion_22: 5244829107896415272
+      EMP_explosion_23: 998757782
+      EMP_explosion_24: 817402501
+      EMP_explosion_25: -1947510063
+      EMP_explosion_26: -1919517334
+      EMP_explosion_3: -518104861378827159
+      EMP_explosion_4: 879084304438562557
+      EMP_explosion_5: -5645244953082226700
+      EMP_explosion_6: -7644232819630328279
+      EMP_explosion_7: -3150569884740445986
+      EMP_explosion_8: -8025603433936097106
+      EMP_explosion_9: 2724828769712887347
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

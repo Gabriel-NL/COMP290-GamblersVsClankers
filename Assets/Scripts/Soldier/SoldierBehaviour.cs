@@ -10,7 +10,7 @@ public class SoldierBehaviour : MonoBehaviour
     public SoldierTierList.TierEnum tier;
     [MustBeAssigned] public Transform firePoint;
     [MustBeAssigned] public SpriteRenderer spriteRenderer;
-    [MustBeAssigned] public GameObject bulletPrefab;
+    public GameObject bulletPrefab; // Optional for EMP grenades
     //public SoldierHealthBar healthBar; // Health bar component (optional)
     [MustBeAssigned]public HealthBlinkIndicator healthBlinkIndicator;
 
@@ -29,6 +29,9 @@ public class SoldierBehaviour : MonoBehaviour
     [ReadOnly] public float dmg;
     [ReadOnly] public bool isShootThrough;
     [ReadOnly] public bool isShotgun;
+    [ReadOnly] public bool isEMPGrenade;
+    [ReadOnly] public float stunDuration;
+    [ReadOnly] public float aoeRadius;
     // legacy public timer kept for inspector visibility if needed, but firing uses attackSpeed
 
     [Header("Timer")]
@@ -44,6 +47,9 @@ public class SoldierBehaviour : MonoBehaviour
 
     private void Update()
     {
+        // EMP grenades don't fire, they detonate on placement
+        if (isEMPGrenade) return;
+
         if (cooldownTimer > 0f)
         {
             cooldownTimer -= Time.deltaTime;
@@ -90,6 +96,9 @@ public class SoldierBehaviour : MonoBehaviour
         dmg = SoldierType.stats.dmg;
         isShootThrough = SoldierType.stats.isShootThrough;
         isShotgun = SoldierType.stats.isShotgun;
+        isEMPGrenade = SoldierType.stats.isEMPGrenade;
+        stunDuration = SoldierType.stats.stunDuration;
+        aoeRadius = SoldierType.stats.aoeRadius;
     }
     
     [NaughtyAttributes.Button("Test: Take 10 Damage")]
@@ -117,6 +126,9 @@ public class SoldierBehaviour : MonoBehaviour
         maxHealth = soldierModdedStats.health;
         currentHealth = maxHealth; // Reset current health when applying tier changes
         dmg = soldierModdedStats.dmg;
+        isEMPGrenade = soldierModdedStats.isEMPGrenade;
+        stunDuration = soldierModdedStats.stunDuration;
+        aoeRadius = soldierModdedStats.aoeRadius;
     }
 
     private void Initialization()
@@ -134,23 +146,53 @@ public class SoldierBehaviour : MonoBehaviour
         {
             Debug.LogWarning($"[SoldierBehaviour] No health bar assigned on '{gameObject.name}'");
         }
-        
+
         Debug.Log($"[SoldierINIT] Initialized attackSpeed={attackSpeed}, legacy timer={timer}, cooldownTimer={cooldownTimer}, health={currentHealth}/{maxHealth} on '{gameObject.name}'");
+
+        // If this is an EMP grenade, detonate immediately
+        if (isEMPGrenade)
+        {
+            DetonateEMP();
+        }
     }
     public void Fire(float firePointOffset = 0f)
     {
+        if (bulletPrefab == null)
+        {
+            Debug.LogError($"[SoldierBehaviour] Cannot fire - bulletPrefab is not assigned on '{gameObject.name}'!");
+            return;
+        }
+
         GameObject bullet = Instantiate(bulletPrefab, new Vector3(firePoint.position.x, firePoint.position.y + firePointOffset, firePoint.position.z), firePoint.rotation);
 
-        // Set bullet damage
-        BulletController bulletController = bullet.GetComponent<BulletController>();
-        if (bulletController != null)
+        // Check if this is an EMP grenade
+        if (isEMPGrenade)
         {
-            bulletController.DamageAmount = dmg;
-            bulletController.isShootThrough = isShootThrough;
+            EMPController empController = bullet.GetComponent<EMPController>();
+            if (empController != null)
+            {
+                empController.stunDuration = stunDuration;
+                empController.aoeRadius = aoeRadius;
+                empController.enemyLayer = enemyLayer;
+            }
+            else
+            {
+                Debug.LogWarning($"[SoldierBehaviour] EMP bullet prefab has no EMPController component on '{gameObject.name}'!");
+            }
         }
         else
         {
-            Debug.LogWarning($"[SoldierBehaviour] Bullet prefab has no BulletController component on '{gameObject.name}'!");
+            // Standard bullet behavior
+            BulletController bulletController = bullet.GetComponent<BulletController>();
+            if (bulletController != null)
+            {
+                bulletController.DamageAmount = dmg;
+                bulletController.isShootThrough = isShootThrough;
+            }
+            else
+            {
+                Debug.LogWarning($"[SoldierBehaviour] Bullet prefab has no BulletController component on '{gameObject.name}'!");
+            }
         }
 
         // Apply velocity
@@ -233,6 +275,41 @@ public class SoldierBehaviour : MonoBehaviour
     public bool IsAlive()
     {
         return currentHealth > 0f;
+    }
+
+    /// <summary>
+    /// Detonate EMP grenade immediately
+    /// </summary>
+    private void DetonateEMP()
+    {
+        Debug.Log($"[SoldierBehaviour] '{gameObject.name}' is an EMP grenade, detonating immediately");
+
+        if (bulletPrefab == null)
+        {
+            Debug.LogError($"[SoldierBehaviour] EMP grenade '{gameObject.name}' has no bulletPrefab assigned! Assign a prefab with EMPController component.");
+            Destroy(gameObject);
+            return;
+        }
+
+        // Spawn the EMP effect at this position
+        GameObject empEffect = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+
+        // Configure the EMP controller
+        EMPController empController = empEffect.GetComponent<EMPController>();
+        if (empController != null)
+        {
+            empController.stunDuration = stunDuration;
+            empController.aoeRadius = aoeRadius;
+            empController.enemyLayer = enemyLayer;
+            Debug.Log($"[SoldierBehaviour] EMP configured: stunDuration={stunDuration}, aoeRadius={aoeRadius}");
+        }
+        else
+        {
+            Debug.LogError($"[SoldierBehaviour] EMP bullet prefab has no EMPController component on '{gameObject.name}'!");
+        }
+
+        // Destroy the soldier object after detonating
+        Destroy(gameObject);
     }
 }
 
