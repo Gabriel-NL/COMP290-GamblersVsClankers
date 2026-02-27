@@ -20,6 +20,7 @@ public class EnemyBehaviour : MonoBehaviour
     [ReadOnly] public float reward;
     [ReadOnly] public bool isFlying;
     [ReadOnly] public bool isRCCar;
+    [ReadOnly] public bool isStunned = false;
 
     [Header("Combat")]
     [Tooltip("Time between attacks in seconds")]
@@ -78,13 +79,16 @@ public class EnemyBehaviour : MonoBehaviour
         // Handle attacking
         if (targetSoldier != null)
         {
+            // Can't attack while stunned
+            if (isStunned) return;
+
             // Check if target is still alive
             if (!targetSoldier.IsAlive())
             {
                 targetSoldier = null;
                 return;
             }
-            
+
             // Attack cooldown
             if (attackTimer > 0f)
             {
@@ -251,6 +255,46 @@ public class EnemyBehaviour : MonoBehaviour
     public bool IsAlive()
     {
         return currentHealth > 0f;
+    }
+
+    /// <summary>
+    /// Stun the enemy for a duration
+    /// </summary>
+    public void Stun(float duration)
+    {
+        if (!IsAlive()) return; // Can't stun dead enemies
+
+        StartCoroutine(StunCoroutine(duration));
+    }
+
+    private IEnumerator StunCoroutine(float duration)
+    {
+        isStunned = true;
+        Debug.Log($"[EnemyBehaviour] '{gameObject.name}' is stunned for {duration} seconds");
+
+        // Stop movement
+        EnemyWalking walking = GetComponent<EnemyWalking>();
+        if (walking != null)
+        {
+            walking.Stop();
+        }
+
+        // Visual feedback - could flash sprite or change color
+        Color originalColor = spriteRenderer.color;
+        spriteRenderer.color = Color.cyan; // Cyan color to indicate EMP stun
+
+        yield return new WaitForSeconds(duration);
+
+        // Resume movement
+        isStunned = false;
+        spriteRenderer.color = originalColor;
+
+        if (walking != null)
+        {
+            walking.Resume();
+        }
+
+        Debug.Log($"[EnemyBehaviour] '{gameObject.name}' stun ended");
     }
     
     /// <summary>

@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 104216c16a8ae5b48961a24ac31c4b7b, type: 3}
+  m_Name: EMP Grenade
+  m_EditorClassIdentifier: Assembly-CSharp::SoldierType
+  name: EMP Grenade
+  characterSprite: {fileID: 21300000, guid: 8b53986d91573c442a776c5e59a72375, type: 3}
+  soldierPrefab: {fileID: 3674942919760477967, guid: 7db32b0b39af21c40b3796e6feeeed79, type: 3}
+  stats:
+    bulletSpeed: 0
+    bulletLife: 0
+    attackSpeed: 0
+    health: 0
+    dmg: 0
+    cost: 0
+    isShootThrough: 0
+    canShootAir: 0
+    isShotgun: 0
+    isEMPGrenade: 1
+    stunDuration: 3
+    aoeRadius: 2.5
