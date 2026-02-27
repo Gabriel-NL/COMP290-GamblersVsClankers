@@ -21,3 +21,4 @@ MonoBehaviour:
     reward: 15
     speed: 2.5
     isFlying: 1
+    isRCCar: 0
