@@ -11,7 +11,7 @@ public class SoldierBehaviour : MonoBehaviour
     [MustBeAssigned] public Transform firePoint;
     [MustBeAssigned] public SpriteRenderer spriteRenderer;
     public GameObject bulletPrefab; // Optional for EMP grenades
-    //public SoldierHealthBar healthBar; // Health bar component (optional)
+    private SoldierTierSetter tierSetter; // Optional component used for tier text and health ring
     [MustBeAssigned]public HealthBlinkIndicator healthBlinkIndicator;
 
     [Header("Detection")]
@@ -137,6 +137,18 @@ public class SoldierBehaviour : MonoBehaviour
         ApplyTierChanges();
         cooldownTimer = (attackSpeed > 0f) ? attackSpeed : ((timer > 0f) ? timer : 0f);
         healthBlinkIndicator= gameObject.GetComponent<HealthBlinkIndicator>();
+
+        // Rebind the classic health bar so tier text remains visible.
+        tierSetter = gameObject.GetComponent<SoldierTierSetter>();
+        if (tierSetter != null)
+        {
+            tierSetter.SetTier(tier);
+        }
+        else
+        {
+            Debug.LogWarning($"[SoldierBehaviour] No SoldierTierSetter found on '{gameObject.name}', tier text will not be shown.");
+        }
+
         // Initialize health bar
         if (healthBlinkIndicator != null)
         {
@@ -221,7 +233,6 @@ public class SoldierBehaviour : MonoBehaviour
 
         currentHealth -= damage;
         currentHealth = Mathf.Max(0f, currentHealth);
-
         // Update health bar
         if (healthBlinkIndicator != null)
         {
@@ -247,7 +258,8 @@ public class SoldierBehaviour : MonoBehaviour
         currentHealth += amount;
         currentHealth = Mathf.Min(currentHealth, maxHealth);
 
-        // Update health bar
+
+
         if (healthBlinkIndicator != null)
         {
             healthBlinkIndicator.SetHealth(currentHealth);
