@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Image = UnityEngine.UI.Image;
 using Random = UnityEngine.Random;
@@ -120,6 +121,11 @@ public class SlotMachineBehaviour : MonoBehaviour
             rewardSlotImage.color = rolledCharacther.tier.tierColor; // Set color based on rarity
             SetupRewardSlotDragging(rolledCharacther);
         }
+    }
+    
+    void OnHoldComplete(InputAction.CallbackContext ctx)
+    {
+        Debug.Log("Hold completed!");
     }
 
     public CharactherAndRarity GetRolledCharacther()
