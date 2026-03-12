@@ -8693,9 +8693,11 @@ MonoBehaviour:
   - soldierType: {fileID: 11400000, guid: 81cdb19f43fffe6468350dc1a529bd2b, type: 2}
     probability: 27.5
   - soldierType: {fileID: 11400000, guid: 99baa54a9d35e8d4cac756bc3175bbf7, type: 2}
-    probability: 80
+    probability: 10
   - soldierType: {fileID: 11400000, guid: 20461b6a6296c714a99e63c1f4b18f6e, type: 2}
-    probability: 80
+    probability: 20
+  - soldierType: {fileID: 11400000, guid: 8568e6901964d1d47bb93db530592052, type: 2}
+    probability: 15
   possibleRarities:
   - type: 0
     probability: 60
