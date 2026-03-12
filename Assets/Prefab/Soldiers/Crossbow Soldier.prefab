@@ -294,6 +294,7 @@ GameObject:
   - component: {fileID: 6485554859113414377}
   - component: {fileID: 5149487190352315202}
   - component: {fileID: 2506445358989392510}
+  - component: {fileID: 4825943414490290218}
   m_Layer: 7
   m_Name: Crossbow Soldier
   m_TagString: Soldier
@@ -337,7 +338,6 @@ MonoBehaviour:
   spriteRenderer: {fileID: 349481681458533966}
   bulletPrefab: {fileID: 6524804497731942337, guid: d55dde61ad148ba47b6745d09c474258, type: 3}
   healthBlinkIndicator: {fileID: 2506445358989392510}
-  tierText: {fileID: 1496489081111486252}
   detectionRange: 20
   enemyLayer:
     serializedVersion: 2
@@ -350,6 +350,9 @@ MonoBehaviour:
   dmg: 50
   isShootThrough: 1
   isShotgun: 0
+  isEMPGrenade: 0
+  stunDuration: 0
+  aoeRadius: 0
   timer: 0
 --- !u!61 &5149487190352315202
 BoxCollider2D:
@@ -416,3 +419,16 @@ MonoBehaviour:
   minimumPercentageOfHealth: 50
   hitBlinkDuration: 1
   hitBlinkSpeed: 10
+--- !u!114 &4825943414490290218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7815089993619729977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17e88ceb1cb850545a9c75315113b3eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoldierTierSetter
+  tierText: {fileID: 1496489081111486252}

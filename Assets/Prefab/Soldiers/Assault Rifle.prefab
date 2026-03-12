@@ -508,6 +508,7 @@ GameObject:
   - component: {fileID: 1022681853174316796}
   - component: {fileID: -640808890354053474}
   - component: {fileID: 4119359233350137658}
+  - component: {fileID: 42558926502935661}
   m_Layer: 7
   m_Name: Assault Rifle
   m_TagString: Soldier
@@ -552,7 +553,6 @@ MonoBehaviour:
   spriteRenderer: {fileID: 6329072092258677603}
   bulletPrefab: {fileID: 4913968032916151816, guid: 3c1f4cd762919934488023d0aeac8e37, type: 3}
   healthBlinkIndicator: {fileID: 4119359233350137658}
-  tierText: {fileID: 2952827152336362659}
   detectionRange: 20
   enemyLayer:
     serializedVersion: 2
@@ -565,6 +565,9 @@ MonoBehaviour:
   dmg: 25
   isShootThrough: 0
   isShotgun: 0
+  isEMPGrenade: 0
+  stunDuration: 0
+  aoeRadius: 0
   timer: 0
 --- !u!61 &-640808890354053474
 BoxCollider2D:
@@ -631,3 +634,16 @@ MonoBehaviour:
   minimumPercentageOfHealth: 50
   hitBlinkDuration: 1
   hitBlinkSpeed: 10
+--- !u!114 &42558926502935661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8840613795720796342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17e88ceb1cb850545a9c75315113b3eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoldierTierSetter
+  tierText: {fileID: 2952827152336362659}

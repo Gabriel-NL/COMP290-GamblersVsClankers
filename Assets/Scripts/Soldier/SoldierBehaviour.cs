@@ -10,8 +10,8 @@ public class SoldierBehaviour : MonoBehaviour
     public SoldierTierList.TierEnum tier;
     [MustBeAssigned] public Transform firePoint;
     [MustBeAssigned] public SpriteRenderer spriteRenderer;
-    public GameObject bulletPrefab; // Optional for EMP grenades
-    //public SoldierHealthBar healthBar; // Health bar component (optional)
+    public GameObject bulletPrefab; // Optional for area effects such as EMP grenades and water bombs
+    private SoldierTierSetter tierSetter; // Optional component used for tier text
     [MustBeAssigned]public HealthBlinkIndicator healthBlinkIndicator;
 
     [Header("Detection")]
@@ -32,6 +32,7 @@ public class SoldierBehaviour : MonoBehaviour
     [ReadOnly] public bool isEMPGrenade;
     [ReadOnly] public float stunDuration;
     [ReadOnly] public float aoeRadius;
+    [ReadOnly] public bool isWaterBomb;
     // legacy public timer kept for inspector visibility if needed, but firing uses attackSpeed
 
     [Header("Timer")]
@@ -47,8 +48,8 @@ public class SoldierBehaviour : MonoBehaviour
 
     private void Update()
     {
-        // EMP grenades don't fire, they detonate on placement
-        if (isEMPGrenade) return;
+        // Area-effect units detonate on placement instead of firing projectiles.
+        if (isEMPGrenade || isWaterBomb) return;
 
         if (cooldownTimer > 0f)
         {
@@ -99,6 +100,7 @@ public class SoldierBehaviour : MonoBehaviour
         isEMPGrenade = SoldierType.stats.isEMPGrenade;
         stunDuration = SoldierType.stats.stunDuration;
         aoeRadius = SoldierType.stats.aoeRadius;
+        isWaterBomb = SoldierType.stats.isWaterBomb;
     }
     
     [NaughtyAttributes.Button("Test: Take 10 Damage")]
@@ -126,9 +128,6 @@ public class SoldierBehaviour : MonoBehaviour
         maxHealth = soldierModdedStats.health;
         currentHealth = maxHealth; // Reset current health when applying tier changes
         dmg = soldierModdedStats.dmg;
-        isEMPGrenade = soldierModdedStats.isEMPGrenade;
-        stunDuration = soldierModdedStats.stunDuration;
-        aoeRadius = soldierModdedStats.aoeRadius;
     }
 
     private void Initialization()
@@ -137,6 +136,18 @@ public class SoldierBehaviour : MonoBehaviour
         ApplyTierChanges();
         cooldownTimer = (attackSpeed > 0f) ? attackSpeed : ((timer > 0f) ? timer : 0f);
         healthBlinkIndicator= gameObject.GetComponent<HealthBlinkIndicator>();
+
+        // Rebind the classic health bar so tier text remains visible.
+        tierSetter = gameObject.GetComponent<SoldierTierSetter>();
+        if (tierSetter != null)
+        {
+            tierSetter.SetTier(tier);
+        }
+        else
+        {
+            Debug.LogWarning($"[SoldierBehaviour] No SoldierTierSetter found on '{gameObject.name}', tier text will not be shown.");
+        }
+
         // Initialize health bar
         if (healthBlinkIndicator != null)
         {
@@ -149,8 +160,17 @@ public class SoldierBehaviour : MonoBehaviour
 
         Debug.Log($"[SoldierINIT] Initialized attackSpeed={attackSpeed}, legacy timer={timer}, cooldownTimer={cooldownTimer}, health={currentHealth}/{maxHealth} on '{gameObject.name}'");
 
-        // If this is an EMP grenade, detonate immediately
-        if (isEMPGrenade)
+        // Area-effect units detonate immediately on placement.
+        if (isEMPGrenade && isWaterBomb)
+        {
+            Debug.LogWarning($"[SoldierBehaviour] '{gameObject.name}' is configured as both EMP and Water Bomb. Defaulting to Water Bomb behavior.");
+            DetonateWaterBomb();
+        }
+        else if (isWaterBomb)
+        {
+            DetonateWaterBomb();
+        }
+        else if (isEMPGrenade)
         {
             DetonateEMP();
         }
@@ -221,7 +241,6 @@ public class SoldierBehaviour : MonoBehaviour
 
         currentHealth -= damage;
         currentHealth = Mathf.Max(0f, currentHealth);
-
         // Update health bar
         if (healthBlinkIndicator != null)
         {
@@ -247,7 +266,6 @@ public class SoldierBehaviour : MonoBehaviour
         currentHealth += amount;
         currentHealth = Mathf.Min(currentHealth, maxHealth);
 
-        // Update health bar
         if (healthBlinkIndicator != null)
         {
             healthBlinkIndicator.SetHealth(currentHealth);
@@ -277,6 +295,38 @@ public class SoldierBehaviour : MonoBehaviour
         return currentHealth > 0f;
     }
 
+    private void DetonateWaterBomb()
+    {
+        Debug.Log($"[SoldierBehaviour] '{gameObject.name}' is a Water Bomb, detonating immediately");
+
+        if (bulletPrefab == null)
+        {
+            Debug.LogError($"[SoldierBehaviour] Water Bomb '{gameObject.name}' has no bulletPrefab assigned! Assign a prefab with EMPController component.");
+            Destroy(gameObject);
+            return;
+        }
+
+        // Spawn the splash effect at this position.
+        GameObject waterBombEffect = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+
+        EMPController areaEffectController = waterBombEffect.GetComponent<EMPController>();
+        if (areaEffectController != null)
+        {
+            areaEffectController.stunDuration = 0f;
+            areaEffectController.damageAmount = dmg;
+            areaEffectController.aoeRadius = aoeRadius;
+            areaEffectController.enemyLayer = enemyLayer;
+            Debug.Log($"[SoldierBehaviour] Water Bomb configured: damage={dmg}, aoeRadius={aoeRadius}");
+        }
+        else
+        {
+            Debug.LogError($"[SoldierBehaviour] Water Bomb effect prefab has no EMPController component on '{gameObject.name}'!");
+        }
+
+        // Destroy the soldier object after detonating
+        Destroy(gameObject);
+    }
+
     /// <summary>
     /// Detonate EMP grenade immediately
     /// </summary>
@@ -299,6 +349,7 @@ public class SoldierBehaviour : MonoBehaviour
         if (empController != null)
         {
             empController.stunDuration = stunDuration;
+            empController.damageAmount = 0f;
             empController.aoeRadius = aoeRadius;
             empController.enemyLayer = enemyLayer;
             Debug.Log($"[SoldierBehaviour] EMP configured: stunDuration={stunDuration}, aoeRadius={aoeRadius}");
