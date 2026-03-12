@@ -27,4 +27,7 @@ public struct SoldierStats
     public bool isShootThrough;
     public bool canShootAir;
     public bool isShotgun;
+    public bool isEMPGrenade;
+    public float stunDuration;
+    public float aoeRadius;
 }
