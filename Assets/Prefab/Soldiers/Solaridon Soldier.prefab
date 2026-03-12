@@ -263,6 +263,7 @@ GameObject:
   - component: {fileID: 4726827177815626217}
   - component: {fileID: 2007938802784805120}
   - component: {fileID: 3802030614880669852}
+  - component: {fileID: -3513136627025287773}
   m_Layer: 0
   m_Name: Solaridon Soldier
   m_TagString: Untagged
@@ -306,7 +307,6 @@ MonoBehaviour:
   spriteRenderer: {fileID: 7195139305198300169}
   bulletPrefab: {fileID: 755093030160454776, guid: 3ba4023e729eb3b4185c0c521fae36a7, type: 3}
   healthBlinkIndicator: {fileID: 3802030614880669852}
-  tierText: {fileID: 6235831058969982139}
   detectionRange: 20
   enemyLayer:
     serializedVersion: 2
@@ -319,6 +319,9 @@ MonoBehaviour:
   dmg: 50
   isShootThrough: 0
   isShotgun: 0
+  isEMPGrenade: 0
+  stunDuration: 0
+  aoeRadius: 0
   timer: 0
 --- !u!61 &2007938802784805120
 BoxCollider2D:
@@ -385,6 +388,19 @@ MonoBehaviour:
   minimumPercentageOfHealth: 50
   hitBlinkDuration: 1
   hitBlinkSpeed: 10
+--- !u!114 &-3513136627025287773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4320091639262341063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17e88ceb1cb850545a9c75315113b3eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoldierTierSetter
+  tierText: {fileID: 6235831058969982139}
 --- !u!1 &7895184136842679374
 GameObject:
   m_ObjectHideFlags: 0
