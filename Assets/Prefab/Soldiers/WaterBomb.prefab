@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3326176782740783069}
   - component: {fileID: 608475507943599046}
   m_Layer: 7
-  m_Name: EMP Grenade
+  m_Name: WaterBomb
   m_TagString: Soldier
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71ab35206f1356448a254053ad475774, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SoldierType: {fileID: 11400000, guid: 20461b6a6296c714a99e63c1f4b18f6e, type: 2}
+  SoldierType: {fileID: 11400000, guid: 8568e6901964d1d47bb93db530592052, type: 2}
   tier: 0
   firePoint: {fileID: 3243422734930342774}
   spriteRenderer: {fileID: 1794791202666502809}
@@ -61,13 +61,13 @@ MonoBehaviour:
   attackSpeed: 0
   maxHealth: 0
   currentHealth: 0
-  dmg: 0
+  dmg: 75
   isShootThrough: 0
   isShotgun: 0
-  isEMPGrenade: 1
-  stunDuration: 3
+  isEMPGrenade: 0
+  stunDuration: 0
   aoeRadius: 2.5
-  isWaterBomb: 0
+  isWaterBomb: 1
   timer: 0
 --- !u!1 &4674977634279276597
 GameObject:
@@ -181,7 +181,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 8b53986d91573c442a776c5e59a72375, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 23737deab07df784bb6820d3a1c09fda, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

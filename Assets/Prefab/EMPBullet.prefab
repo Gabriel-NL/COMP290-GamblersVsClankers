@@ -45,9 +45,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EMPController
   stunDuration: 3
+  damageAmount: 0
   aoeRadius: 3
   enemyLayer:
     serializedVersion: 2
     m_Bits: 0
   audioName: EMP
-  empEffectPrefab: {fileID: 0}
+  empEffectPrefab: {fileID: 9021028466107895252, guid: f4bfb213a1b8d564a814bb403812126b, type: 3}
+  effectLifetime: 1
