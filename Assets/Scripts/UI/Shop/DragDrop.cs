@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,44 +7,56 @@ using UnityEngine.UI;
 
 public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
-    // Made public so runtime-created drag objects can set the Canvas reference.
     public Canvas canvas;
+
     [Header("Prefab to instantiate when dropped")]
-    public GameObject soldierPrefab; // Prefab to instantiate when dropped on a slot
+    public GameObject soldierPrefab;
+
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
     private Vector2 pointerOffset;
     private bool isUIElement;
     private Vector3 worldOffset;
     private Camera mainCamera;
-    // If this DragDrop is a source (like the reward slot), create a draggable clone instead
+
+    // Source-mode drag settings
     public bool isSource = false;
-    public bool oneTimeUse = false; // If true and isSource=true, only allow one clone to be placed
-    private bool hasBeenUsed = false; // Track if this one-time source has been used
-    private bool isDragging = false; // Track if a drag is currently active
-    public DragDrop parentSource = null; // Reference to the source that created this clone
-    public UnityEngine.Sprite sourceSprite;
-    public Color sourceColor = Color.white; // Color to apply to clones (for rarity tinting)
-    public Color soldierColor = Color.white; // Color to apply to the instantiated prefab
-    public SoldierTierList.TierEnum soldierTier = SoldierTierList.TierEnum.Common; // Tier to apply to the spawned soldier
+    public bool oneTimeUse = false;
+    private bool hasBeenUsed = false;
+    private bool isDragging = false;
+
+    public DragDrop parentSource = null;
+
+    public Sprite sourceSprite;
+    public Color sourceColor = Color.white;
+    public Color soldierColor = Color.white;
+    public SoldierTierList.TierEnum soldierTier = SoldierTierList.TierEnum.Common;
+
     private GameObject activeClone;
+
+    // Callbacks used by SlotMachineBehaviour
+    public Action onBeginDragFromSource;
+    public Action onCancelledOrInvalidDrop;
+    public Action onSuccessfulDrop;
+
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
         isUIElement = rectTransform != null;
         mainCamera = Camera.main;
-        
+
         if (isUIElement)
         {
-            // UI element setup
             canvasGroup = GetComponent<CanvasGroup>();
-            if (canvasGroup == null) canvasGroup = gameObject.AddComponent<CanvasGroup>();
+            if (canvasGroup == null)
+            {
+                canvasGroup = gameObject.AddComponent<CanvasGroup>();
+            }
         }
         else
         {
-            // World GameObject setup - ensure it has a collider for mouse detection
             Collider2D col = GetComponent<Collider2D>();
-            if (col == null) 
+            if (col == null)
             {
                 BoxCollider2D boxCol = gameObject.AddComponent<BoxCollider2D>();
                 SpriteRenderer sr = GetComponent<SpriteRenderer>();
@@ -55,18 +68,25 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
         }
     }
 
-    // Helper to create a draggable clone when this DragDrop is a source (so the source stays in place)
     private GameObject CreateDraggableClone(PointerEventData eventData)
     {
-        // Find or create DragCanvas
         Canvas targetCanvas = canvas;
         if (targetCanvas == null)
         {
-            var existing = GameObject.Find("DragCanvas");
-            if (existing != null) targetCanvas = existing.GetComponent<Canvas>();
+            GameObject existing = GameObject.Find("DragCanvas");
+            if (existing != null)
+            {
+                targetCanvas = existing.GetComponent<Canvas>();
+            }
             else
             {
-                GameObject dc = new GameObject("DragCanvas", typeof(Canvas), typeof(UnityEngine.UI.CanvasScaler), typeof(UnityEngine.UI.GraphicRaycaster));
+                GameObject dc = new GameObject(
+                    "DragCanvas",
+                    typeof(Canvas),
+                    typeof(CanvasScaler),
+                    typeof(GraphicRaycaster)
+                );
+
                 targetCanvas = dc.GetComponent<Canvas>();
                 targetCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
                 targetCanvas.sortingOrder = 1000;
@@ -76,119 +96,126 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
 
         if (isUIElement)
         {
-            var srcImage = GetComponent<UnityEngine.UI.Image>();
+            Image srcImage = GetComponent<Image>();
             Sprite sprite = srcImage != null ? srcImage.sprite : sourceSprite;
             Color color = srcImage != null ? srcImage.color : sourceColor;
-            GameObject go = new GameObject(gameObject.name + "_Clone", typeof(RectTransform), typeof(UnityEngine.CanvasRenderer), typeof(UnityEngine.UI.Image));
-            var rt = go.GetComponent<RectTransform>();
+
+            GameObject go = new GameObject(
+                gameObject.name + "_Clone",
+                typeof(RectTransform),
+                typeof(CanvasRenderer),
+                typeof(Image)
+            );
+
+            RectTransform rt = go.GetComponent<RectTransform>();
             go.transform.SetParent(targetCanvas.transform, false);
-            var img = go.GetComponent<UnityEngine.UI.Image>();
+
+            Image img = go.GetComponent<Image>();
             img.sprite = sprite;
-            img.color = color; // Apply the color from the source
+            img.color = color;
             img.raycastTarget = true;
-            Vector2 localPoint;
+
             RectTransform canvasRect = targetCanvas.GetComponent<RectTransform>();
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, eventData.position, targetCanvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : targetCanvas.worldCamera, out localPoint))
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                canvasRect,
+                eventData.position,
+                targetCanvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : targetCanvas.worldCamera,
+                out Vector2 localPoint))
             {
                 rt.anchoredPosition = localPoint;
             }
-            var dd = go.AddComponent<DragDrop>();
+
+            DragDrop dd = go.AddComponent<DragDrop>();
             dd.canvas = targetCanvas;
             dd.isSource = false;
-            dd.parentSource = this; // Set reference to source
-            dd.soldierPrefab = this.soldierPrefab;
-            dd.soldierColor = color; // Pass the color to the clone so it can apply to instantiated prefab
-            dd.soldierTier = this.soldierTier; // Pass the tier to the clone
+            dd.parentSource = this;
+            dd.soldierPrefab = soldierPrefab;
+            dd.soldierColor = color;
+            dd.soldierTier = soldierTier;
+
             return go;
         }
         else
         {
-            var srcSr = GetComponent<SpriteRenderer>();
+            SpriteRenderer srcSr = GetComponent<SpriteRenderer>();
             Sprite sprite = srcSr != null ? srcSr.sprite : sourceSprite;
             Color color = srcSr != null ? srcSr.color : sourceColor;
+
             Vector3 spawnWorld = mainCamera.ScreenToWorldPoint(eventData.position);
             spawnWorld.z = transform.position.z;
+
             GameObject go = new GameObject(gameObject.name + "_Clone", typeof(SpriteRenderer));
-            var sr = go.GetComponent<SpriteRenderer>();
+            SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
             sr.sprite = sprite;
-            sr.color = color; // Apply the color from the source
+            sr.color = color;
             go.transform.position = spawnWorld;
-            if (go.GetComponent<Collider2D>() == null) go.AddComponent<BoxCollider2D>();
-            var dd = go.AddComponent<DragDrop>();
+
+            if (go.GetComponent<Collider2D>() == null)
+            {
+                go.AddComponent<BoxCollider2D>();
+            }
+
+            DragDrop dd = go.AddComponent<DragDrop>();
             dd.isSource = false;
-            dd.parentSource = this; // Set reference to source
-            dd.soldierPrefab = this.soldierPrefab;
-            dd.soldierColor = color; // Pass the color to the clone so it can apply to instantiated prefab
+            dd.parentSource = this;
+            dd.soldierPrefab = soldierPrefab;
+            dd.soldierColor = color;
+            dd.soldierTier = soldierTier;
+
             return go;
         }
     }
-    public void OnDrag(PointerEventData eventData)
-    {
-        Debug.Log("OnDrag");
-        
-        // If we're not actually dragging (e.g., blocked by oneTimeUse), do nothing
-        if (!isDragging)
-        {
-            return;
-        }
 
-        // If we spawned an active clone for dragging, forward the drag event to it and return
-        if (activeClone != null)
-        {
-            ExecuteEvents.Execute<IDragHandler>(activeClone, eventData, ExecuteEvents.dragHandler);
-            return;
-        }
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        Debug.Log("OnPointerDown");
 
         if (isUIElement)
         {
-            // UI element drag logic
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle((RectTransform)canvas.transform, eventData.position, canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera, out Vector2 localPoint))
-            {
-                rectTransform.anchoredPosition = localPoint - pointerOffset;
-            }
-        }
-        else
-        {
-            // World GameObject drag logic
-            Vector3 worldPos = mainCamera.ScreenToWorldPoint(eventData.position);
-            worldPos.z = transform.position.z; // Maintain Z position
-            transform.position = worldPos - worldOffset;
+            transform.SetAsLastSibling();
         }
     }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
         Debug.Log("OnBeginDrag");
-        
-        // If this DragDrop is a source (e.g. reward slot), spawn a clone and forward begin-drag to it
+
         if (isSource)
         {
-            // If this is a one-time use source and it's already been used, don't allow dragging
             if (oneTimeUse && hasBeenUsed)
             {
                 Debug.Log("This reward has already been claimed - cannot drag again");
-                isDragging = false; // Mark that we're NOT dragging
+                isDragging = false;
                 return;
             }
-            
-            // create clone on DragCanvas and forward begin-drag
+
             activeClone = CreateDraggableClone(eventData);
             if (activeClone != null)
             {
-                isDragging = true; // Mark that we ARE dragging (via clone)
-                // Forward the BeginDrag to the clone
+                isDragging = true;
+
+                // Important: invoke only after clone exists
+                onBeginDragFromSource?.Invoke();
+
                 ExecuteEvents.Execute<IBeginDragHandler>(activeClone, eventData, ExecuteEvents.beginDragHandler);
                 return;
             }
-            // If clone couldn't be created, fall back to default behavior
         }
 
-        isDragging = true; // Mark that we're dragging this object directly
+        isDragging = true;
 
         if (isUIElement)
         {
-            // UI element begin drag logic
-            if (canvasGroup != null) canvasGroup.blocksRaycasts = false;
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle((RectTransform)canvas.transform, eventData.position, canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera, out Vector2 localPoint))
+            if (canvasGroup != null)
+            {
+                canvasGroup.blocksRaycasts = false;
+            }
+
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                (RectTransform)canvas.transform,
+                eventData.position,
+                canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera,
+                out Vector2 localPoint))
             {
                 pointerOffset = localPoint - rectTransform.anchoredPosition;
             }
@@ -199,34 +226,64 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
         }
         else
         {
-            // World GameObject begin drag logic
             Vector3 worldPos = mainCamera.ScreenToWorldPoint(eventData.position);
             worldPos.z = transform.position.z;
             worldOffset = worldPos - transform.position;
-            
-            // Bring sprite to front by adjusting sorting order
+
             SpriteRenderer sr = GetComponent<SpriteRenderer>();
             if (sr != null)
             {
-                sr.sortingOrder += 100; // Bring to front while dragging
+                sr.sortingOrder += 100;
             }
         }
     }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        Debug.Log("OnDrag");
+
+        if (!isDragging)
+        {
+            return;
+        }
+
+        if (activeClone != null)
+        {
+            ExecuteEvents.Execute<IDragHandler>(activeClone, eventData, ExecuteEvents.dragHandler);
+            return;
+        }
+
+        if (isUIElement)
+        {
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                (RectTransform)canvas.transform,
+                eventData.position,
+                canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera,
+                out Vector2 localPoint))
+            {
+                rectTransform.anchoredPosition = localPoint - pointerOffset;
+            }
+        }
+        else
+        {
+            Vector3 worldPos = mainCamera.ScreenToWorldPoint(eventData.position);
+            worldPos.z = transform.position.z;
+            transform.position = worldPos - worldOffset;
+        }
+    }
+
     public void OnEndDrag(PointerEventData eventData)
     {
         Debug.Log("OnEndDrag");
 
-        // If we're not actually dragging (e.g., blocked by oneTimeUse), do nothing
         if (!isDragging)
         {
             Debug.Log("OnEndDrag called but isDragging=false, ignoring");
             return;
         }
 
-        // Reset the dragging flag
         isDragging = false;
 
-        // If we have an active clone (spawned by a source), forward the EndDrag to it and destroy the clone
         if (activeClone != null)
         {
             ExecuteEvents.Execute<IEndDragHandler>(activeClone, eventData, ExecuteEvents.endDragHandler);
@@ -237,12 +294,18 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
 
         if (isUIElement)
         {
-            if (canvasGroup != null) canvasGroup.blocksRaycasts = true;
+            if (canvasGroup != null)
+            {
+                canvasGroup.blocksRaycasts = true;
+            }
         }
         else
         {
             SpriteRenderer sr = GetComponent<SpriteRenderer>();
-            if (sr != null) sr.sortingOrder -= 100;
+            if (sr != null)
+            {
+                sr.sortingOrder -= 100;
+            }
         }
 
         ItemSlot targetSlot = null;
@@ -250,21 +313,31 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
         // UI detection
         if (isUIElement && EventSystem.current != null)
         {
-            PointerEventData pe = new PointerEventData(EventSystem.current) { position = eventData.position };
-            var results = new List<RaycastResult>();
+            PointerEventData pe = new PointerEventData(EventSystem.current)
+            {
+                position = eventData.position
+            };
+
+            List<RaycastResult> results = new List<RaycastResult>();
             EventSystem.current.RaycastAll(pe, results);
+
             Debug.Log($"UI Raycast found {results.Count} results");
-            foreach (var r in results)
+
+            foreach (RaycastResult r in results)
             {
                 Debug.Log($"Raycast hit: {r.gameObject.name} (distance: {r.distance})");
-                var slot = r.gameObject.GetComponentInParent<ItemSlot>();
+
+                ItemSlot slot = r.gameObject.GetComponentInParent<ItemSlot>();
                 if (slot != null)
                 {
                     targetSlot = slot;
                     Debug.Log($"Found UI ItemSlot: {slot.gameObject.name}");
                     break;
                 }
-                else Debug.Log($"No ItemSlot found on {r.gameObject.name} or its parents");
+                else
+                {
+                    Debug.Log($"No ItemSlot found on {r.gameObject.name} or its parents");
+                }
             }
         }
 
@@ -273,22 +346,24 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
         {
             Vector3 worldPos = mainCamera.ScreenToWorldPoint(eventData.position);
             worldPos.z = 0f;
+
             Collider2D hitCollider = Physics2D.OverlapPoint(worldPos);
             if (hitCollider != null)
             {
-                var slot = hitCollider.GetComponentInParent<ItemSlot>();
+                ItemSlot slot = hitCollider.GetComponentInParent<ItemSlot>();
                 if (slot != null)
                 {
                     targetSlot = slot;
                     Debug.Log($"Found world ItemSlot via OverlapPoint: {slot.gameObject.name}");
                 }
             }
+
             if (targetSlot == null)
             {
                 RaycastHit2D hit = Physics2D.Raycast(worldPos, Vector2.zero);
                 if (hit.collider != null)
                 {
-                    var slot = hit.collider.GetComponentInParent<ItemSlot>();
+                    ItemSlot slot = hit.collider.GetComponentInParent<ItemSlot>();
                     if (slot != null)
                     {
                         targetSlot = slot;
@@ -296,31 +371,37 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
                     }
                 }
             }
-            if (targetSlot == null) Debug.Log($"No ItemSlot found at world position: {worldPos}");
+
+            if (targetSlot == null)
+            {
+                Debug.Log($"No ItemSlot found at world position: {worldPos}");
+            }
         }
 
-        // If we found a slot, check if it's occupied first
         if (targetSlot != null)
         {
-            // Check if the slot is already occupied
             if (targetSlot.IsOccupied())
             {
                 Debug.Log($"Slot {targetSlot.gameObject.name} is already occupied - cannot place soldier here");
-                
-                // Return the soldier to shop counter if it came from the shop
-                var shopInfo = GetComponent<ShopSpawnInfo>();
+
+                if (parentSource != null)
+                {
+                    parentSource.onCancelledOrInvalidDrop?.Invoke();
+                }
+
+                ShopSpawnInfo shopInfo = GetComponent<ShopSpawnInfo>();
                 if (shopInfo != null && shopInfo.shop != null)
                 {
                     shopInfo.shop.IncrementSoldierByIndex(shopInfo.slotIndex);
                     Destroy(gameObject);
                     return;
                 }
-                
-                // Otherwise just keep the item where it is
+
                 Debug.Log("Item will remain in place (slot occupied)");
+                Destroy(gameObject);
                 return;
             }
-            
+
             if (soldierPrefab != null)
             {
                 Vector3 spawnPosition = targetSlot.transform.position;
@@ -329,10 +410,14 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
 
                 GameObject spawnedSoldier = Instantiate(soldierPrefab, spawnPosition, Quaternion.identity);
                 spawnedSoldier.transform.SetParent(parentTransform);
-                var rb = spawnedSoldier.GetComponent<Rigidbody2D>();
-                if (rb != null) { rb.bodyType = RigidbodyType2D.Kinematic; rb.linearVelocity = Vector2.zero; }
-                
-                // Scale the soldier to fit within the slot
+
+                Rigidbody2D rb = spawnedSoldier.GetComponent<Rigidbody2D>();
+                if (rb != null)
+                {
+                    rb.bodyType = RigidbodyType2D.Kinematic;
+                    rb.linearVelocity = Vector2.zero;
+                }
+
                 RectTransform slotRect = targetSlot.GetComponent<RectTransform>();
                 if (slotRect != null)
                 {
@@ -341,73 +426,67 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
                     {
                         soldierSprite = spawnedSoldier.GetComponentInChildren<SpriteRenderer>();
                     }
-                    
+
                     if (soldierSprite != null && soldierSprite.sprite != null)
                     {
-                        // Get slot dimensions
                         Vector2 slotSize = slotRect.rect.size;
-                        
-                        // Get sprite dimensions in world units
                         Vector2 spriteSize = soldierSprite.sprite.bounds.size;
-                        
-                        // Calculate scale factor to fit sprite within slot (with some padding)
-                        float paddingFactor = 0.95f; // 95% of slot size to leave some margin
+
+                        float paddingFactor = 0.95f;
                         float scaleX = (slotSize.x * paddingFactor) / spriteSize.x;
                         float scaleY = (slotSize.y * paddingFactor) / spriteSize.y;
-                        float scaleFactor = Mathf.Min(scaleX, scaleY); // Use the smaller scale to fit both dimensions
-                        
-                        // Apply the scale
+                        float scaleFactor = Mathf.Min(scaleX, scaleY);
+
                         spawnedSoldier.transform.localScale = Vector3.one * scaleFactor;
                         Debug.Log($"Scaled soldier by {scaleFactor} to fit slot (slot: {slotSize}, sprite: {spriteSize})");
                     }
                 }
-                
-                // Apply the tier to the spawned soldier BEFORE Start() is called
-                var soldierBehaviour = spawnedSoldier.GetComponent<SoldierBehaviour>();
+
+                SoldierBehaviour soldierBehaviour = spawnedSoldier.GetComponent<SoldierBehaviour>();
                 if (soldierBehaviour != null)
                 {
                     soldierBehaviour.tier = soldierTier;
                     Debug.Log($"Applied tier {soldierTier} to spawned soldier '{spawnedSoldier.name}'");
-                    // Note: ApplyTierChanges() will be called automatically in Start()
-                    
-                    // Apply the rarity color to the soldier's sprite renderer
+
                     if (soldierBehaviour.spriteRenderer != null)
                     {
                         soldierBehaviour.spriteRenderer.color = soldierColor;
                         Debug.Log($"Applied tier color {soldierColor} to soldier's spriteRenderer");
                     }
                 }
-                
-                // Also try to apply color to any other SpriteRenderer or Image components as fallback
-                var soldierSr = spawnedSoldier.GetComponent<SpriteRenderer>();
+
+                SpriteRenderer soldierSr = spawnedSoldier.GetComponent<SpriteRenderer>();
                 if (soldierSr != null)
                 {
                     soldierSr.color = soldierColor;
                     Debug.Log($"Applied color {soldierColor} to spawned soldier SpriteRenderer (root)");
                 }
-                var soldierImg = spawnedSoldier.GetComponent<UnityEngine.UI.Image>();
+
+                Image soldierImg = spawnedSoldier.GetComponent<Image>();
                 if (soldierImg != null)
                 {
                     soldierImg.color = soldierColor;
                     Debug.Log($"Applied color {soldierColor} to spawned soldier Image");
                 }
-                
-                // Notify difficulty manager that a soldier was placed
+
                 if (DifficultyManager.instance != null)
                 {
                     DifficultyManager.instance.OnSoldierPlaced();
                 }
-                
-                // Mark the slot as occupied
+
                 targetSlot.SetOccupied(spawnedSoldier);
-                
-                // If this clone came from a one-time-use source, mark the source as used
+
                 if (parentSource != null && parentSource.oneTimeUse)
                 {
                     parentSource.hasBeenUsed = true;
                     Debug.Log($"Parent source '{parentSource.gameObject.name}' marked as used (one-time only)");
                 }
-                
+
+                if (parentSource != null)
+                {
+                    parentSource.onSuccessfulDrop?.Invoke();
+                }
+
                 Debug.Log($"Instantiated soldier prefab '{soldierPrefab.name}' at slot: {targetSlot.gameObject.name}");
                 Destroy(gameObject);
                 return;
@@ -421,47 +500,48 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
                     {
                         transform.SetParent(slotRect, false);
                         rectTransform.anchoredPosition = Vector2.zero;
-                        
-                        // Scale to fit within slot
-                        var image = GetComponent<UnityEngine.UI.Image>();
+
+                        Image image = GetComponent<Image>();
                         if (image != null && image.sprite != null)
                         {
-                            // Get slot and sprite dimensions
                             Vector2 slotSize = slotRect.rect.size;
                             Vector2 spriteSize = new Vector2(image.sprite.rect.width, image.sprite.rect.height);
-                            
-                            // Calculate scale factor to fit sprite within slot (with some padding)
-                            float paddingFactor = 0.95f; // 95% of slot size to leave some margin
+
+                            float paddingFactor = 0.95f;
                             float scaleX = (slotSize.x * paddingFactor) / spriteSize.x;
                             float scaleY = (slotSize.y * paddingFactor) / spriteSize.y;
                             float scaleFactor = Mathf.Min(scaleX, scaleY);
-                            
-                            // Apply the scale
+
                             rectTransform.localScale = Vector3.one * scaleFactor;
                             Debug.Log($"Scaled UI element by {scaleFactor} to fit slot (slot: {slotSize}, sprite: {spriteSize})");
-                            
-                            // Restore full opacity
+
                             Color color = image.color;
                             color.a = 1.0f;
                             image.color = color;
                         }
                         else
                         {
-                            // Fallback: just restore opacity if no sprite
-                            if (image != null) { Color color = image.color; color.a = 1.0f; image.color = color; }
+                            if (image != null)
+                            {
+                                Color color = image.color;
+                                color.a = 1.0f;
+                                image.color = color;
+                            }
                         }
-                        
-                        // Mark the slot as occupied
+
                         targetSlot.SetOccupied(gameObject);
-                        
-                        // If this clone came from a one-time-use source, mark the source as used
+
                         if (parentSource != null && parentSource.oneTimeUse)
                         {
                             parentSource.hasBeenUsed = true;
                             Debug.Log($"Parent source '{parentSource.gameObject.name}' marked as used (one-time only)");
                         }
-                        
-                        // Deselect before destroying to prevent Unity Editor errors
+
+                        if (parentSource != null)
+                        {
+                            parentSource.onSuccessfulDrop?.Invoke();
+                        }
+
 #if UNITY_EDITOR
                         if (UnityEditor.Selection.activeGameObject == gameObject)
                         {
@@ -479,50 +559,49 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
                     slotWorldPos.z = transform.position.z;
                     transform.position = slotWorldPos;
                     transform.SetParent(targetSlot.transform);
-                    
-                    // Scale to fit within slot
+
                     RectTransform slotRect = targetSlot.GetComponent<RectTransform>();
-                    var spriteRenderer = GetComponent<SpriteRenderer>();
+                    SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
                     if (slotRect != null && spriteRenderer != null && spriteRenderer.sprite != null)
                     {
-                        // Get slot dimensions
                         Vector2 slotSize = slotRect.rect.size;
-                        
-                        // Get sprite dimensions in world units
                         Vector2 spriteSize = spriteRenderer.sprite.bounds.size;
-                        
-                        // Calculate scale factor to fit sprite within slot (with some padding)
-                        float paddingFactor = 0.95f; // 95% of slot size to leave some margin
+
+                        float paddingFactor = 0.95f;
                         float scaleX = (slotSize.x * paddingFactor) / spriteSize.x;
                         float scaleY = (slotSize.y * paddingFactor) / spriteSize.y;
                         float scaleFactor = Mathf.Min(scaleX, scaleY);
-                        
-                        // Apply the scale
+
                         transform.localScale = Vector3.one * scaleFactor;
                         Debug.Log($"Scaled world sprite by {scaleFactor} to fit slot (slot: {slotSize}, sprite: {spriteSize})");
-                        
-                        // Restore full opacity
+
                         Color color = spriteRenderer.color;
                         color.a = 1.0f;
                         spriteRenderer.color = color;
                     }
                     else
                     {
-                        // Fallback: just restore opacity if no sprite
-                        if (spriteRenderer != null) { Color color = spriteRenderer.color; color.a = 1.0f; spriteRenderer.color = color; }
+                        if (spriteRenderer != null)
+                        {
+                            Color color = spriteRenderer.color;
+                            color.a = 1.0f;
+                            spriteRenderer.color = color;
+                        }
                     }
-                    
-                    // Mark the slot as occupied
+
                     targetSlot.SetOccupied(gameObject);
-                    
-                    // If this clone came from a one-time-use source, mark the source as used
+
                     if (parentSource != null && parentSource.oneTimeUse)
                     {
                         parentSource.hasBeenUsed = true;
                         Debug.Log($"Parent source '{parentSource.gameObject.name}' marked as used (one-time only)");
                     }
-                    
-                    // Deselect before destroying to prevent Unity Editor errors
+
+                    if (parentSource != null)
+                    {
+                        parentSource.onSuccessfulDrop?.Invoke();
+                    }
+
 #if UNITY_EDITOR
                     if (UnityEditor.Selection.activeGameObject == gameObject)
                     {
@@ -536,8 +615,7 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
             }
         }
 
-        // Not dropped on an ItemSlot — if this came from the shop, return one to the counter then destroy
-        var info = GetComponent<ShopSpawnInfo>();
+        ShopSpawnInfo info = GetComponent<ShopSpawnInfo>();
         if (info != null && info.shop != null)
         {
             info.shop.IncrementSoldierByIndex(info.slotIndex);
@@ -545,21 +623,12 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
             return;
         }
 
+        if (parentSource != null)
+        {
+            parentSource.onCancelledOrInvalidDrop?.Invoke();
+        }
+
         Debug.Log("Item was not dropped on a valid slot and will remain in place");
-    }
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        Debug.Log("OnPointerDown");
-        
-        if (isUIElement)
-        {
-            // Bring UI element to front
-            transform.SetAsLastSibling();
-        }
-        else
-        {
-            // For world GameObjects, sorting order is handled in OnBeginDrag
-            // Could add additional logic here if needed
-        }
+        Destroy(gameObject);
     }
 }

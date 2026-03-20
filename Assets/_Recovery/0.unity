@@ -6501,7 +6501,7 @@ SpriteRenderer:
   m_Size: {x: 16, y: 16}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_SpriteSortPoint: 0
 --- !u!4 &836324180
 Transform:
@@ -13531,7 +13531,7 @@ SpriteRenderer:
   m_Size: {x: 4.8911943, y: 4.9}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1844413517
 GameObject:

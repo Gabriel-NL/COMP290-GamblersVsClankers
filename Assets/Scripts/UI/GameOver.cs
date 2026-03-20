@@ -15,6 +15,6 @@ public class GameOver : MonoBehaviour
     public void ExitGame()
     {
         AudioManager.StopAllSounds();
-        SceneManager.LoadScene("TitleScreen");
+        SceneManager.LoadScene("TitleScreenJD");
     }
 }

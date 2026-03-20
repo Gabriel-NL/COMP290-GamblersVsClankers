@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class ShopINIT : MonoBehaviour
 {
@@ -12,26 +13,21 @@ public class ShopINIT : MonoBehaviour
     [SerializeField] List<SoldierType> shopSoldiers = new List<SoldierType>();
     [SerializeField] List<TMP_Text> purchasedTexts = new List<TMP_Text>();
 
-    //List<float> soldierCosts = new List<float>();
+    private HashSet<int> suppressedNextClick = new HashSet<int>();
+
     void Start()
     {
         InitializeShop();
         AudioManager.Play("GameplayMusic");
     }
 
-    // track suppressed clicks per slot to avoid a single click firing after a hold
-    private HashSet<int> suppressedNextClick = new HashSet<int>();
-
-    // Helper method to get the text component for a slot
     private TMP_Text GetSlotText(int slotIndex)
     {
-        // First check if we have a manually assigned text component
         if (slotIndex >= 0 && slotIndex < purchasedTexts.Count && purchasedTexts[slotIndex] != null)
         {
             return purchasedTexts[slotIndex];
         }
-        
-        // If no manual assignment, try to get the first child's TMP_Text component
+
         if (slotIndex >= 0 && slotIndex < shopSlots.Count)
         {
             Transform slotTransform = shopSlots[slotIndex].transform;
@@ -44,80 +40,78 @@ public class ShopINIT : MonoBehaviour
                     return tmpText;
                 }
             }
-            
-            // Fallback: search all children for any TMP_Text
+
             return slotTransform.GetComponentInChildren<TMP_Text>();
         }
-        
+
         return null;
     }
 
     private void InitializeShop()
     {
         Debug.Log($"InitializeShop started - shopSlots.Count: {shopSlots.Count}, shopSoldiers.Count: {shopSoldiers.Count}");
+
         for (int i = 0; i < shopSlots.Count; i++)
         {
-            // guard in case lists are different sizes
             if (i >= shopSoldiers.Count) continue;
-            
+
             Debug.Log($"Initializing slot {i}: {shopSlots[i]?.gameObject.name}");
 
             shopSlots[i].sprite = shopSoldiers[i].characterSprite;
-            // capture the loop variable for the listener
+
             int idx = i;
-            var btn = shopSlots[i].GetComponent<Button>();
+            Button btn = shopSlots[i].GetComponent<Button>();
             if (btn != null)
             {
-                // Diagnostics: report any persistent (inspector) listeners that exist on this Button
                 int persistentCount = btn.onClick.GetPersistentEventCount();
                 if (persistentCount > 0)
                 {
                     Debug.Log($"Button '{btn.gameObject.name}' has {persistentCount} persistent OnClick listeners configured in the Inspector. Skipping adding a runtime listener to avoid duplicates.");
                     for (int p = 0; p < persistentCount; p++)
                     {
-                        var target = btn.onClick.GetPersistentTarget(p);
-                        var methodName = btn.onClick.GetPersistentMethodName(p);
+                        Object target = btn.onClick.GetPersistentTarget(p);
+                        string methodName = btn.onClick.GetPersistentMethodName(p);
                         Debug.Log($"  Persistent[{p}] target={target} method={methodName}");
                     }
-                    // Even if persistent listeners exist, ensure a HoldClickRepeater exists so hold works.
-                    var repeaterExisting = btn.gameObject.GetComponent<HoldClickRepeater>();
-                    if (repeaterExisting == null) repeaterExisting = btn.gameObject.AddComponent<HoldClickRepeater>();
-                    repeaterExisting.shop = this;
-                    repeaterExisting.slotIndex = idx;
+
+                    ShopDragStarter dragStarterExisting = btn.gameObject.GetComponent<ShopDragStarter>();
+                    if (dragStarterExisting == null)
+                    {
+                        dragStarterExisting = btn.gameObject.AddComponent<ShopDragStarter>();
+                    }
+
+                    dragStarterExisting.shop = this;
+                    dragStarterExisting.slotIndex = idx;
                 }
                 else
                 {
-                    // No inspector listeners — safe to add a single runtime listener.
-                    // Clear any runtime listeners first to be safe, then add ours.
                     btn.onClick.RemoveAllListeners();
                     btn.onClick.AddListener(() => OnSoldierClick(shopSoldiers[idx].name, idx));
                     Debug.Log($"Added runtime listener for slot {idx} on Button '{btn.gameObject.name}'");
 
-                    // Attach or configure HoldClickRepeater so press-and-hold repeats the click
-                    var repeater = btn.gameObject.GetComponent<HoldClickRepeater>();
-                    if (repeater == null) 
+                    ShopDragStarter dragStarter = btn.gameObject.GetComponent<ShopDragStarter>();
+                    if (dragStarter == null)
                     {
-                        repeater = btn.gameObject.AddComponent<HoldClickRepeater>();
-                        Debug.Log($"Added HoldClickRepeater to slot {idx} ({btn.gameObject.name})");
+                        dragStarter = btn.gameObject.AddComponent<ShopDragStarter>();
+                        Debug.Log($"Added ShopDragStarter to slot {idx} ({btn.gameObject.name})");
                     }
-                    repeater.shop = this;
-                    repeater.slotIndex = idx;
-                    Debug.Log($"Configured HoldClickRepeater for slot {idx} - initialDelay: {repeater.initialDelay}s");
+
+                    dragStarter.shop = this;
+                    dragStarter.slotIndex = idx;
+                    Debug.Log($"Configured ShopDragStarter for slot {idx}");
                 }
             }
         }
     }
 
-    // Called by HoldClickRepeater to suppress the next single click event after a hold
     public void SuppressNextClick(int slotIndex)
     {
         suppressedNextClick.Add(slotIndex);
     }
 
-    // Decrement the displayed count for a slot down to a minimum of 0
     public void DecrementSoldierByIndex(int slotIndex)
     {
-        var tmpText = GetSlotText(slotIndex);
+        TMP_Text tmpText = GetSlotText(slotIndex);
         if (tmpText != null)
         {
             if (int.TryParse(tmpText.text, out int current))
@@ -134,38 +128,38 @@ public class ShopINIT : MonoBehaviour
 
     private float CalculateCosts(string soldierName)
     {
-        // Prefer direct name lookup — this is robust to different naming and order
         for (int i = 0; i < shopSoldiers.Count; i++)
         {
             if (shopSoldiers[i].name == soldierName)
+            {
                 return shopSoldiers[i].stats.cost;
+            }
         }
 
         Debug.LogWarning("Soldier type not found: " + soldierName);
         return 0f;
     }
 
-    // receives the clicked soldier name and the slot index so we can find child UI elements
     public void OnSoldierClick(string soldierName, int slotIndex)
     {
         float cost = CalculateCosts(soldierName);
-        // If a HoldClickRepeater signalled a hold, suppress the next single click (to avoid a final increment)
+
         if (suppressedNextClick.Contains(slotIndex))
         {
             suppressedNextClick.Remove(slotIndex);
             Debug.Log($"Suppressed single click for slot {slotIndex} after hold/repeat.");
             return;
         }
-        // On a regular click, attempt to purchase one: check funds first via ScoreManager
+
         int costInt = Mathf.CeilToInt(cost);
         bool bought = false;
+
         if (ScoreManager.instance != null)
         {
             bought = ScoreManager.instance.TrySpend(costInt);
         }
         else
         {
-            // If ScoreManager is missing, allow the purchase but warn (helps testing)
             Debug.LogWarning("ScoreManager.instance not found — allowing purchase for testing.");
             bought = true;
         }
@@ -177,8 +171,7 @@ public class ShopINIT : MonoBehaviour
             return;
         }
 
-        // Purchase succeeded — increment the slot counter in UI
-        var tmpText = GetSlotText(slotIndex);
+        TMP_Text tmpText = GetSlotText(slotIndex);
         if (tmpText != null)
         {
             if (int.TryParse(tmpText.text, out int current))
@@ -195,19 +188,9 @@ public class ShopINIT : MonoBehaviour
             Debug.LogWarning($"No text component found in shop slot {slotIndex} to set quantity.");
         }
 
-        // if(/*add overall funds here*/ > cost)
-        // {
-        //     // Deduct cost from overall funds
-        //     // overallFunds -= cost;
-        // }
-        // else
-        // {
-        //     Debug.Log("Not enough funds to purchase " + soldierName);
-        // }
         Debug.Log("Button Clicked: " + soldierName + " | Cost: " + cost + " | Slot: " + slotIndex);
     }
 
-    // inspector-friendly wrapper: pass slot index from Button.OnClick (supports one parameter)
     public void OnSoldierClickByIndex(int slotIndex)
     {
         if (slotIndex < 0 || slotIndex >= shopSoldiers.Count)
@@ -215,11 +198,11 @@ public class ShopINIT : MonoBehaviour
             Debug.LogWarning("Slot index out of range: " + slotIndex);
             return;
         }
+
         string soldierName = shopSoldiers[slotIndex].name;
         OnSoldierClick(soldierName, slotIndex);
     }
 
-    // optional: inspector-friendly wrapper that accepts a name string
     public void OnSoldierClickByName(string soldierName)
     {
         int index = shopSoldiers.FindIndex(s => s.name == soldierName);
@@ -228,12 +211,56 @@ public class ShopINIT : MonoBehaviour
             Debug.LogWarning("Soldier name not found: " + soldierName);
             return;
         }
+
         OnSoldierClick(soldierName, index);
     }
 
-    // Spawn a new UI Image that represents the soldier and make it draggable by the existing DragDrop script.
-    // Returns the created GameObject (or null on failure).
-    public GameObject SpawnSoldierForDrag(int slotIndex)
+    private Vector2 GetCurrentPointerScreenPosition()
+    {
+        if (Mouse.current != null)
+        {
+            return Mouse.current.position.ReadValue();
+        }
+
+        if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
+        {
+            return Touchscreen.current.primaryTouch.position.ReadValue();
+        }
+
+        return new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
+    }
+
+    public GameObject TrySpawnOwnedSoldierForDrag(int slotIndex, PointerEventData eventData)
+    {
+        if (slotIndex < 0 || slotIndex >= shopSoldiers.Count)
+        {
+            Debug.LogWarning("Slot index out of range: " + slotIndex);
+            return null;
+        }
+
+        TMP_Text tmpText = GetSlotText(slotIndex);
+        if (tmpText == null)
+        {
+            Debug.LogWarning("No stock text found for slot " + slotIndex);
+            return null;
+        }
+
+        if (!int.TryParse(tmpText.text, out int currentOwned) || currentOwned <= 0)
+        {
+            Debug.Log("No owned stock available to drag for slot " + slotIndex);
+            return null;
+        }
+
+        GameObject dragObj = SpawnSoldierForDrag(slotIndex, eventData);
+        if (dragObj == null)
+        {
+            return null;
+        }
+
+        return dragObj;
+    }
+
+    public GameObject SpawnSoldierForDrag(int slotIndex, PointerEventData eventData)
     {
         if (slotIndex < 0 || slotIndex >= shopSoldiers.Count)
         {
@@ -241,8 +268,7 @@ public class ShopINIT : MonoBehaviour
             return null;
         }
 
-        // If the shop UI displays a counter for this slot and it's zero, don't allow spawning.
-        var tmpTextCheck = GetSlotText(slotIndex);
+        TMP_Text tmpTextCheck = GetSlotText(slotIndex);
         if (tmpTextCheck != null && int.TryParse(tmpTextCheck.text, out int currentCheck) && currentCheck <= 0)
         {
             Debug.Log("No stock to spawn for slot " + slotIndex);
@@ -256,15 +282,12 @@ public class ShopINIT : MonoBehaviour
             return null;
         }
 
-        // Attempt to find the best Canvas in the scene to parent the UI element.
-        // Prefer a top-level/root canvas or the one with the highest sort order so the spawned
-        // draggable appears above nested shop UI elements.
         Canvas[] canvases = Object.FindObjectsByType<Canvas>(FindObjectsSortMode.None);
         Canvas canvas = null;
+
         if (canvases != null && canvases.Length > 0)
         {
-            // Prefer rootCanvas if present
-            foreach (var c in canvases)
+            foreach (Canvas c in canvases)
             {
                 if (c.rootCanvas == c)
                 {
@@ -272,15 +295,13 @@ public class ShopINIT : MonoBehaviour
                     break;
                 }
             }
-            // otherwise pick canvas with highest sortingOrder (useful for ScreenSpaceCamera or Overlay)
+
             if (canvas == null)
             {
                 int bestOrder = int.MinValue;
-                foreach (var c in canvases)
+                foreach (Canvas c in canvases)
                 {
-                    int order = 0;
-                    var cc = c.GetComponent<Canvas>();
-                    if (cc != null) order = cc.sortingOrder;
+                    int order = c.sortingOrder;
                     if (order > bestOrder)
                     {
                         bestOrder = order;
@@ -289,45 +310,47 @@ public class ShopINIT : MonoBehaviour
                 }
             }
         }
+
         if (canvas == null)
         {
             Debug.LogWarning("No Canvas found in scene to spawn draggable soldier.");
             return null;
         }
 
-        // Ensure there's a dedicated DragCanvas at top layer so drags always appear above other UI.
-        Canvas dragCanvas = Object.FindFirstObjectByType<Canvas>(); // placeholder
-        // Try to find an existing GameObject named "DragCanvas"
-        var existingDragCanvas = GameObject.Find("DragCanvas");
+        Canvas dragCanvas = null;
+        GameObject existingDragCanvas = GameObject.Find("DragCanvas");
         if (existingDragCanvas != null)
         {
             dragCanvas = existingDragCanvas.GetComponent<Canvas>();
         }
         else
         {
-            // Create DragCanvas as ScreenSpaceOverlay and set a high sorting order
             GameObject dc = new GameObject("DragCanvas", typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
             dragCanvas = dc.GetComponent<Canvas>();
             dragCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            dragCanvas.sortingOrder = 1000; // high so it's above other canvases
-            // Make sure it sits at root level
+            dragCanvas.sortingOrder = 1000;
             dc.transform.SetParent(null);
         }
 
-        // Create UI Image
-        GameObject go = new GameObject(soldier.name + "_Drag", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
-        var rt = go.GetComponent<RectTransform>();
-        go.transform.SetParent(dragCanvas != null ? dragCanvas.transform : canvas.transform, false);
+        Canvas targetCanvas = dragCanvas != null ? dragCanvas : canvas;
 
-        var img = go.GetComponent<Image>();
+        GameObject go = new GameObject(
+            soldier.name + "_Drag",
+            typeof(RectTransform),
+            typeof(CanvasRenderer),
+            typeof(Image)
+        );
+
+        RectTransform rt = go.GetComponent<RectTransform>();
+        go.transform.SetParent(targetCanvas.transform, false);
+
+        Image img = go.GetComponent<Image>();
         img.sprite = soldier.characterSprite;
-        img.raycastTarget = true; // allow pointer events
+        img.raycastTarget = true;
 
-        // Add DragDrop and wire Canvas reference
-        var drag = go.AddComponent<DragDrop>();
-        drag.canvas = canvas;
-        
-        // CRITICAL: Assign the soldier prefab so it can be instantiated when dropped
+        DragDrop drag = go.AddComponent<DragDrop>();
+        drag.canvas = targetCanvas;
+
         if (soldier.soldierPrefab != null)
         {
             drag.soldierPrefab = soldier.soldierPrefab;
@@ -338,19 +361,24 @@ public class ShopINIT : MonoBehaviour
             Debug.LogWarning($"No soldierPrefab assigned to SoldierType '{soldier.name}' - drop will only place sprite!");
         }
 
-        // Ensure there's a CanvasGroup so raycasts can be toggled by DragDrop later if needed
-        var cg = go.GetComponent<CanvasGroup>();
-        if (cg == null) cg = go.AddComponent<CanvasGroup>();
-        // Default CanvasGroup state: visible and interactive until drag starts
+        CanvasGroup cg = go.GetComponent<CanvasGroup>();
+        if (cg == null)
+        {
+            cg = go.AddComponent<CanvasGroup>();
+        }
+
         cg.alpha = 1f;
         cg.interactable = true;
         cg.blocksRaycasts = true;
 
-        // Position at current pointer (mouse/touch) so drag begins under the cursor
-        Vector2 localPoint = Vector2.zero;
-        Vector2 screenPos = Input.mousePosition;
-        RectTransform canvasRect = canvas.GetComponent<RectTransform>();
-        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, screenPos, canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera, out localPoint))
+        Vector2 screenPos = eventData.position;
+        RectTransform canvasRect = targetCanvas.GetComponent<RectTransform>();
+
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            canvasRect,
+            screenPos,
+            targetCanvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : targetCanvas.worldCamera,
+            out Vector2 localPoint))
         {
             rt.anchoredPosition = localPoint;
         }
@@ -359,22 +387,20 @@ public class ShopINIT : MonoBehaviour
             rt.anchoredPosition = Vector2.zero;
         }
 
-    // Ensure spawned drag object is on top of UI so it's not obscured by the shop slot
-    go.transform.SetAsLastSibling();
-    Debug.Log("Spawned draggable soldier: " + go.name + " (set as last sibling)");
-        // Decrement the shop counter immediately since the player grabbed one
+        go.transform.SetAsLastSibling();
+        Debug.Log("Spawned draggable soldier: " + go.name + " (set as last sibling)");
+
         DecrementSoldierByIndex(slotIndex);
-        // Attach spawn metadata so drop handlers can return this to the shop counter if needed
-        var info = go.AddComponent<ShopSpawnInfo>();
+
+        ShopSpawnInfo info = go.AddComponent<ShopSpawnInfo>();
         info.slotIndex = slotIndex;
         info.shop = this;
         return go;
     }
 
-    // Re-add one to the shop UI counter for a slot (inverse of DecrementSoldierByIndex)
     public void IncrementSoldierByIndex(int slotIndex)
     {
-        var tmpText = GetSlotText(slotIndex);
+        TMP_Text tmpText = GetSlotText(slotIndex);
         if (tmpText != null)
         {
             if (int.TryParse(tmpText.text, out int current))
