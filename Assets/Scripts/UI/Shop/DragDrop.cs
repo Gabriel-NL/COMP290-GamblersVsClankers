@@ -19,7 +19,6 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
     private Vector3 worldOffset;
     private Camera mainCamera;
 
-    // Source-mode drag settings
     public bool isSource = false;
     public bool oneTimeUse = false;
     private bool hasBeenUsed = false;
@@ -34,7 +33,6 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
 
     private GameObject activeClone;
 
-    // Callbacks used by SlotMachineBehaviour
     public Action onBeginDragFromSource;
     public Action onCancelledOrInvalidDrop;
     public Action onSuccessfulDrop;
@@ -66,6 +64,76 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
                 }
             }
         }
+    }
+
+    private Transform FindVisualChild(GameObject root)
+    {
+        if (root == null)
+            return null;
+
+        Transform[] allChildren = root.GetComponentsInChildren<Transform>(true);
+        foreach (Transform child in allChildren)
+        {
+            if (child == root.transform)
+                continue;
+
+            if (string.Equals(child.name, "sprite", StringComparison.OrdinalIgnoreCase))
+                return child;
+        }
+
+        SpriteRenderer sr = root.GetComponentInChildren<SpriteRenderer>();
+        if (sr != null)
+            return sr.transform;
+
+        return null;
+    }
+
+    private void FitVisualChildToSlot(GameObject spawnedSoldier, ItemSlot targetSlot)
+    {
+        if (spawnedSoldier == null || targetSlot == null)
+            return;
+
+        RectTransform slotRect = targetSlot.GetComponent<RectTransform>();
+        if (slotRect == null)
+        {
+            Debug.LogWarning($"Target slot '{targetSlot.name}' has no RectTransform. Cannot fit visual child.");
+            return;
+        }
+
+        Transform visualChild = FindVisualChild(spawnedSoldier);
+        if (visualChild == null)
+        {
+            Debug.LogWarning($"No visual child named 'sprite' or SpriteRenderer found on '{spawnedSoldier.name}'.");
+            return;
+        }
+
+        SpriteRenderer visualSprite = visualChild.GetComponent<SpriteRenderer>();
+        if (visualSprite == null || visualSprite.sprite == null)
+        {
+            Debug.LogWarning($"Visual child '{visualChild.name}' has no SpriteRenderer/sprite on '{spawnedSoldier.name}'.");
+            return;
+        }
+
+        Vector2 slotSize = slotRect.rect.size;
+        Vector2 spriteSize = visualSprite.sprite.bounds.size;
+
+        if (spriteSize.x <= 0f || spriteSize.y <= 0f)
+        {
+            Debug.LogWarning($"Sprite size invalid on '{visualChild.name}'.");
+            return;
+        }
+
+        float paddingFactor = 0.95f;
+        float scaleX = (slotSize.x * paddingFactor) / spriteSize.x;
+        float scaleY = (slotSize.y * paddingFactor) / spriteSize.y;
+        float scaleFactor = Mathf.Min(scaleX, scaleY);
+
+        visualChild.localScale = Vector3.one * scaleFactor;
+
+        Debug.Log(
+            $"Fitted visual child '{visualChild.name}' of '{spawnedSoldier.name}' to slot '{targetSlot.name}'. " +
+            $"slot={slotSize}, sprite={spriteSize}, visualScale={visualChild.localScale}"
+        );
     }
 
     private GameObject CreateDraggableClone(PointerEventData eventData)
@@ -193,10 +261,7 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
             if (activeClone != null)
             {
                 isDragging = true;
-
-                // Important: invoke only after clone exists
                 onBeginDragFromSource?.Invoke();
-
                 ExecuteEvents.Execute<IBeginDragHandler>(activeClone, eventData, ExecuteEvents.beginDragHandler);
                 return;
             }
@@ -310,7 +375,6 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
 
         ItemSlot targetSlot = null;
 
-        // UI detection
         if (isUIElement && EventSystem.current != null)
         {
             PointerEventData pe = new PointerEventData(EventSystem.current)
@@ -341,7 +405,6 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
             }
         }
 
-        // World detection
         if (!isUIElement)
         {
             Vector3 worldPos = mainCamera.ScreenToWorldPoint(eventData.position);
@@ -409,7 +472,12 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
                 Transform parentTransform = targetSlot.transform;
 
                 GameObject spawnedSoldier = Instantiate(soldierPrefab, spawnPosition, Quaternion.identity);
-                spawnedSoldier.transform.SetParent(parentTransform);
+                spawnedSoldier.transform.SetParent(parentTransform, false);
+                spawnedSoldier.transform.localPosition = Vector3.zero;
+                spawnedSoldier.transform.localRotation = Quaternion.identity;
+                spawnedSoldier.transform.localScale = Vector3.one;
+
+                FitVisualChildToSlot(spawnedSoldier, targetSlot);
 
                 Rigidbody2D rb = spawnedSoldier.GetComponent<Rigidbody2D>();
                 if (rb != null)
@@ -418,29 +486,7 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
                     rb.linearVelocity = Vector2.zero;
                 }
 
-                RectTransform slotRect = targetSlot.GetComponent<RectTransform>();
-                if (slotRect != null)
-                {
-                    SpriteRenderer soldierSprite = spawnedSoldier.GetComponent<SpriteRenderer>();
-                    if (soldierSprite == null)
-                    {
-                        soldierSprite = spawnedSoldier.GetComponentInChildren<SpriteRenderer>();
-                    }
-
-                    if (soldierSprite != null && soldierSprite.sprite != null)
-                    {
-                        Vector2 slotSize = slotRect.rect.size;
-                        Vector2 spriteSize = soldierSprite.sprite.bounds.size;
-
-                        float paddingFactor = 0.95f;
-                        float scaleX = (slotSize.x * paddingFactor) / spriteSize.x;
-                        float scaleY = (slotSize.y * paddingFactor) / spriteSize.y;
-                        float scaleFactor = Mathf.Min(scaleX, scaleY);
-
-                        spawnedSoldier.transform.localScale = Vector3.one * scaleFactor;
-                        Debug.Log($"Scaled soldier by {scaleFactor} to fit slot (slot: {slotSize}, sprite: {spriteSize})");
-                    }
-                }
+                Debug.Log($"Set placed soldier root '{spawnedSoldier.name}' localScale to {spawnedSoldier.transform.localScale}");
 
                 SoldierBehaviour soldierBehaviour = spawnedSoldier.GetComponent<SoldierBehaviour>();
                 if (soldierBehaviour != null)
@@ -450,23 +496,27 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
 
                     if (soldierBehaviour.spriteRenderer != null)
                     {
-                        soldierBehaviour.spriteRenderer.color = soldierColor;
-                        Debug.Log($"Applied tier color {soldierColor} to soldier's spriteRenderer");
+                        soldierBehaviour.spriteRenderer.color = Color.white;
                     }
                 }
 
-                SpriteRenderer soldierSr = spawnedSoldier.GetComponent<SpriteRenderer>();
-                if (soldierSr != null)
+                SoldierEnchantController enchantController = spawnedSoldier.GetComponent<SoldierEnchantController>();
+                if (enchantController == null)
                 {
-                    soldierSr.color = soldierColor;
-                    Debug.Log($"Applied color {soldierColor} to spawned soldier SpriteRenderer (root)");
+                    enchantController = spawnedSoldier.GetComponentInChildren<SoldierEnchantController>();
                 }
 
-                Image soldierImg = spawnedSoldier.GetComponent<Image>();
-                if (soldierImg != null)
+                if (enchantController != null)
                 {
-                    soldierImg.color = soldierColor;
-                    Debug.Log($"Applied color {soldierColor} to spawned soldier Image");
+                    bool shouldEnchant = soldierTier != SoldierTierList.TierEnum.Common;
+                    enchantController.SetEnchantColor(soldierColor);
+                    enchantController.SetEnchantEnabled(shouldEnchant);
+
+                    Debug.Log($"Applied enchant color {soldierColor} to soldier '{spawnedSoldier.name}', enabled={shouldEnchant}");
+                }
+                else
+                {
+                    Debug.LogWarning($"No SoldierEnchantController found on '{spawnedSoldier.name}'. No rarity enchant was applied.");
                 }
 
                 if (DifficultyManager.instance != null)
@@ -513,6 +563,7 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
                             float scaleFactor = Mathf.Min(scaleX, scaleY);
 
                             rectTransform.localScale = Vector3.one * scaleFactor;
+
                             Debug.Log($"Scaled UI element by {scaleFactor} to fit slot (slot: {slotSize}, sprite: {spriteSize})");
 
                             Color color = image.color;
@@ -573,6 +624,7 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
                         float scaleFactor = Mathf.Min(scaleX, scaleY);
 
                         transform.localScale = Vector3.one * scaleFactor;
+
                         Debug.Log($"Scaled world sprite by {scaleFactor} to fit slot (slot: {slotSize}, sprite: {spriteSize})");
 
                         Color color = spriteRenderer.color;
