@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Image = UnityEngine.UI.Image;
 using Random = UnityEngine.Random;
@@ -12,25 +13,27 @@ public class SlotMachineBehaviour : MonoBehaviour
     public CharactherAndProbability[] possibleResults;
     public RarityAndProbability[] possibleRarities;
     private CharactherAndRarity[] currentResults = new CharactherAndRarity[3];
+    
+
     public Image[] slotMachineImages = new Image[3];
     public Image[] slotMachineBGImages = new Image[3];
+
     public Image rewardSlotImage;
     public Canvas dragCanvas; // Canvas for drag operations
+    
+
 
     public SoldierType WeightedRandomSoldierSelection()
     {
-        // Calculate total weight
         float totalWeight = 0f;
         foreach (CharactherAndProbability characther in possibleResults)
         {
             totalWeight += characther.probability;
         }
 
-        // Generate random value between 0 and total weight
         float randomValue = Random.Range(0f, totalWeight);
         float cumulativeWeight = 0f;
 
-        // Find which item the random value falls into
         foreach (CharactherAndProbability characther in possibleResults)
         {
             cumulativeWeight += characther.probability;
@@ -39,25 +42,21 @@ public class SlotMachineBehaviour : MonoBehaviour
                 return characther.soldierType;
             }
         }
-        
-        // Fallback (should never reach here if probabilities are set correctly)
+
         return possibleResults[possibleResults.Length - 1].soldierType;
     }
 
     public SoldierTier WeightedRaritySelection()
     {
-        // Calculate total weight
         float totalWeight = 0f;
         foreach (RarityAndProbability rarity in possibleRarities)
         {
             totalWeight += rarity.probability;
         }
 
-        // Generate random value between 0 and total weight
         float randomValue = Random.Range(0f, totalWeight);
         float cumulativeWeight = 0f;
 
-        // Find which rarity the random value falls into
         foreach (RarityAndProbability rarity in possibleRarities)
         {
             cumulativeWeight += rarity.probability;
@@ -66,21 +65,20 @@ public class SlotMachineBehaviour : MonoBehaviour
                 return SoldierTierList.tierDictionary[rarity.type];
             }
         }
-        
-        // Fallback (should never reach here if probabilities are set correctly)
+
         SoldierTierList.TierEnum lastType = possibleRarities[possibleRarities.Length - 1].type;
         return SoldierTierList.tierDictionary[lastType];
     }
+
     [NaughtyAttributes.Button]
     public void Spin()
     {
-        // Use ScoreManager instead of directly reading/writing scoreText
         if (ScoreManager.instance == null)
         {
             Debug.LogError("ScoreManager.instance not found! Cannot process spin.");
             return;
         }
-        
+
         int spinCost = 100;
         if (ScoreManager.instance.CurrentScore < spinCost)
         {
@@ -88,36 +86,36 @@ public class SlotMachineBehaviour : MonoBehaviour
             return;
         }
 
-        // Attempt to spend coins via ScoreManager
         if (!ScoreManager.instance.TrySpend(spinCost))
         {
             Debug.LogWarning("Failed to spend coins for slot machine spin!");
             return;
         }
-        
+
         Debug.Log($"Slot machine spin cost {spinCost} coins. Remaining: {ScoreManager.instance.CurrentScore}");
 
-        slotMachineImages[0].sprite = possibleResults[0].soldierType.characterSprite;
         SoldierTier newTier = WeightedRaritySelection();
 
         for (int i = 0; i < currentResults.Length; i++)
         {
             SoldierType newSoldier = WeightedRandomSoldierSelection();
             slotMachineImages[i].sprite = newSoldier.characterSprite;
-
             slotMachineBGImages[i].color = newTier.tierColor;
 
-            currentResults[i] = new CharactherAndRarity() { soldierType = newSoldier, tier = newTier };
+            currentResults[i] = new CharactherAndRarity()
+            {
+                soldierType = newSoldier,
+                tier = newTier
+            };
         }
 
         CharactherAndRarity rolledCharacther = GetRolledCharacther();
         Debug.Log($"{rolledCharacther.soldierType.name} - {rolledCharacther.tier.tierType}");
-        
-        // Display the rolled character in the reward slot and make it draggable
+
         if (rewardSlotImage != null)
         {
             rewardSlotImage.sprite = rolledCharacther.soldierType.characterSprite;
-            rewardSlotImage.color = rolledCharacther.tier.tierColor; // Set color based on rarity
+            rewardSlotImage.color = rolledCharacther.tier.tierColor;
             SetupRewardSlotDragging(rolledCharacther);
         }
     }
@@ -126,14 +124,15 @@ public class SlotMachineBehaviour : MonoBehaviour
     {
         CharactherAndRarity endResult = new CharactherAndRarity();
         endResult.tier = currentResults[0].tier;
+
         for (int i = 1; i < currentResults.Length; i++)
         {
             if (currentResults[i].tier.tierWeight < endResult.tier.tierWeight)
             {
                 endResult = currentResults[i];
             }
-
         }
+
         Dictionary<SoldierType, int> frequency = new Dictionary<SoldierType, int>();
         foreach (var result in currentResults)
         {
@@ -167,11 +166,10 @@ public class SlotMachineBehaviour : MonoBehaviour
     {
         if (rewardSlotImage == null) return;
 
-        // Find or create DragCanvas (similar to shop system)
         Canvas targetCanvas = dragCanvas;
         if (targetCanvas == null)
         {
-            var existingDragCanvas = GameObject.Find("DragCanvas");
+            GameObject existingDragCanvas = GameObject.Find("DragCanvas");
             if (existingDragCanvas != null)
             {
                 targetCanvas = existingDragCanvas.GetComponent<Canvas>();
@@ -186,21 +184,21 @@ public class SlotMachineBehaviour : MonoBehaviour
             }
         }
 
-        // Remove existing DragDrop component if present
-        var existingDrag = rewardSlotImage.GetComponent<DragDrop>();
-        if (existingDrag != null) DestroyImmediate(existingDrag);
+        DragDrop existingDrag = rewardSlotImage.GetComponent<DragDrop>();
+        if (existingDrag != null)
+        {
+            DestroyImmediate(existingDrag);
+        }
 
-        // Add DragDrop component and configure it AS A SOURCE (so it stays in place and spawns clones)
-        var dragDrop = rewardSlotImage.gameObject.AddComponent<DragDrop>();
+        DragDrop dragDrop = rewardSlotImage.gameObject.AddComponent<DragDrop>();
         dragDrop.canvas = targetCanvas;
-        dragDrop.isSource = true;  // CRITICAL: Mark as source so it creates clones instead of moving
-        dragDrop.oneTimeUse = true; // CRITICAL: Only allow placing the reward once
+        dragDrop.isSource = true;
+        dragDrop.oneTimeUse = true;
         dragDrop.sourceSprite = rolledCharacter.soldierType.characterSprite;
-        dragDrop.sourceColor = rolledCharacter.tier.tierColor; // Set the tier color for clones
-        dragDrop.soldierColor = rolledCharacter.tier.tierColor; // Set the tier color for instantiated prefab
-        dragDrop.soldierTier = rolledCharacter.tier.tierType; // CRITICAL: Set the tier enum for stat scaling
-        
-        // Assign the soldier prefab so the clone knows what to instantiate when dropped
+        dragDrop.sourceColor = rolledCharacter.tier.tierColor;
+        dragDrop.soldierColor = rolledCharacter.tier.tierColor;
+        dragDrop.soldierTier = rolledCharacter.tier.tierType;
+
         if (rolledCharacter.soldierType.soldierPrefab != null)
         {
             dragDrop.soldierPrefab = rolledCharacter.soldierType.soldierPrefab;
@@ -211,11 +209,37 @@ public class SlotMachineBehaviour : MonoBehaviour
             Debug.LogWarning($"No soldierPrefab found on {rolledCharacter.soldierType.name}");
         }
 
-        // Ensure CanvasGroup exists for drag functionality
-        var canvasGroup = rewardSlotImage.GetComponent<CanvasGroup>();
-        if (canvasGroup == null) canvasGroup = rewardSlotImage.gameObject.AddComponent<CanvasGroup>();
+        // When drag starts from reward slot, clear the source UI image,
+        // but only after DragDrop has already created the dragged visual.
+        dragDrop.onBeginDragFromSource = () =>
+        {
+            rewardSlotImage.sprite = null;
+            rewardSlotImage.color = Color.clear;
+            rewardSlotImage.raycastTarget = false;
+        };
 
-        // Enable raycast target for dragging
+        // If drop fails / is cancelled, restore the reward slot image.
+        dragDrop.onCancelledOrInvalidDrop = () =>
+        {
+            rewardSlotImage.sprite = rolledCharacter.soldierType.characterSprite;
+            rewardSlotImage.color = rolledCharacter.tier.tierColor;
+            rewardSlotImage.raycastTarget = true;
+        };
+
+        // If drop succeeds, keep it empty because it was consumed.
+        dragDrop.onSuccessfulDrop = () =>
+        {
+            rewardSlotImage.sprite = null;
+            rewardSlotImage.color = Color.clear;
+            rewardSlotImage.raycastTarget = false;
+        };
+
+        CanvasGroup canvasGroup = rewardSlotImage.GetComponent<CanvasGroup>();
+        if (canvasGroup == null)
+        {
+            canvasGroup = rewardSlotImage.gameObject.AddComponent<CanvasGroup>();
+        }
+
         rewardSlotImage.raycastTarget = true;
 
         Debug.Log($"Reward slot image is now draggable (SOURCE MODE, ONE-TIME USE) for {rolledCharacter.soldierType.name}");
@@ -227,12 +251,14 @@ public class SlotMachineBehaviour : MonoBehaviour
         public SoldierType soldierType;
         public float probability;
     }
+
     [System.Serializable]
     public class RarityAndProbability
     {
         public SoldierTierList.TierEnum type;
         public float probability;
     }
+
     [System.Serializable]
     public class CharactherAndRarity
     {

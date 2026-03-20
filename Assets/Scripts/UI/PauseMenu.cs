@@ -57,13 +57,6 @@ public class PauseMenu : MonoBehaviour
         
         Debug.Log($"Pause menu UI configured with {animators.Length} animators set to UnscaledTime");
     }
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            TogglePausePanel();
-        }
-    }
 
     public void TogglePausePanel()
     {

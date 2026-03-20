@@ -73,3 +73,5 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+Assets/ExternalPersonalPackages/ManualCompileGuard.6000.3.4f1.dll.meta
+Assets/ExternalPersonalPackages/ManualCompileGuard.6000.3.4f1.dll
