@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 5295753241947847384}
   - component: {fileID: 5967699214372368038}
-  - component: {fileID: -4535127890272362724}
   - component: {fileID: 8387875406702529424}
   - component: {fileID: 4625508943642000990}
+  - component: {fileID: 5544230236368790942}
   m_Layer: 7
   m_Name: Laser Soldier
   m_TagString: Soldier
@@ -30,11 +30,11 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 4.63, y: -1.76, z: 0}
-  m_LocalScale: {x: 0.0896, y: 0.1363, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7199744094346205433}
   - {fileID: 1035879126396289407}
+  - {fileID: 7199744094346205433}
   - {fileID: 7033729519106107099}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -71,8 +71,41 @@ MonoBehaviour:
   isEMPGrenade: 0
   stunDuration: 0
   aoeRadius: 0
+  isWaterBomb: 0
   timer: 0
---- !u!61 &-4535127890272362724
+--- !u!114 &8387875406702529424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1304353129378444638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4862271fe41ab3246b754f6aa2197056, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthBlinkIndicator
+  blinkColor: {r: 1, g: 0, b: 0, a: 1}
+  initialBlinkDuration: 0.2
+  initialBlinkCooldown: 0.2
+  enableScalingStartHealth: 1
+  minimumPercentageOfHealth: 50
+  hitBlinkDuration: 1
+  hitBlinkSpeed: 10
+--- !u!114 &4625508943642000990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1304353129378444638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17e88ceb1cb850545a9c75315113b3eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoldierTierSetter
+  tierText: {fileID: 5063592751422587306}
+--- !u!61 &5544230236368790942
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -106,50 +139,18 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -1.8, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 10.24, y: 10.24}
+    newSize: {x: 10.24, y: 10.24}
+    adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 5, y: 8}
   m_EdgeRadius: 0
---- !u!114 &8387875406702529424
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1304353129378444638}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4862271fe41ab3246b754f6aa2197056, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HealthBlinkIndicator
-  blinkColor: {r: 1, g: 0, b: 0, a: 1}
-  initialBlinkDuration: 0.2
-  initialBlinkCooldown: 0.2
-  enableScalingStartHealth: 1
-  minimumPercentageOfHealth: 50
-  hitBlinkDuration: 1
-  hitBlinkSpeed: 10
---- !u!114 &4625508943642000990
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1304353129378444638}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17e88ceb1cb850545a9c75315113b3eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SoldierTierSetter
-  tierText: {fileID: 5063592751422587306}
 --- !u!1 &2057219990124605643
 GameObject:
   m_ObjectHideFlags: 0
@@ -161,6 +162,7 @@ GameObject:
   - component: {fileID: 7199744094346205433}
   - component: {fileID: 6410930928580191114}
   - component: {fileID: 4667135808404786164}
+  - component: {fileID: 6598424741757116302}
   m_Layer: 7
   m_Name: Sprite
   m_TagString: Untagged
@@ -209,7 +211,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 7fd74cc3b2d12ff41a56d76de6ec4ddc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -264,6 +266,22 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6598424741757116302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2057219990124605643}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7883a8476714b6fa7cc4c394e76e31d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoldierEnchantController
+  visibleAlphaThreshold: 1
+  renderAlphaThreshold: 0.95
+  enchantEnabled: 1
+  enchantColor: {r: 1, g: 1, b: 1, a: 0.35}
 --- !u!1 &7540739340310366819
 GameObject:
   m_ObjectHideFlags: 0

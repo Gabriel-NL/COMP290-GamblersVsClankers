@@ -12,7 +12,8 @@ public class SoldierBehaviour : MonoBehaviour
     [MustBeAssigned] public SpriteRenderer spriteRenderer;
     public GameObject bulletPrefab; // Optional for area effects such as EMP grenades and water bombs
     private SoldierTierSetter tierSetter; // Optional component used for tier text
-    [MustBeAssigned]public HealthBlinkIndicator healthBlinkIndicator;
+    [MustBeAssigned] public HealthBlinkIndicator healthBlinkIndicator;
+    private SpriteOutlineMapRenderer outlineRenderer;
 
     [Header("Detection")]
     public float detectionRange = 10f;
@@ -40,7 +41,6 @@ public class SoldierBehaviour : MonoBehaviour
     private float cooldownTimer;
     private float bulletOffsetValue = 2f;
 
-
     void Start()
     {
         Initialization();
@@ -61,9 +61,10 @@ public class SoldierBehaviour : MonoBehaviour
             if (cooldownTimer <= 0f)
             {
                 Fire();
-                if(isShotgun)
-                {                // For shotguns, we want to fire twice with a slight offset, so we call Fire() again with an offset
-                    Fire(bulletOffsetValue); // Fire upper pellet
+                if (isShotgun)
+                {
+                    // For shotguns, we want to fire twice with a slight offset, so we call Fire() again with an offset
+                    Fire(bulletOffsetValue);   // Fire upper pellet
                     Fire(-bulletOffsetValue);  // Fire lower pellet
                 }
 
@@ -102,19 +103,19 @@ public class SoldierBehaviour : MonoBehaviour
         aoeRadius = SoldierType.stats.aoeRadius;
         isWaterBomb = SoldierType.stats.isWaterBomb;
     }
-    
+
     [NaughtyAttributes.Button("Test: Take 10 Damage")]
     private void TestTakeDamage()
     {
         TakeDamage(10f);
     }
-    
+
     [NaughtyAttributes.Button("Test: Heal 10 Health")]
     private void TestHeal()
     {
         Heal(10f);
     }
-    
+
     [NaughtyAttributes.Button("Apply Tier Changes")]
     private void ApplyTierChanges()
     {
@@ -134,8 +135,12 @@ public class SoldierBehaviour : MonoBehaviour
     {
         SetSoldierType();
         ApplyTierChanges();
+
+        outlineRenderer = gameObject.GetComponent<SpriteOutlineMapRenderer>();
+        ApplyTierOutline();
+
         cooldownTimer = (attackSpeed > 0f) ? attackSpeed : ((timer > 0f) ? timer : 0f);
-        healthBlinkIndicator= gameObject.GetComponent<HealthBlinkIndicator>();
+        healthBlinkIndicator = gameObject.GetComponent<HealthBlinkIndicator>();
 
         // Rebind the classic health bar so tier text remains visible.
         tierSetter = gameObject.GetComponent<SoldierTierSetter>();
@@ -175,6 +180,48 @@ public class SoldierBehaviour : MonoBehaviour
             DetonateEMP();
         }
     }
+
+    private void ApplyTierOutline()
+    {
+        if (outlineRenderer == null)
+            return;
+
+        if (tier == SoldierTierList.TierEnum.Common)
+        {
+            outlineRenderer.SetEnchantEnabled(false);
+            return;
+        }
+
+        outlineRenderer.SetEnchantEnabled(true);
+        outlineRenderer.SetEnchantColor(GetTierOutlineColor());
+    }
+
+    private Color GetTierOutlineColor()
+    {
+        string tierName = tier.ToString().ToLower();
+
+        switch (tierName)
+        {
+            case "common":
+                return Color.clear;
+
+            case "uncommon":
+                return Color.green;
+
+            case "rare":
+                return Color.blue;
+
+            case "epic":
+                return new Color(0.6f, 0.2f, 1f);
+
+            case "legendary":
+                return new Color(1f, 0.6f, 0f);
+
+            default:
+                return Color.white;
+        }
+    }
+
     public void Fire(float firePointOffset = 0f)
     {
         if (bulletPrefab == null)
@@ -183,7 +230,11 @@ public class SoldierBehaviour : MonoBehaviour
             return;
         }
 
-        GameObject bullet = Instantiate(bulletPrefab, new Vector3(firePoint.position.x, firePoint.position.y + firePointOffset, firePoint.position.z), firePoint.rotation);
+        GameObject bullet = Instantiate(
+            bulletPrefab,
+            new Vector3(firePoint.position.x, firePoint.position.y + firePointOffset, firePoint.position.z),
+            firePoint.rotation
+        );
 
         // Check if this is an EMP grenade
         if (isEMPGrenade)
@@ -241,6 +292,7 @@ public class SoldierBehaviour : MonoBehaviour
 
         currentHealth -= damage;
         currentHealth = Mathf.Max(0f, currentHealth);
+
         // Update health bar
         if (healthBlinkIndicator != null)
         {
@@ -280,9 +332,9 @@ public class SoldierBehaviour : MonoBehaviour
     private void Die()
     {
         Debug.Log($"[SoldierBehaviour] '{gameObject.name}' has died!");
-        
+
         // Optional: Play death animation or sound here
-        
+
         // Destroy the soldier
         Destroy(gameObject);
     }
@@ -363,4 +415,3 @@ public class SoldierBehaviour : MonoBehaviour
         Destroy(gameObject);
     }
 }
-
