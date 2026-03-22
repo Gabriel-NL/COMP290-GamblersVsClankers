@@ -127,17 +127,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7883a8476714b6fa7cc4c394e76e31d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoldierEnchantController
-  spriteRenderer: {fileID: 7195139305198300169}
-  soldierBehaviour: {fileID: 4726827177815626217}
+  visibleAlphaThreshold: 1
+  renderAlphaThreshold: 0.001
   enchantEnabled: 0
-  autoUseRarityColor: 1
-  autoDisableForCommon: 1
   enchantColor: {r: 1, g: 1, b: 1, a: 0.35}
-  waveSpeed: 1
-  waveFrequency: 8
-  waveWidth: 0.2
-  waveStrength: 0.5
-  diagonalAmount: 1
 --- !u!1 &3654174582788162622
 GameObject:
   m_ObjectHideFlags: 0
@@ -451,7 +444,7 @@ Transform:
   m_GameObject: {fileID: 7895184136842679374}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 2.3, y: 1.16, z: 0}
+  m_LocalPosition: {x: 4.41, y: 1.16, z: 0}
   m_LocalScale: {x: 1.101, y: 0.8484999, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

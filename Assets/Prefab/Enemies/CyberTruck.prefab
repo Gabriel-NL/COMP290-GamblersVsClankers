@@ -32,6 +32,22 @@ PrefabInstance:
       propertyPath: currentHealth
       value: 100
       objectReference: {fileID: 0}
+    - target: {fileID: 1206555501232163653, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
+      propertyPath: m_Size.x
+      value: 5.488215
+      objectReference: {fileID: 0}
+    - target: {fileID: 1206555501232163653, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
+      propertyPath: m_Size.y
+      value: 3.756858
+      objectReference: {fileID: 0}
+    - target: {fileID: 1206555501232163653, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
+      propertyPath: m_Offset.x
+      value: -0.4080193
+      objectReference: {fileID: 0}
+    - target: {fileID: 1206555501232163653, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.18488371
+      objectReference: {fileID: 0}
     - target: {fileID: 2535829431886164371, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
       propertyPath: m_Size.x
       value: 15.36
