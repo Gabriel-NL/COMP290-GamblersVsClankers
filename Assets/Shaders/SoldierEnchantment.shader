@@ -1,17 +1,13 @@
-Shader "Custom/SoldierEnchantment"
+Shader "Custom/SpriteVisibleAndOutlineMap"
 {
     Properties
     {
-        [PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
-        _Color ("Base Tint", Color) = (1,1,1,1)
-
-        _EnchantColor ("Enchant Color", Color) = (0.4, 0.8, 1, 0.35)
-        _WaveSpeed ("Wave Speed", Float) = 1.0
-        _WaveFrequency ("Wave Frequency", Float) = 8.0
-        _WaveWidth ("Wave Width", Range(0.01, 1.0)) = 0.2
-        _WaveStrength ("Wave Strength", Range(0, 1)) = 0.5
-        _DiagonalAmount ("Diagonal Amount", Float) = 1.0
-        _EnchantEnabled ("Enchant Enabled", Float) = 1
+        _MainTex ("Sprite Atlas", 2D) = "white" {}
+        _MaskTex ("Mask Texture", 2D) = "black" {}
+        _OutlineColor ("Outline Color", Color) = (1,1,1,1)
+        _SpriteRect ("Sprite Rect XYWH", Vector) = (0,0,1,1)
+        _AlphaCutoff ("Alpha Cutoff", Range(0,1)) = 0.001
+        _ShowEnchant ("Show Enchant", Float) = 1
     }
 
     SubShader
@@ -21,14 +17,13 @@ Shader "Custom/SoldierEnchantment"
             "Queue"="Transparent"
             "RenderType"="Transparent"
             "IgnoreProjector"="True"
-            "PreviewType"="Plane"
             "CanUseSpriteAtlas"="True"
         }
 
         Blend SrcAlpha OneMinusSrcAlpha
         Cull Off
-        Lighting Off
         ZWrite Off
+        Lighting Off
 
         Pass
         {
@@ -37,64 +32,66 @@ Shader "Custom/SoldierEnchantment"
             #pragma fragment frag
             #include "UnityCG.cginc"
 
-            struct appdata_t
+            struct appdata
             {
                 float4 vertex   : POSITION;
+                float2 uv       : TEXCOORD0;
                 float4 color    : COLOR;
-                float2 texcoord : TEXCOORD0;
             };
 
             struct v2f
             {
                 float4 vertex   : SV_POSITION;
-                fixed4 color    : COLOR;
                 float2 uv       : TEXCOORD0;
+                fixed4 color    : COLOR;
             };
 
             sampler2D _MainTex;
-            fixed4 _Color;
+            sampler2D _MaskTex;
+            float4 _MainTex_ST;
+            float4 _OutlineColor;
+            float4 _SpriteRect;
+            float _AlphaCutoff;
+            float _ShowEnchant;
 
-            fixed4 _EnchantColor;
-            float _WaveSpeed;
-            float _WaveFrequency;
-            float _WaveWidth;
-            float _WaveStrength;
-            float _DiagonalAmount;
-            float _EnchantEnabled;
-
-            v2f vert(appdata_t IN)
+            v2f vert(appdata v)
             {
-                v2f OUT;
-                OUT.vertex = UnityObjectToClipPos(IN.vertex);
-                OUT.uv = IN.texcoord;
-                OUT.color = IN.color * _Color;
-                return OUT;
+                v2f o;
+                o.vertex = UnityObjectToClipPos(v.vertex);
+                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                o.color = v.color;
+                return o;
             }
 
-            fixed4 frag(v2f IN) : SV_Target
+            fixed4 frag(v2f i) : SV_Target
             {
-                fixed4 baseCol = tex2D(_MainTex, IN.uv) * IN.color;
+                float2 atlasUV = i.uv;
 
-                // Sprite alpha is the mask
-                float mask = baseCol.a;
+                float2 localUV;
+                localUV.x = (atlasUV.x - _SpriteRect.x) / _SpriteRect.z;
+                localUV.y = (atlasUV.y - _SpriteRect.y) / _SpriteRect.w;
 
-                // Diagonal coordinate
-                float diag = IN.uv.x + (IN.uv.y * _DiagonalAmount);
+                if (localUV.x < 0 || localUV.x > 1 || localUV.y < 0 || localUV.y > 1)
+                    discard;
 
-                // Moving wave
-                float wave = frac(diag * _WaveFrequency - _Time.y * _WaveSpeed);
+                fixed4 spriteCol = tex2D(_MainTex, atlasUV) * i.color;
+                fixed4 maskCol = tex2D(_MaskTex, localUV);
 
-                // Turn wave into a soft band
-                float band = smoothstep(0.0, _WaveWidth, wave) *
-                             (1.0 - smoothstep(_WaveWidth, _WaveWidth * 2.0, wave));
+                bool isVisiblePixel = maskCol.r > 0.5;
+                bool isOutlinePixel = (maskCol.g > 0.5) && (_ShowEnchant > 0.5);
 
-                // Only show effect inside sprite shape
-                float effect = band * _WaveStrength * mask * _EnchantEnabled;
+                if (!isVisiblePixel && !isOutlinePixel)
+                    discard;
 
-                fixed3 finalRgb = lerp(baseCol.rgb, baseCol.rgb + _EnchantColor.rgb, effect);
-                float finalA = baseCol.a;
+                if (isVisiblePixel)
+                {
+                    if (spriteCol.a <= _AlphaCutoff)
+                        discard;
 
-                return fixed4(finalRgb, finalA);
+                    return spriteCol;
+                }
+
+                return _OutlineColor;
             }
             ENDCG
         }

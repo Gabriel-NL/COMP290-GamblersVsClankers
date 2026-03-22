@@ -12,6 +12,10 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
     [Header("Prefab to instantiate when dropped")]
     public GameObject soldierPrefab;
 
+    [Header("Placed Visual Fit")]
+    [Tooltip("Placed soldier visual will fit within this multiplier of the cell size. 1.0 = cell size, 1.1 = 110% of cell size.")]
+    public float placedVisualFitMultiplier = 1.1f;
+
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
     private Vector2 pointerOffset;
@@ -88,6 +92,17 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
         return null;
     }
 
+    private Vector2 GetRectTransformWorldSize(RectTransform rectTransformToMeasure)
+    {
+        Vector3[] corners = new Vector3[4];
+        rectTransformToMeasure.GetWorldCorners(corners);
+
+        float width = Vector3.Distance(corners[0], corners[3]);
+        float height = Vector3.Distance(corners[0], corners[1]);
+
+        return new Vector2(width, height);
+    }
+
     private void FitVisualChildToSlot(GameObject spawnedSoldier, ItemSlot targetSlot)
     {
         if (spawnedSoldier == null || targetSlot == null)
@@ -114,25 +129,32 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
             return;
         }
 
-        Vector2 slotSize = slotRect.rect.size;
-        Vector2 spriteSize = visualSprite.sprite.bounds.size;
+        Vector2 slotWorldSize = GetRectTransformWorldSize(slotRect);
+        Vector2 targetWorldSize = slotWorldSize * placedVisualFitMultiplier;
 
-        if (spriteSize.x <= 0f || spriteSize.y <= 0f)
+        Vector3 originalVisualScale = visualChild.localScale;
+
+        Bounds currentBounds = visualSprite.bounds;
+        Vector2 currentWorldSize = new Vector2(currentBounds.size.x, currentBounds.size.y);
+
+        if (currentWorldSize.x <= 0f || currentWorldSize.y <= 0f)
         {
-            Debug.LogWarning($"Sprite size invalid on '{visualChild.name}'.");
+            Debug.LogWarning($"Current rendered size invalid on '{visualChild.name}'.");
             return;
         }
 
-        float paddingFactor = 0.95f;
-        float scaleX = (slotSize.x * paddingFactor) / spriteSize.x;
-        float scaleY = (slotSize.y * paddingFactor) / spriteSize.y;
+        float scaleX = targetWorldSize.x / currentWorldSize.x;
+        float scaleY = targetWorldSize.y / currentWorldSize.y;
         float scaleFactor = Mathf.Min(scaleX, scaleY);
 
-        visualChild.localScale = Vector3.one * scaleFactor;
+        visualChild.localScale = originalVisualScale * scaleFactor;
+
+        Bounds finalBounds = visualSprite.bounds;
+        Vector2 finalWorldSize = new Vector2(finalBounds.size.x, finalBounds.size.y);
 
         Debug.Log(
             $"Fitted visual child '{visualChild.name}' of '{spawnedSoldier.name}' to slot '{targetSlot.name}'. " +
-            $"slot={slotSize}, sprite={spriteSize}, visualScale={visualChild.localScale}"
+            $"slotWorld={slotWorldSize}, targetWorld={targetWorldSize}, before={currentWorldSize}, after={finalWorldSize}, scaleFactor={scaleFactor}"
         );
     }
 
@@ -500,10 +522,10 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
                     }
                 }
 
-                SoldierEnchantController enchantController = spawnedSoldier.GetComponent<SoldierEnchantController>();
+                SpriteOutlineMapRenderer enchantController = spawnedSoldier.GetComponent<SpriteOutlineMapRenderer>();
                 if (enchantController == null)
                 {
-                    enchantController = spawnedSoldier.GetComponentInChildren<SoldierEnchantController>();
+                    enchantController = spawnedSoldier.GetComponentInChildren<SpriteOutlineMapRenderer>();
                 }
 
                 if (enchantController != null)
@@ -516,7 +538,7 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
                 }
                 else
                 {
-                    Debug.LogWarning($"No SoldierEnchantController found on '{spawnedSoldier.name}'. No rarity enchant was applied.");
+                    Debug.LogWarning($"No SpriteOutlineMapRenderer found on '{spawnedSoldier.name}'. No rarity enchant was applied.");
                 }
 
                 if (DifficultyManager.instance != null)
