@@ -555,6 +555,17 @@
                     "action": "Cheat",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "932607e5-ab7f-4d79-bd07-99ce08eeaf2b",
+                    "path": "<Keyboard>/f11",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Cheat",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
