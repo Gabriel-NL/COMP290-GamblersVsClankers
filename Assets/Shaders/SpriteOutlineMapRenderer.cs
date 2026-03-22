@@ -1,9 +1,11 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
 public class SpriteOutlineMapRenderer : MonoBehaviour
 {
+    
     [System.Serializable]
     public class SpriteMapData
     {
@@ -12,9 +14,6 @@ public class SpriteOutlineMapRenderer : MonoBehaviour
         public Vector2Int[] outlineablePixels;
         public Texture2D maskTexture;
     }
-
-    [Header("Material using the custom shader")]
-    [SerializeField] private Material runtimeMaterial;
 
     [Header("Build threshold: alpha >= this is considered visible for map generation")]
     [SerializeField] private byte visibleAlphaThreshold = 1;
@@ -29,9 +28,11 @@ public class SpriteOutlineMapRenderer : MonoBehaviour
 
     private SpriteRenderer spriteRenderer;
     private Sprite lastSprite;
+    private Material sourceRuntimeMaterial;
+    private Coroutine waitForProviderCoroutine;
+    private int outlineThickness = 3;
 
     private readonly Dictionary<Sprite, SpriteMapData> spriteMapDictionary = new();
-
     public IReadOnlyDictionary<Sprite, SpriteMapData> SpriteMapDictionary => spriteMapDictionary;
 
     private static readonly int MainTexId = Shader.PropertyToID("_MainTex");
@@ -43,12 +44,28 @@ public class SpriteOutlineMapRenderer : MonoBehaviour
 
     private void Awake()
     {
-        InitializeAndApply(forceRefresh: true);
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void OnEnable()
     {
-        InitializeAndApply(forceRefresh: true);
+        SpriteOutlineRenderDispatcher.RegisterRenderer(this);
+
+        if (waitForProviderCoroutine != null)
+            StopCoroutine(waitForProviderCoroutine);
+
+        waitForProviderCoroutine = StartCoroutine(CoWaitForProviderAndApply());
+    }
+
+    private void OnDisable()
+    {
+        SpriteOutlineRenderDispatcher.UnregisterRenderer(this);
+
+        if (waitForProviderCoroutine != null)
+        {
+            StopCoroutine(waitForProviderCoroutine);
+            waitForProviderCoroutine = null;
+        }
     }
 
     private void LateUpdate()
@@ -56,26 +73,30 @@ public class SpriteOutlineMapRenderer : MonoBehaviour
         RefreshCurrentSprite(force: false);
     }
 
-#if UNITY_EDITOR
-    private void OnValidate()
+    private IEnumerator CoWaitForProviderAndApply()
     {
-        InitializeAndApply(forceRefresh: true);
-    }
-#endif
+        while (!HasValidRuntimeMaterial())
+        {
+            SpriteOutlineRenderDispatcher.TryApplyToRenderer(this);
+            yield return null;
+        }
 
-    private void InitializeAndApply(bool forceRefresh)
-    {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        EnsureTargetMaterial();
-        ClearMaskSoSpriteRemainsVisible();
-        ApplyVisualProperties();
-        RefreshCurrentSprite(forceRefresh);
+        RefreshCurrentSprite(force: true);
+        waitForProviderCoroutine = null;
     }
 
-    private void EnsureTargetMaterial()
+    private bool HasValidRuntimeMaterial()
+    {
+        Material mat = GetTargetMaterial();
+        return mat != null && sourceRuntimeMaterial != null;
+    }
+
+    public void ReceiveRuntimeMaterial(Material runtimeMaterial)
     {
         if (runtimeMaterial == null)
             return;
+
+        sourceRuntimeMaterial = runtimeMaterial;
 
         if (spriteRenderer == null)
             spriteRenderer = GetComponent<SpriteRenderer>();
@@ -83,34 +104,34 @@ public class SpriteOutlineMapRenderer : MonoBehaviour
         if (spriteRenderer == null)
             return;
 
-#if UNITY_EDITOR
-        if (!Application.isPlaying)
-        {
-            if (spriteRenderer.sharedMaterial != runtimeMaterial)
-                spriteRenderer.sharedMaterial = runtimeMaterial;
-
-            return;
-        }
-#endif
-
         Material current = spriteRenderer.material;
-        if (current == null || current.shader != runtimeMaterial.shader || current.name != runtimeMaterial.name + " (Runtime Instance)")
+        bool needsNewInstance =
+            current == null ||
+            current.shader != runtimeMaterial.shader ||
+            current.name != runtimeMaterial.name + " (Runtime Instance)";
+
+        if (needsNewInstance)
         {
             Material instance = new Material(runtimeMaterial);
             instance.name = runtimeMaterial.name + " (Runtime Instance)";
             spriteRenderer.material = instance;
         }
+
+        ClearMaskSoSpriteRemainsVisible();
+        ApplyVisualProperties();
+        RefreshCurrentSprite(force: true);
+    }
+
+    public void ReceiveRenderSettings(float alphaThreshold)
+    {
+        renderAlphaThreshold = Mathf.Clamp01(alphaThreshold);
+        ApplyVisualProperties();
     }
 
     private Material GetTargetMaterial()
     {
         if (spriteRenderer == null)
             return null;
-
-#if UNITY_EDITOR
-        if (!Application.isPlaying)
-            return spriteRenderer.sharedMaterial;
-#endif
 
         return spriteRenderer.material;
     }
@@ -216,13 +237,7 @@ public class SpriteOutlineMapRenderer : MonoBehaviour
                 if (visibleMap[x, y])
                     continue;
 
-                bool hasVisibleNeighbor =
-                    IsVisible(visibleMap, x, y + 1, width, height) ||
-                    IsVisible(visibleMap, x, y - 1, width, height) ||
-                    IsVisible(visibleMap, x - 1, y, width, height) ||
-                    IsVisible(visibleMap, x + 1, y, width, height);
-
-                if (hasVisibleNeighbor)
+                if (HasVisibleNeighborInRange(visibleMap, x, y, width, height, outlineThickness))
                     outlineablePixels.Add(new Vector2Int(x, y));
             }
         }
@@ -300,6 +315,28 @@ public class SpriteOutlineMapRenderer : MonoBehaviour
             return false;
 
         return map[x, y];
+    }
+    private static bool HasVisibleNeighborInRange(bool[,] map, int centerX, int centerY, int width, int height, int range)
+    {
+        if (range <= 0)
+            return false;
+
+        for (int y = centerY - range; y <= centerY + range; y++)
+        {
+            for (int x = centerX - range; x <= centerX + range; x++)
+            {
+                if (x == centerX && y == centerY)
+                    continue;
+
+                if (x < 0 || x >= width || y < 0 || y >= height)
+                    continue;
+
+                if (map[x, y])
+                    return true;
+            }
+        }
+
+        return false;
     }
 
     public bool TryGetMap(Sprite sprite, out SpriteMapData data)

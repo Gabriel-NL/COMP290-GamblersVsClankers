@@ -33,8 +33,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1122584798454053347}
   - {fileID: 1059306280016158703}
+  - {fileID: 1122584798454053347}
   - {fileID: 8552931564372106709}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -211,7 +211,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 7fd74cc3b2d12ff41a56d76de6ec4ddc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -278,17 +278,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7883a8476714b6fa7cc4c394e76e31d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoldierEnchantController
-  spriteRenderer: {fileID: 6037154882826363636}
-  soldierBehaviour: {fileID: 223862328501449259}
+  visibleAlphaThreshold: 1
+  renderAlphaThreshold: 0.001
   enchantEnabled: 0
-  autoUseRarityColor: 1
-  autoDisableForCommon: 1
   enchantColor: {r: 1, g: 1, b: 1, a: 0.35}
-  waveSpeed: 1
-  waveFrequency: 8
-  waveWidth: 0.2
-  waveStrength: 0.5
-  diagonalAmount: 1
 --- !u!1 &6398259423021296117
 GameObject:
   m_ObjectHideFlags: 0

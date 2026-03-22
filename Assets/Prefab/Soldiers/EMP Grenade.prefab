@@ -110,7 +110,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3601261629423451221}
   - component: {fileID: 1794791202666502809}
-  - component: {fileID: 8530088059024567837}
   m_Layer: 7
   m_Name: Sprite
   m_TagString: Untagged
@@ -192,26 +191,3 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &8530088059024567837
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4976208931788187220}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7883a8476714b6fa7cc4c394e76e31d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SoldierEnchantController
-  spriteRenderer: {fileID: 1794791202666502809}
-  soldierBehaviour: {fileID: 608475507943599046}
-  enchantEnabled: 0
-  autoUseRarityColor: 1
-  autoDisableForCommon: 1
-  enchantColor: {r: 1, g: 1, b: 1, a: 0.35}
-  waveSpeed: 1
-  waveFrequency: 8
-  waveWidth: 0.2
-  waveStrength: 0.5
-  diagonalAmount: 1

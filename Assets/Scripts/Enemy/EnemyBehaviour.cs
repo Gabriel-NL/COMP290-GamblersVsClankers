@@ -20,7 +20,7 @@ public class EnemyBehaviour : MonoBehaviour
     [ReadOnly] public bool isStunned = false;
 
     [Header("Combat")]
-    [Tooltip("Current scaled time between attacks in seconds")]
+    [Tooltip("Current time between attacks in seconds")]
     [ReadOnly] public float attackCooldown = 1f;
 
     private float attackTimer = 0f;
@@ -54,6 +54,9 @@ public class EnemyBehaviour : MonoBehaviour
     private float stunEndTime = -1f;
     private Color preStunColor = Color.white;
 
+    private HordeManager hordeManager;
+    private bool hasReportedDeathToHordeManager;
+
     void Start()
     {
         Initialization();
@@ -67,6 +70,11 @@ public class EnemyBehaviour : MonoBehaviour
         }
 
         jitterSeed = Random.Range(0f, 1000f);
+    }
+
+    public void SetHordeManager(HordeManager manager)
+    {
+        hordeManager = manager;
     }
 
     void Update()
@@ -139,27 +147,19 @@ public class EnemyBehaviour : MonoBehaviour
             return;
         }
 
+        if (spriteRenderer == null)
+        {
+            Debug.LogWarning($"[EnemyBehaviour] '{gameObject.name}' has no SpriteRenderer assigned.");
+            return;
+        }
+
         spriteRenderer.sprite = enemyType.characterSprite;
+
         speed = enemyType.stats.speed;
-
-        float baseHealth = enemyType.stats.health;
-        float baseDamage = enemyType.stats.dmg;
-        float baseAttackCooldown = enemyType.stats.attackCooldown;
-
-        if (Application.isPlaying && DifficultyManager.instance != null)
-        {
-            maxHealth = DifficultyManager.instance.GetScaledHealth(baseHealth);
-            dmg = DifficultyManager.instance.GetScaledDamage(baseDamage);
-            attackCooldown = DifficultyManager.instance.GetScaledCooldown(baseAttackCooldown);
-        }
-        else
-        {
-            maxHealth = baseHealth;
-            dmg = baseDamage;
-            attackCooldown = baseAttackCooldown;
-        }
-
+        maxHealth = enemyType.stats.health;
         currentHealth = maxHealth;
+        dmg = enemyType.stats.dmg;
+        attackCooldown = enemyType.stats.attackCooldown;
         reward = enemyType.stats.reward;
         isFlying = enemyType.stats.isFlying;
         isRCCar = enemyType.stats.isRCCar;
@@ -174,7 +174,10 @@ public class EnemyBehaviour : MonoBehaviour
     private void Initialization()
     {
         SetEnemyType();
-        Debug.Log($"[EnemyBehaviour] Initialized speed={speed}, health={currentHealth}/{maxHealth}, dmg={dmg}, reward={reward}, atkCd={attackCooldown} on '{gameObject.name}'");
+
+        Debug.Log(
+            $"[EnemyBehaviour] Initialized speed={speed}, health={currentHealth}/{maxHealth}, dmg={dmg}, reward={reward}, atkCd={attackCooldown} on '{gameObject.name}'"
+        );
     }
 
     public void TakeDamage(float damage)
@@ -195,6 +198,14 @@ public class EnemyBehaviour : MonoBehaviour
 
     private void Die(bool rewardPlayer, bool countAsKill)
     {
+        if (hasReportedDeathToHordeManager)
+        {
+            Debug.LogWarning($"[EnemyBehaviour] '{gameObject.name}' death was already processed.");
+            return;
+        }
+
+        hasReportedDeathToHordeManager = true;
+
         Debug.Log($"[EnemyBehaviour] '{gameObject.name}' has died! rewardPlayer={rewardPlayer}, countAsKill={countAsKill}");
 
         if (rewardPlayer && ScoreManager.instance != null)
@@ -202,9 +213,20 @@ public class EnemyBehaviour : MonoBehaviour
             ScoreManager.instance.AddPoints((int)reward);
         }
 
-        if (countAsKill && DifficultyManager.instance != null)
+        // countAsKill foi mantido para compatibilidade com sua assinatura atual,
+        // mas a progressão de horda agora depende do HordeManager, não do DifficultyManager.
+        if (countAsKill)
         {
-            DifficultyManager.instance.OnEnemyKilled();
+            // Intencionalmente vazio.
+        }
+
+        if (hordeManager != null)
+        {
+            hordeManager.RemoveEnemy(this);
+        }
+        else
+        {
+            Debug.LogWarning($"[EnemyBehaviour] '{gameObject.name}' died without HordeManager reference.");
         }
 
         Destroy(gameObject);
@@ -295,7 +317,9 @@ public class EnemyBehaviour : MonoBehaviour
 
             soldier.TakeDamage(99999f);
 
-            // No reward and no kill progression if RC car explodes on collision kill.
+            // Continua sem reward e sem kill credit normal,
+            // mas agora ainda remove da horda porque o próprio Die()
+            // sempre notifica o HordeManager.
             Die(false, false);
             return;
         }

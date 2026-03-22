@@ -60,7 +60,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 7fd74cc3b2d12ff41a56d76de6ec4ddc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -127,17 +127,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7883a8476714b6fa7cc4c394e76e31d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoldierEnchantController
-  spriteRenderer: {fileID: 6329072092258677603}
-  soldierBehaviour: {fileID: 1022681853174316796}
-  enchantEnabled: 0
-  autoUseRarityColor: 1
-  autoDisableForCommon: 1
-  enchantColor: {r: 1, g: 1, b: 1, a: 0.35}
-  waveSpeed: 1
-  waveFrequency: 8
-  waveWidth: 0.2
-  waveStrength: 0.5
-  diagonalAmount: 1
+  visibleAlphaThreshold: 1
+  renderAlphaThreshold: 0.95
+  enchantEnabled: 1
+  enchantColor: {r: 0, g: 0.666667, b: 1, a: 0.84313726}
 --- !u!1 &3540929256551037961
 GameObject:
   m_ObjectHideFlags: 0
@@ -357,7 +350,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SoldierType: {fileID: 11400000, guid: 230a6661fcc9d2f4b967dc75cbd6846f, type: 2}
-  tier: 0
+  tier: 2
   firePoint: {fileID: 2135843433926487458}
   spriteRenderer: {fileID: 6329072092258677603}
   bulletPrefab: {fileID: 4913968032916151816, guid: 3c1f4cd762919934488023d0aeac8e37, type: 3}

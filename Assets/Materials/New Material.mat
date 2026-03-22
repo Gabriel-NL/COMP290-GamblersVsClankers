@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_SoldierEnchantment
-  m_Shader: {fileID: 4800000, guid: 1a737623c5cf4ea09e021393783c0ce9, type: 3}
+  m_Name: New Material
+  m_Shader: {fileID: 10753, guid: 0000000000000000f000000000000000, type: 0}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -31,10 +31,6 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _ControlMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -51,15 +47,7 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _LineMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 1db0e151b70eb6f4e9bb46efcc1ad4a0, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MaskTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -71,10 +59,6 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _OutlineMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -82,53 +66,27 @@ Material:
     m_Ints: []
     m_Floats:
     - PixelSnap: 0
-    - _AlphaCutoff: 0.414
     - _BumpScale: 1
-    - _CooldownDuration: 5
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
-    - _DiagonalAmount: 1
     - _DstBlend: 0
     - _EnableExternalAlpha: 0
-    - _EnchantEnabled: 1
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _LineStrength: 0.1
-    - _LineWidth: 0.142
-    - _LocalMaxX: 0.5
-    - _LocalMaxY: 0.5
-    - _LocalMinX: -0.5
-    - _LocalMinY: -0.5
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _OutlineStrength: 1
     - _Parallax: 0.02
-    - _PulseActive: 0
-    - _PulseProgress: 0.75
-    - _ShowEnchant: 1
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _SpriteHeight: 1
-    - _SpriteMaxY: 0.5
-    - _SpriteMinY: -0.5
     - _SrcBlend: 1
-    - _SweepDuration: 5
     - _UVSec: 0
-    - _WaveFrequency: 0.2
-    - _WaveSpeed: 0.1
-    - _WaveStrength: 0.1
-    - _WaveWidth: 1
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _EnchantColor: {r: 1, g: 0, b: 0, a: 0.35}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
-    - _LineColor: {r: 1, g: 0, b: 0, a: 1}
-    - _OutlineColor: {r: 0, g: 0.666667, b: 1, a: 0.84313726}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
-    - _SpriteRect: {r: 0.012158381, g: 0.020779222, b: 0.27877143, a: 0.2866211}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

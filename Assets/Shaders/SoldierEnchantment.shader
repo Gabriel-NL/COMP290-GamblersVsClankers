@@ -1,4 +1,4 @@
-Shader "Custom/SpriteVisibleAndOutlineMap"
+Shader "Custom/SpriteOutlineMapRenderer"
 {
     Properties
     {

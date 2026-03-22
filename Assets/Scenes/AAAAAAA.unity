@@ -119,17 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!114 &721159707 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1022681853174316796, guid: b329b3a5fb772fb4ea8847d5e73048a3, type: 3}
-  m_PrefabInstance: {fileID: 1846046463}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71ab35206f1356448a254053ad475774, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &761613372
 GameObject:
   m_ObjectHideFlags: 0
@@ -216,7 +205,7 @@ Transform:
   m_GameObject: {fileID: 761613372}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 0, y: 2.81, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -230,74 +219,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1022681853174316796, guid: b329b3a5fb772fb4ea8847d5e73048a3, type: 3}
-      propertyPath: tier
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5072092866240057540, guid: b329b3a5fb772fb4ea8847d5e73048a3, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5072092866240057540, guid: b329b3a5fb772fb4ea8847d5e73048a3, type: 3}
-      propertyPath: waveSpeed
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5072092866240057540, guid: b329b3a5fb772fb4ea8847d5e73048a3, type: 3}
-      propertyPath: waveWidth
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 5072092866240057540, guid: b329b3a5fb772fb4ea8847d5e73048a3, type: 3}
-      propertyPath: waveStrength
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5072092866240057540, guid: b329b3a5fb772fb4ea8847d5e73048a3, type: 3}
-      propertyPath: waveFrequency
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5072092866240057540, guid: b329b3a5fb772fb4ea8847d5e73048a3, type: 3}
-      propertyPath: diagonalAmount
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5072092866240057540, guid: b329b3a5fb772fb4ea8847d5e73048a3, type: 3}
       propertyPath: enchantColor.a
-      value: 0.84313726
-      objectReference: {fileID: 0}
-    - target: {fileID: 5072092866240057540, guid: b329b3a5fb772fb4ea8847d5e73048a3, type: 3}
-      propertyPath: enchantColor.b
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5072092866240057540, guid: b329b3a5fb772fb4ea8847d5e73048a3, type: 3}
-      propertyPath: enchantColor.g
-      value: 0.666667
-      objectReference: {fileID: 0}
-    - target: {fileID: 5072092866240057540, guid: b329b3a5fb772fb4ea8847d5e73048a3, type: 3}
-      propertyPath: enchantColor.r
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5072092866240057540, guid: b329b3a5fb772fb4ea8847d5e73048a3, type: 3}
-      propertyPath: enchantEnabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5072092866240057540, guid: b329b3a5fb772fb4ea8847d5e73048a3, type: 3}
-      propertyPath: runtimeMaterial
-      value: 
-      objectReference: {fileID: 2100000, guid: 1a8d047bfc2b2694ead1aee3fec3a996, type: 2}
-    - target: {fileID: 5072092866240057540, guid: b329b3a5fb772fb4ea8847d5e73048a3, type: 3}
-      propertyPath: soldierBehaviour
-      value: 
-      objectReference: {fileID: 721159707}
-    - target: {fileID: 5072092866240057540, guid: b329b3a5fb772fb4ea8847d5e73048a3, type: 3}
-      propertyPath: autoUseRarityColor
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5072092866240057540, guid: b329b3a5fb772fb4ea8847d5e73048a3, type: 3}
-      propertyPath: renderAlphaThreshold
-      value: 0.414
-      objectReference: {fileID: 0}
-    - target: {fileID: 6329072092258677603, guid: b329b3a5fb772fb4ea8847d5e73048a3, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 1a8d047bfc2b2694ead1aee3fec3a996, type: 2}
     - target: {fileID: 7905570568522773899, guid: b329b3a5fb772fb4ea8847d5e73048a3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -341,10 +266,6 @@ PrefabInstance:
     - target: {fileID: 8840613795720796342, guid: b329b3a5fb772fb4ea8847d5e73048a3, type: 3}
       propertyPath: m_Name
       value: Assault Rifle
-      objectReference: {fileID: 0}
-    - target: {fileID: 8840613795720796342, guid: b329b3a5fb772fb4ea8847d5e73048a3, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
