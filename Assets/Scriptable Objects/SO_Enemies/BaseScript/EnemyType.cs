@@ -22,6 +22,7 @@ public struct EnemyStats
     public float dmg;
     public float reward;
     public float speed;
+    public float attackCooldown;
     public bool isFlying;
     public bool isRCCar;
 }

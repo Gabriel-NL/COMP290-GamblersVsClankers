@@ -20,3 +20,6 @@ MonoBehaviour:
     dmg: 10
     reward: 10
     speed: 2
+    attackCooldown: 1
+    isFlying: 0
+    isRCCar: 0
