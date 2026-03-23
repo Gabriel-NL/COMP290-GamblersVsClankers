@@ -198,23 +198,24 @@ public class EnemyBehaviour : MonoBehaviour
 
     private void ApplyExplosionDamage()
     {
-        // Find all colliders in the explosion radius
-        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, aoeRadius, enemyLayer);
+        // Find all soldiers in the scene and check distance
+        SoldierBehaviour[] allSoldiers = FindObjectsByType<SoldierBehaviour>(FindObjectsSortMode.None);
+        int damagedCount = 0;
 
-        foreach (Collider2D collider in hitColliders)
+        foreach (SoldierBehaviour soldier in allSoldiers)
         {
-            EnemyBehaviour enemy = collider.GetComponent<EnemyBehaviour>();
-            if (enemy != null && enemy != this && enemy.IsAlive())
+            // Calculate distance to this soldier
+            float distance = Vector3.Distance(transform.position, soldier.transform.position);
+            
+            if (distance <= aoeRadius)
             {
-                enemy.TakeDamage(dmg);
-                Debug.Log($"[EnemyBehaviour] Cybertruck explosion dealt {dmg} damage to '{collider.gameObject.name}'");
+                soldier.TakeDamage(dmg);
+                damagedCount++;
+                Debug.Log($"[EnemyBehaviour] Cybertruck explosion dealt {dmg} damage to soldier '{soldier.gameObject.name}' (distance: {distance:F2})");
             }
         }
 
-        if (hitColliders.Length > 0)
-        {
-            Debug.Log($"[EnemyBehaviour] Cybertruck explosion hit {hitColliders.Length} target(s)");
-        }
+        Debug.Log($"[EnemyBehaviour] Cybertruck explosion affected {damagedCount} soldier(s) within radius {aoeRadius}");
     }
 
     private void UpdateAttackAnimation()
@@ -280,13 +281,14 @@ public class EnemyBehaviour : MonoBehaviour
         reward = enemyType.stats.reward;
         isFlying = enemyType.stats.isFlying;
         isRCCar = enemyType.stats.isRCCar;
+        isCybertruck = enemyType.stats.isCybertruck;
     }
 
-    [Button("Test: Take 10 Damage")]
-    private void TestTakeDamage()
-    {
-        TakeDamage(10f);
-    }
+    // [Button("Test: Take 10 Damage")]
+    // private void TestTakeDamage()
+    // {
+    //     TakeDamage(10f);
+    // }
 
     private void Initialization()
     {

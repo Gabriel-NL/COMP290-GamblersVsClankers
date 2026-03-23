@@ -34,15 +34,19 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 6cdd0bfa0cdd4154b83987bc779c416a, type: 2}
     - target: {fileID: 953735057178029277, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
       propertyPath: maxHealth
-      value: 200
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 953735057178029277, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
       propertyPath: bulletPrefab
       value: 
       objectReference: {fileID: 9021028466107895252, guid: f4bfb213a1b8d564a814bb403812126b, type: 3}
     - target: {fileID: 953735057178029277, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
+      propertyPath: isCybertruck
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 953735057178029277, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
       propertyPath: currentHealth
-      value: 200
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 953735057178029277, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
       propertyPath: attackCooldown

@@ -36,7 +36,7 @@ public class UIHandler : MonoBehaviour
         {
             fullscreenToggle.isOn = Screen.fullScreenMode == FullScreenMode.FullScreenWindow;
             fullscreenToggle.onValueChanged.AddListener(SetFullscreen);
-            Debug.Log("Fullscreen toggle set to: " + fullscreenToggle.isOn);
+            //Debug.Log("Fullscreen toggle set to: " + fullscreenToggle.isOn);
         }
         else
         {
