@@ -34,7 +34,6 @@ public class EnableCheatmode : MonoBehaviour
 
     public void ActivateCheatmode()
     {
-        Debug.Log("Cheat mode enabled: INFINITE MONEY");
         ScoreManager scoreManager = Object.FindFirstObjectByType<ScoreManager>();
         if (scoreManager != null)
         {

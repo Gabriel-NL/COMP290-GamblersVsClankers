@@ -6496,7 +6496,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   overwritePanel: {fileID: 1461990799}
-  inputActionAsset: {fileID: 0}
+  inputActionAsset: {fileID: -944628639613478452, guid: 56882b78d9f923947a8040f82a56e561, type: 3}
 --- !u!1 &931092582
 GameObject:
   m_ObjectHideFlags: 0
@@ -13959,7 +13959,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e19a81117229d1143addf9abc3aa8b66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputActionAsset: {fileID: 0}
+  inputActionAsset: {fileID: -944628639613478452, guid: 56882b78d9f923947a8040f82a56e561, type: 3}
 --- !u!1 &2006691169
 GameObject:
   m_ObjectHideFlags: 0

@@ -80,7 +80,7 @@ public class PauseMenu : MonoBehaviour
             animator.updateMode = AnimatorUpdateMode.UnscaledTime;
         }
         
-        Debug.Log($"Pause menu UI configured with {animators.Length} animators set to UnscaledTime");
+        //Debug.Log($"Pause menu UI configured with {animators.Length} animators set to UnscaledTime");
     }
 
     public void TogglePausePanel()

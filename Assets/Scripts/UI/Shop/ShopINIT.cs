@@ -49,13 +49,13 @@ public class ShopINIT : MonoBehaviour
 
     private void InitializeShop()
     {
-        Debug.Log($"InitializeShop started - shopSlots.Count: {shopSlots.Count}, shopSoldiers.Count: {shopSoldiers.Count}");
+        //Debug.Log($"InitializeShop started - shopSlots.Count: {shopSlots.Count}, shopSoldiers.Count: {shopSoldiers.Count}");
 
         for (int i = 0; i < shopSlots.Count; i++)
         {
             if (i >= shopSoldiers.Count) continue;
 
-            Debug.Log($"Initializing slot {i}: {shopSlots[i]?.gameObject.name}");
+            //Debug.Log($"Initializing slot {i}: {shopSlots[i]?.gameObject.name}");
 
             shopSlots[i].sprite = shopSoldiers[i].characterSprite;
 
