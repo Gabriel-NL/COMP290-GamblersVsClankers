@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class PauseMenu : MonoBehaviour
 {
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject overwritePanel;
+    [SerializeField] private InputActionAsset inputActionAsset;
+    private InputAction pauseAction;
     private bool isPaused = false;
 
     void Start()
@@ -30,8 +33,30 @@ public class PauseMenu : MonoBehaviour
             pausePanel.SetActive(false);
             
             // Ensure pause panel UI works during pause (uses unscaled time)
-            EnsurePauseUIWorksWithTimeScale();
         }
+        // Setup input action for pause
+        SetupPauseInput();
+    }
+
+    private void SetupPauseInput()
+    {
+        if (inputActionAsset == null)
+        {
+            Debug.LogWarning("InputActionAsset not assigned to PauseMenu script");
+            return;
+        }
+
+        pauseAction = inputActionAsset.FindAction("UI/Pause");
+        if (pauseAction == null)
+        {
+            Debug.LogError("Pause action not found in UI action map");
+            return;
+        }
+
+        pauseAction.performed += OnPauseInput;
+        pauseAction.Enable();
+            EnsurePauseUIWorksWithTimeScale();
+        
     }
     
     /// <summary>
@@ -107,6 +132,19 @@ public class PauseMenu : MonoBehaviour
     {
         Time.timeScale = 1f; // Resumes normal time
         isPaused = false;
+    }
+    private void OnDestroy()
+    {
+        if (pauseAction != null)
+        {
+            pauseAction.performed -= OnPauseInput;
+            pauseAction.Disable();
+        }
+    }
+
+    private void OnPauseInput(InputAction.CallbackContext context)
+    {
+        TogglePausePanel();
         Debug.Log("Game Resumed");
     }
     

@@ -494,8 +494,7 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
                 Transform parentTransform = targetSlot.transform;
 
                 GameObject spawnedSoldier = Instantiate(soldierPrefab, spawnPosition, Quaternion.identity);
-                spawnedSoldier.transform.SetParent(parentTransform, false);
-                spawnedSoldier.transform.localPosition = Vector3.zero;
+                spawnedSoldier.transform.SetParent(parentTransform, true);
                 spawnedSoldier.transform.localRotation = Quaternion.identity;
                 spawnedSoldier.transform.localScale = Vector3.one;
 

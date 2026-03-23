@@ -17,6 +17,7 @@ public class EnemyBehaviour : MonoBehaviour
     [ReadOnly] public float reward;
     [ReadOnly] public bool isFlying;
     [ReadOnly] public bool isRCCar;
+    [ReadOnly] public bool isCybertruck;
     [ReadOnly] public bool isStunned = false;
 
     [Header("Combat")]
@@ -25,6 +26,18 @@ public class EnemyBehaviour : MonoBehaviour
 
     private float attackTimer = 0f;
     private SoldierBehaviour targetSoldier;
+
+    [Header("Cybertruck Explosion")]
+    [Tooltip("Prefab to spawn for explosion effect (should have EMPController)")]
+    public GameObject bulletPrefab;
+    [Tooltip("Radius of the explosion area of effect")]
+    public float aoeRadius = 5f;
+    [Tooltip("Layer mask for enemies to damage")]
+    public LayerMask enemyLayer;
+    [Tooltip("Duration of the explosion animation in seconds")]
+    public float explosionAnimationDuration = 0.5f;
+    [Tooltip("Max scale reached during explosion animation")]
+    public float explosionMaxScale = 1.5f;
 
     [Header("Attack Animation")]
     [Tooltip("How far forward the sprite lunges during attack")]
@@ -97,6 +110,110 @@ public class EnemyBehaviour : MonoBehaviour
                 AttackSoldier(targetSoldier);
                 attackTimer = attackCooldown;
             }
+        }
+    }
+
+    private void DetonateBomb()
+    {
+        Debug.Log($"[EnemyBehaviour] '{gameObject.name}' is a Cybertruck, detonating");
+
+        // Start the explosion sequence (animation + damage)
+        StartCoroutine(ExplosionSequence());
+    }
+
+    private IEnumerator ExplosionSequence()
+    {
+        // Disable collision and movement during explosion
+        Collider2D collider = GetComponent<Collider2D>();
+        if (collider != null)
+        {
+            collider.enabled = false;
+        }
+
+        EnemyWalking walking = GetComponent<EnemyWalking>();
+        if (walking != null)
+        {
+            walking.Stop();
+        }
+
+        Vector3 originalScale = spriteRenderer != null ? spriteRenderer.transform.localScale : Vector3.one;
+        Vector3 targetScale = originalScale * explosionMaxScale;
+        float elapsedTime = 0f;
+
+        // Play explosion animation (scale up then down)
+        while (elapsedTime < explosionAnimationDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float progress = elapsedTime / explosionAnimationDuration;
+            
+            // Scale up then down smoothly
+            float scaleProgress = Mathf.Sin(progress * Mathf.PI);
+            Vector3 currentScale = Vector3.Lerp(originalScale, targetScale, scaleProgress);
+            
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.transform.localScale = currentScale;
+            }
+
+            yield return null;
+        }
+
+        // Reset scale
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.transform.localScale = originalScale;
+        }
+
+        // Spawn the explosion effect (visual feedback)
+        if (bulletPrefab != null)
+        {
+            GameObject cybertruckBombEffect = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+            EMPController areaEffectController = cybertruckBombEffect.GetComponent<EMPController>();
+            
+            if (areaEffectController != null)
+            {
+                // Configure the effect as pure damage (no stun)
+                areaEffectController.stunDuration = 0f;
+                areaEffectController.damageAmount = dmg;
+                areaEffectController.aoeRadius = aoeRadius;
+                areaEffectController.enemyLayer = enemyLayer;
+                Debug.Log($"[EnemyBehaviour] Cybertruck explosion spawned: damage={dmg}, aoeRadius={aoeRadius}");
+            }
+            else
+            {
+                Debug.LogWarning($"[EnemyBehaviour] Cybertruck bomb effect has no EMPController on '{gameObject.name}'");
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"[EnemyBehaviour] Cybertruck '{gameObject.name}' has no bulletPrefab assigned. No visual effect spawned.");
+        }
+
+        // Apply direct damage to all enemies in AOE radius using Physics overlap
+        ApplyExplosionDamage();
+
+        // Destroy the cybertruck after the animation
+        Destroy(gameObject);
+    }
+
+    private void ApplyExplosionDamage()
+    {
+        // Find all colliders in the explosion radius
+        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, aoeRadius, enemyLayer);
+
+        foreach (Collider2D collider in hitColliders)
+        {
+            EnemyBehaviour enemy = collider.GetComponent<EnemyBehaviour>();
+            if (enemy != null && enemy != this && enemy.IsAlive())
+            {
+                enemy.TakeDamage(dmg);
+                Debug.Log($"[EnemyBehaviour] Cybertruck explosion dealt {dmg} damage to '{collider.gameObject.name}'");
+            }
+        }
+
+        if (hitColliders.Length > 0)
+        {
+            Debug.Log($"[EnemyBehaviour] Cybertruck explosion hit {hitColliders.Length} target(s)");
         }
     }
 
@@ -321,6 +438,14 @@ public class EnemyBehaviour : MonoBehaviour
             // mas agora ainda remove da horda porque o próprio Die()
             // sempre notifica o HordeManager.
             Die(false, false);
+            return;
+        }
+
+        if(isCybertruck)
+        {
+            Debug.Log($"[EnemyBehaviour] Cybertruck '{gameObject.name}' collided with '{collision.gameObject.name}'. Detonating.");
+
+            DetonateBomb();
             return;
         }
 

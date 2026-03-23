@@ -424,6 +424,74 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6254519}
   m_CullTransparentMesh: 1
+--- !u!1 &34169833
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 34169834}
+  - component: {fileID: 34169836}
+  - component: {fileID: 34169835}
+  m_Layer: 0
+  m_Name: EnemyHordeManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &34169834
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 34169833}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1191980163}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &34169835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 34169833}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c4e9dfd9b554a7fad9c4c2bf04fe38b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HordePrefabDatabase
+  enemyPrefabs:
+  - {fileID: 9204518505934783331, guid: 08b662762cea5c34d9dfa301d3d6abc8, type: 3}
+  - {fileID: 721090535793958033, guid: c38a5e9bf5458124e92ce749002d191f, type: 3}
+  - {fileID: 3961095044603274631, guid: f04003c4f173ccf47ba758bb63407c08, type: 3}
+  - {fileID: 8129901452232044080, guid: d1b7ac40278827741a0ef19de094f8d8, type: 3}
+  - {fileID: 4874827477642571900, guid: 7972091e90d2d8044b645b4d3b97078e, type: 3}
+  - {fileID: 1942547105517165933, guid: 45b3fdae14868f046916fc2714f2bb26, type: 3}
+  - {fileID: 3608417763630863750, guid: d25063ec6bd202e41b3441f3c8215509, type: 3}
+--- !u!114 &34169836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 34169833}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 729c8834aa61408482ee547dccded7de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HordeManager
+  prefabDatabase: {fileID: 34169835}
+  currentState: 0
+  currentHordeNumber: 0
 --- !u!1 &63264389
 GameObject:
   m_ObjectHideFlags: 0
@@ -2170,6 +2238,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pausePanel: {fileID: 965739329}
   overwritePanel: {fileID: 1461990799}
+  inputActionAsset: {fileID: -944628639613478452, guid: 56882b78d9f923947a8040f82a56e561, type: 3}
 --- !u!4 &318816510
 Transform:
   m_ObjectHideFlags: 0
@@ -6427,6 +6496,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   overwritePanel: {fileID: 1461990799}
+  inputActionAsset: {fileID: 0}
 --- !u!1 &931092582
 GameObject:
   m_ObjectHideFlags: 0
@@ -8698,7 +8768,7 @@ MonoBehaviour:
   - soldierType: {fileID: 11400000, guid: 9fcc17ea4a17e3340885ca8080388207, type: 2}
     probability: 15
   - soldierType: {fileID: 11400000, guid: 742f5728f55e73f4b8aca4733e003ecc, type: 2}
-    probability: 45
+    probability: 30
   - soldierType: {fileID: 11400000, guid: bd6adab3d859e7248abbaa68b43902bb, type: 2}
     probability: 25
   - soldierType: {fileID: 11400000, guid: 81cdb19f43fffe6468350dc1a529bd2b, type: 2}
@@ -8867,11 +8937,13 @@ Transform:
   - {fileID: 318816510}
   - {fileID: 818760093}
   - {fileID: 2058196450}
+  - {fileID: 34169834}
   - {fileID: 1506226230}
   - {fileID: 2000683154}
   - {fileID: 992747944}
   - {fileID: 1996157476}
   - {fileID: 883196051}
+  - {fileID: 1313100481}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1243899791
@@ -9395,6 +9467,52 @@ RectTransform:
   m_AnchoredPosition: {x: 91, y: 113}
   m_SizeDelta: {x: 35, y: 35}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1313100480
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1313100481}
+  - component: {fileID: 1313100482}
+  m_Layer: 0
+  m_Name: SpriteOutlineRenderDispatcher
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1313100481
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1313100480}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -3.6745906, y: -0.74534655, z: -0.03392602}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1191980163}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1313100482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1313100480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b712d38bdf912341be9a0d70f226015, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpriteOutlineRenderDispatcher
+  runtimeMaterial: {fileID: 2100000, guid: 6976705a604b4db488d791e9f03469ba, type: 2}
+  renderAlphaThreshold: 0.001
 --- !u!1 &1316453485
 GameObject:
   m_ObjectHideFlags: 0
@@ -13841,6 +13959,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e19a81117229d1143addf9abc3aa8b66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputActionAsset: {fileID: 0}
 --- !u!1 &2006691169
 GameObject:
   m_ObjectHideFlags: 0
@@ -14124,7 +14243,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2058196450
 Transform:
   m_ObjectHideFlags: 0
@@ -14159,7 +14278,6 @@ MonoBehaviour:
   - {fileID: 1942547105517165933, guid: 45b3fdae14868f046916fc2714f2bb26, type: 3}
   - {fileID: 9204518505934783331, guid: 08b662762cea5c34d9dfa301d3d6abc8, type: 3}
   - {fileID: 4874827477642571900, guid: 7972091e90d2d8044b645b4d3b97078e, type: 3}
-  - {fileID: 3608417763630863750, guid: d25063ec6bd202e41b3441f3c8215509, type: 3}
   numberOfLanes: 5
   laneSpacing: 1.4
   firstLaneOffset: -2
@@ -14458,6 +14576,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 242cf5c5dfc5d3f4bac8ec99706b6002, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputActionAsset: {fileID: -944628639613478452, guid: 56882b78d9f923947a8040f82a56e561, type: 3}
 --- !u!4 &2143343867
 Transform:
   m_ObjectHideFlags: 0
