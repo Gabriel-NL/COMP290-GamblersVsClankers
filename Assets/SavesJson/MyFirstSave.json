@@ -2,17 +2,8 @@
     "metadata": [
         {
             "key": "points",
-            "value": "400"
+            "value": "500"
         }
     ],
-    "entries": [
-        {
-            "x": 6,
-            "y": 1,
-            "value": {
-                "soldierTypeName": "RifleMan",
-                "soldierTierName": "Common"
-            }
-        }
-    ]
+    "entries": []
 }

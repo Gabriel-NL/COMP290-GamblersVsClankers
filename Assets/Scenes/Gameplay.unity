@@ -2238,6 +2238,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pausePanel: {fileID: 965739329}
   overwritePanel: {fileID: 1461990799}
+  inputActionAsset: {fileID: -944628639613478452, guid: 56882b78d9f923947a8040f82a56e561, type: 3}
 --- !u!4 &318816510
 Transform:
   m_ObjectHideFlags: 0
@@ -6495,6 +6496,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   overwritePanel: {fileID: 1461990799}
+  inputActionAsset: {fileID: 0}
 --- !u!1 &931092582
 GameObject:
   m_ObjectHideFlags: 0
@@ -13957,6 +13959,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e19a81117229d1143addf9abc3aa8b66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputActionAsset: {fileID: 0}
 --- !u!1 &2006691169
 GameObject:
   m_ObjectHideFlags: 0
@@ -14573,6 +14576,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 242cf5c5dfc5d3f4bac8ec99706b6002, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputActionAsset: {fileID: -944628639613478452, guid: 56882b78d9f923947a8040f82a56e561, type: 3}
 --- !u!4 &2143343867
 Transform:
   m_ObjectHideFlags: 0
