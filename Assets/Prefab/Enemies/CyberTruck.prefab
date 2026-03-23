@@ -9,6 +9,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 953735057178029277, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
+      propertyPath: dmg
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 953735057178029277, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
       propertyPath: speed
       value: 0.8
       objectReference: {fileID: 0}
@@ -18,7 +22,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 953735057178029277, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
       propertyPath: isRCCar
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 953735057178029277, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
+      propertyPath: aoeRadius
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 953735057178029277, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
       propertyPath: enemyType
@@ -26,11 +34,19 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 6cdd0bfa0cdd4154b83987bc779c416a, type: 2}
     - target: {fileID: 953735057178029277, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
       propertyPath: maxHealth
-      value: 100
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 953735057178029277, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
+      propertyPath: bulletPrefab
+      value: 
+      objectReference: {fileID: 9021028466107895252, guid: f4bfb213a1b8d564a814bb403812126b, type: 3}
+    - target: {fileID: 953735057178029277, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
       propertyPath: currentHealth
-      value: 100
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 953735057178029277, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
+      propertyPath: attackCooldown
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1206555501232163653, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
       propertyPath: m_Size.x

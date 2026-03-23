@@ -552,4 +552,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoldierTierSetter
   tierText: {fileID: 2952827152336362659}
-  canvas: {fileID: 2949258827073108165}

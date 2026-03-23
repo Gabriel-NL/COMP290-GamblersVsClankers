@@ -25,4 +25,5 @@ public struct EnemyStats
     public float attackCooldown;
     public bool isFlying;
     public bool isRCCar;
+    public bool isCybertruck;
 }

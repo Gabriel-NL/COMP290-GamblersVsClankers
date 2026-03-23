@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Crossbow Soldier
   characterSprite: {fileID: 2129950167499018804, guid: 17353af252dc23f42adee4496286e43d, type: 3}
-  soldierPrefab: {fileID: 7815089993619729977, guid: 0632766f979ec1640912e55fc178bb6d, type: 3}
+  soldierPrefab: {fileID: 8840613795720796342, guid: 242eaaba8c7fd2b479321b3fa7971d9c, type: 3}
   stats:
     bulletSpeed: 40
     bulletLife: 2
@@ -25,3 +25,7 @@ MonoBehaviour:
     isShootThrough: 1
     canShootAir: 1
     isShotgun: 0
+    isEMPGrenade: 0
+    stunDuration: 0
+    aoeRadius: 0
+    isWaterBomb: 0

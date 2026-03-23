@@ -79,7 +79,10 @@ public static class HordeDefinitions
             new PreMadeSummon(laneIndex: 2, relativeDelay: 2.3f, enemyPrefabIndex: 0),
             new PreMadeSummon(laneIndex: 4, relativeDelay: 1.4f, enemyPrefabIndex: 4),
             new PreMadeSummon(laneIndex: 1, relativeDelay: 2.7f, enemyPrefabIndex: 1),
-            new PreMadeSummon(laneIndex: 3, relativeDelay: 1.8f, enemyPrefabIndex: 5)
+            new PreMadeSummon(laneIndex: 3, relativeDelay: 1.8f, enemyPrefabIndex: 5),
+            
+            // CyberTruck spawn
+            new PreMadeSummon(laneIndex: 2, relativeDelay: 3.0f, enemyPrefabIndex: 6)
         ),
         new PreMadeHorde(
             new PreMadeSummon(laneIndex: 1, relativeDelay: 1.3f, enemyPrefabIndex: 0),
@@ -104,7 +107,10 @@ public static class HordeDefinitions
             new PreMadeSummon(laneIndex: 3, relativeDelay: 1.5f, enemyPrefabIndex: 1),
             new PreMadeSummon(laneIndex: 0, relativeDelay: 2.6f, enemyPrefabIndex: 2),
             new PreMadeSummon(laneIndex: 4, relativeDelay: 1.4f, enemyPrefabIndex: 1),
-            new PreMadeSummon(laneIndex: 2, relativeDelay: 2.0f, enemyPrefabIndex: 5)
+            new PreMadeSummon(laneIndex: 2, relativeDelay: 2.0f, enemyPrefabIndex: 5),
+            
+            // CyberTruck spawn
+            new PreMadeSummon(laneIndex: 0, relativeDelay: 3.5f, enemyPrefabIndex: 6)
         ),
         new PreMadeHorde(
     new PreMadeSummon(laneIndex: 0, relativeDelay: 1.4f, enemyPrefabIndex: 1),
@@ -139,7 +145,10 @@ public static class HordeDefinitions
 
     new PreMadeSummon(laneIndex: 1, relativeDelay: 1.9f, enemyPrefabIndex: 2),
     new PreMadeSummon(laneIndex: 3, relativeDelay: 0.0f, enemyPrefabIndex: 3),
-    new PreMadeSummon(laneIndex: 4, relativeDelay: 0.0f, enemyPrefabIndex: 4)
+    new PreMadeSummon(laneIndex: 4, relativeDelay: 0.0f, enemyPrefabIndex: 4),
+    
+    // CyberTruck spawn
+    new PreMadeSummon(laneIndex: 3, relativeDelay: 3.2f, enemyPrefabIndex: 6)
 ),
         new PreMadeHorde(
     new PreMadeSummon(laneIndex: 0, relativeDelay: 1.2f, enemyPrefabIndex: 1),
@@ -181,7 +190,10 @@ public static class HordeDefinitions
 
     new PreMadeSummon(laneIndex: 0, relativeDelay: 1.3f, enemyPrefabIndex: 1),
     new PreMadeSummon(laneIndex: 2, relativeDelay: 0.0f, enemyPrefabIndex: 0),
-    new PreMadeSummon(laneIndex: 4, relativeDelay: 0.0f, enemyPrefabIndex: 5)
+    new PreMadeSummon(laneIndex: 4, relativeDelay: 0.0f, enemyPrefabIndex: 5),
+    
+    // CyberTruck spawn
+    new PreMadeSummon(laneIndex: 1, relativeDelay: 2.8f, enemyPrefabIndex: 6)
 ),
     };
 }

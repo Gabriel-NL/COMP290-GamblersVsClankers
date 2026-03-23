@@ -17,9 +17,10 @@ MonoBehaviour:
   enemyPrefab: {fileID: 3608417763630863750, guid: d25063ec6bd202e41b3441f3c8215509, type: 3}
   stats:
     health: 200
-    dmg: 0
+    dmg: 50
     reward: 25
     speed: 0.8
     attackCooldown: 0
     isFlying: 0
-    isRCCar: 1
+    isRCCar: 0
+    isCybertruck: 1
