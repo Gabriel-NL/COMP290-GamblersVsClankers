@@ -476,6 +476,7 @@ MonoBehaviour:
   - {fileID: 8129901452232044080, guid: d1b7ac40278827741a0ef19de094f8d8, type: 3}
   - {fileID: 4874827477642571900, guid: 7972091e90d2d8044b645b4d3b97078e, type: 3}
   - {fileID: 1942547105517165933, guid: 45b3fdae14868f046916fc2714f2bb26, type: 3}
+  - {fileID: 3608417763630863750, guid: d25063ec6bd202e41b3441f3c8215509, type: 3}
 --- !u!114 &34169836
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8765,7 +8766,7 @@ MonoBehaviour:
   - soldierType: {fileID: 11400000, guid: 9fcc17ea4a17e3340885ca8080388207, type: 2}
     probability: 15
   - soldierType: {fileID: 11400000, guid: 742f5728f55e73f4b8aca4733e003ecc, type: 2}
-    probability: 45
+    probability: 30
   - soldierType: {fileID: 11400000, guid: bd6adab3d859e7248abbaa68b43902bb, type: 2}
     probability: 25
   - soldierType: {fileID: 11400000, guid: 81cdb19f43fffe6468350dc1a529bd2b, type: 2}
