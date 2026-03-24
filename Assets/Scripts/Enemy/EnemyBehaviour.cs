@@ -192,6 +192,16 @@ public class EnemyBehaviour : MonoBehaviour
         // Apply direct damage to all enemies in AOE radius using Physics overlap
         ApplyExplosionDamage();
 
+        // Report death to HordeManager before destroying
+        if (hordeManager != null)
+        {
+            hordeManager.RemoveEnemy(this);
+        }
+        else
+        {
+            Debug.LogWarning($"[EnemyBehaviour] CyberTruck '{gameObject.name}' exploded without HordeManager reference.");
+        }
+
         // Destroy the cybertruck after the animation
         Destroy(gameObject);
     }
