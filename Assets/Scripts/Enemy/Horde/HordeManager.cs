@@ -91,7 +91,16 @@ public sealed class HordeManager : MonoBehaviour
             yield return SpawnHordeRoutine(orderedHordes[hordeIndex]);
 
             currentState = HordeState.WaitingForAllEnemiesDead;
-            yield return new WaitUntil(() => aliveEnemies.Count == 0);
+            Debug.Log($"[HordeManager] Horde {currentHordeNumber} spawned. Waiting for {aliveEnemies.Count} enemies to die...");
+            
+            yield return new WaitUntil(() => {
+                if (aliveEnemies.Count == 0)
+                    return true;
+                // Log periodically to help debug stuck hordes
+                return false;
+            });
+            
+            Debug.Log($"[HordeManager] Horde {currentHordeNumber} complete! All enemies defeated.");
 
             currentState = HordeState.WaitingForNextHorde;
 
@@ -143,12 +152,17 @@ public sealed class HordeManager : MonoBehaviour
 
         if (!removed)
         {
-            Debug.LogWarning("[HordeManager] he is already dead! Stop!", this);
+            Debug.LogWarning(
+                $"[HordeManager] Enemy '{enemy.gameObject.name}' was not in alive enemies list! Already removed? Remaining alive: {aliveEnemies.Count}",
+                this);
             return;
         }
 
+        Debug.Log($"[HordeManager] Enemy '{enemy.gameObject.name}' removed. Alive enemies remaining: {aliveEnemies.Count}");
+
         if (currentState == HordeState.WaitingForAllEnemiesDead && aliveEnemies.Count == 0)
         {
+            Debug.Log("[HordeManager] All enemies defeated! Horde complete.");
             // No direct action needed here because WaitUntil in coroutine will continue automatically.
         }
     }
@@ -202,6 +216,10 @@ public sealed class HordeManager : MonoBehaviour
             Debug.LogWarning(
                 $"[HordeManager] Duplicate EnemyBehaviour registration detected on '{instance.name}'.",
                 instance);
+        }
+        else
+        {
+            Debug.Log($"[HordeManager] Enemy '{instance.name}' spawned. Total alive: {aliveEnemies.Count}");
         }
 
         instance.SetActive(true);
