@@ -184,10 +184,10 @@ public class EnemyBehaviour : MonoBehaviour
                 Debug.LogWarning($"[EnemyBehaviour] Cybertruck bomb effect has no EMPController on '{gameObject.name}'");
             }
         }
-        else
-        {
-            Debug.LogWarning($"[EnemyBehaviour] Cybertruck '{gameObject.name}' has no bulletPrefab assigned. No visual effect spawned.");
-        }
+        // else
+        // {
+        //     Debug.LogWarning($"[EnemyBehaviour] Cybertruck '{gameObject.name}' has no bulletPrefab assigned. No visual effect spawned.");
+        // }
 
         // Apply direct damage to all enemies in AOE radius using Physics overlap
         ApplyExplosionDamage();
@@ -197,10 +197,10 @@ public class EnemyBehaviour : MonoBehaviour
         {
             hordeManager.RemoveEnemy(this);
         }
-        else
-        {
-            Debug.LogWarning($"[EnemyBehaviour] CyberTruck '{gameObject.name}' exploded without HordeManager reference.");
-        }
+        // else
+        // {
+        //     Debug.LogWarning($"[EnemyBehaviour] CyberTruck '{gameObject.name}' exploded without HordeManager reference.");
+        // }
 
         // Destroy the cybertruck after the animation
         Destroy(gameObject);
@@ -444,11 +444,13 @@ public class EnemyBehaviour : MonoBehaviour
         {
             Debug.Log($"[EnemyBehaviour] RC Car '{gameObject.name}' collided with '{collision.gameObject.name}'. Detonating.");
 
-            soldier.TakeDamage(99999f);
-
+            Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+            soldier.TakeDamage(100f);
+            
             // Continua sem reward e sem kill credit normal,
             // mas agora ainda remove da horda porque o próprio Die()
             // sempre notifica o HordeManager.
+            //huh
             Die(false, false);
             return;
         }

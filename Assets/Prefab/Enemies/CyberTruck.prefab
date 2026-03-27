@@ -39,7 +39,7 @@ PrefabInstance:
     - target: {fileID: 953735057178029277, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
       propertyPath: bulletPrefab
       value: 
-      objectReference: {fileID: 9021028466107895252, guid: f4bfb213a1b8d564a814bb403812126b, type: 3}
+      objectReference: {fileID: 6248049569348298151, guid: 924f9b4060edad6449797fe56b6c6448, type: 3}
     - target: {fileID: 953735057178029277, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
       propertyPath: isCybertruck
       value: 1

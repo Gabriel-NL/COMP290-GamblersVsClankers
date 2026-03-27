@@ -9,20 +9,21 @@ public class EMPController: MonoBehaviour
     [HideInInspector] public float aoeRadius = 3f;
     [HideInInspector] public LayerMask enemyLayer;
     [SerializeField] private string audioName = "EMP";
-    [SerializeField] private GameObject empEffectPrefab;
+    //[SerializeField] private GameObject empEffectPrefab;
     [SerializeField] private float effectLifetime = 1f;
 
     private void Start()
     {
+        Debug.Log(audioName);
         // Instantly detonate on spawn
         Detonate();
     }
 
     private void Detonate()
     {
-        Debug.Log($"[EMPController] Area effect detonating at position {transform.position} with radius {aoeRadius}, stunDuration={stunDuration}, damageAmount={damageAmount}, enemyLayer={enemyLayer.value}");
+        //Debug.Log($"[EMPController] Area effect detonating at position {transform.position} with radius {aoeRadius}, stunDuration={stunDuration}, damageAmount={damageAmount}, enemyLayer={enemyLayer.value}");
 
-        SpawnEffect();
+        AudioManager.Play(audioName);
 
         // Find all enemies in radius - try without layer mask first to debug
         Collider2D[] allColliders = Physics2D.OverlapCircleAll(transform.position, aoeRadius);
@@ -63,32 +64,30 @@ public class EMPController: MonoBehaviour
         }
 
         // Destroy the EMP object immediately
-        Destroy(gameObject);
+        Destroy(gameObject, effectLifetime);
     }
 
-    private void SpawnEffect()
-    {
-        // if (!string.IsNullOrEmpty(audioName))
-        // {
-        //     AudioManager.Play(audioName);
-        // }
+    // private void SpawnEffect()
+    // {
+    //     /*if (!string.IsNullOrEmpty(audioName))
+    //     // {
+    //     //     AudioManager.Play(audioName);
+    //     }*/
 
-        if (empEffectPrefab == null)
-        {
-            Debug.LogWarning($"[EMPController] No EMP effect prefab assigned on '{gameObject.name}'.");
-            return;
-        }
+    //     /*if (empEffectPrefab == null)
+    //     {
+    //         Debug.LogWarning($"[EMPController] No EMP effect prefab assigned on '{gameObject.name}'.");
+    //         return;
+    //     }*/
 
-        GameObject effectInstance = Instantiate(empEffectPrefab, transform.position, Quaternion.identity);
-        if (effectLifetime > 0f)
-        {
-            Destroy(effectInstance, effectLifetime);
-        }
-    }
+    //     //GameObject effectInstance = Instantiate(empEffectPrefab, transform.position, Quaternion.identity);
+    //     if (effectLifetime > 0f)
+    //     {
+    //         Destroy(effectInstance, effectLifetime);
+    //     }
+    // }
 
-    /// <summary>
-    /// Walks up the hierarchy to find EnemyBehaviour in case the hit collider belongs to a child object.
-    /// </summary>
+    // Walks up the hierarchy to find EnemyBehaviour in case the hit collider belongs to a child object.
     private EnemyBehaviour ResolveEnemyBehaviour(Collider2D col)
     {
         EnemyBehaviour eb = col.GetComponent<EnemyBehaviour>();

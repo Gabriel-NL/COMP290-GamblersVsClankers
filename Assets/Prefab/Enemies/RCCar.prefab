@@ -221,10 +221,18 @@ MonoBehaviour:
   reward: 30
   isFlying: 0
   isRCCar: 1
+  isCybertruck: 0
+  isStunned: 0
   attackCooldown: 1
+  bulletPrefab: {fileID: 6248049569348298151, guid: 924f9b4060edad6449797fe56b6c6448, type: 3}
+  aoeRadius: 5
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  explosionAnimationDuration: 0.5
+  explosionMaxScale: 1.5
   attackLungeDistance: 0.3
   attackLungeSpeed: 10
-  timer: 0
   jitterAmplitude: 0.05
   jitterFrequency: 8
   jitterRotationAmplitude: 2
