@@ -50,7 +50,7 @@ MonoBehaviour:
   tier: 0
   firePoint: {fileID: 3243422734930342774}
   spriteRenderer: {fileID: 1794791202666502809}
-  bulletPrefab: {fileID: 6248049569348298151, guid: 0dae39802d8623e45bfc29d3dfd1a127, type: 3}
+  bulletPrefab: {fileID: 6248049569348298151, guid: cc436ef36f54862448dd2e30a2e9d46d, type: 3}
   healthBlinkIndicator: {fileID: 0}
   detectionRange: 10
   enemyLayer:

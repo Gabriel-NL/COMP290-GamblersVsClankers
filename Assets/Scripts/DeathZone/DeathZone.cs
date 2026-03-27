@@ -18,7 +18,7 @@ public class DeathZone : MonoBehaviour
         lives = 0;
         Time.timeScale = 0f;
         gameOverScreen.SetActive(true);
-        Debug.Log("Game Over");
+        //Debug.Log("Game Over");
 
         
         AudioManager.Play("Death");
@@ -27,11 +27,11 @@ public class DeathZone : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log($"[DeathZone] OnCollisionEnter2D triggered by '{collision.gameObject.name}' with tag '{collision.gameObject.tag}'");
+        //Debug.Log($"[DeathZone] OnCollisionEnter2D triggered by '{collision.gameObject.name}' with tag '{collision.gameObject.tag}'");
         
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            Debug.Log($"[DeathZone] Enemy '{collision.gameObject.name}' entered death zone. Lives before: {lives}");
+            //Debug.Log($"[DeathZone] Enemy '{collision.gameObject.name}' entered death zone. Lives before: {lives}");
 
             // Play the crossing sound once per enemy. Some enemies may have multiple colliders
             // and trigger this method multiple times before being destroyed. To avoid duplicate
@@ -52,7 +52,7 @@ public class DeathZone : MonoBehaviour
             //Update the draw mode width of the to display only the remaining lives
             livesDisplay.GetComponent<SpriteRenderer>().size -= new Vector2(15.8f, 0);
             
-            Debug.Log($"[DeathZone] Lives after: {lives}");
+            //Debug.Log($"[DeathZone] Lives after: {lives}");
             Destroy(collision.gameObject);
             if (lives <= 0)
             {

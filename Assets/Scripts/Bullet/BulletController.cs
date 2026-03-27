@@ -3,7 +3,7 @@ using UnityEngine;
 public class BulletController : MonoBehaviour
 {
     [HideInInspector]public float DamageAmount;
-    public string audioName = "Shot";
+    //public string audioName = "Shot";
     public bool isShootThrough = false;
     public bool canShootAir = false;
 
@@ -11,7 +11,7 @@ public class BulletController : MonoBehaviour
 
     private void Start()
     {
-        AudioManager.Play(audioName);
+        //AudioManager.Play(audioName);
         
         // Apply bullet scale
         // if (bulletScale != 1f)
