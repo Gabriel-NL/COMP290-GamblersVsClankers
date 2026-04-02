@@ -3,15 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public sealed class HordeManager : MonoBehaviour
+public sealed partial class HordeManager : MonoBehaviour
 {
-    public enum HordeState
-    {
-        Disabled = 0,
-        SpawningHorde = 1,
-        WaitingForAllEnemiesDead = 2,
-        WaitingForNextHorde = 3
-    }
 
     [Header("Database")]
     [SerializeField] private HordePrefabDatabase prefabDatabase;
@@ -96,7 +89,6 @@ public sealed class HordeManager : MonoBehaviour
             yield return new WaitUntil(() => {
                 if (aliveEnemies.Count == 0)
                     return true;
-                // Log periodically to help debug stuck hordes
                 return false;
             });
             
@@ -211,16 +203,10 @@ public sealed class HordeManager : MonoBehaviour
         enemyBehaviour.SetHordeManager(this);
 
         bool added = aliveEnemies.Add(enemyBehaviour);
-        if (!added)
-        {
-            Debug.LogWarning(
-                $"[HordeManager] Duplicate EnemyBehaviour registration detected on '{instance.name}'.",
-                instance);
-        }
-        else
-        {
-            Debug.Log($"[HordeManager] Enemy '{instance.name}' spawned. Total alive: {aliveEnemies.Count}");
-        }
+
+        // Debug.Log(!added
+        //     ? $"[HordeManager] Duplicate EnemyBehaviour instance '{instance.name}' detected. This should not happen. Check if the prefab has multiple EnemyBehaviour components or if the same instance is being spawned multiple times."
+        //     : $"[HordeManager] Enemy '{instance.name}' spawned successfully and registered. Total alive: {aliveEnemies.Count}", instance);
 
         instance.SetActive(true);
     }

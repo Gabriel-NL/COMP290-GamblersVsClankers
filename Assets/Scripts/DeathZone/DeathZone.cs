@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class DeathZone : MonoBehaviour
+public partial class DeathZone : MonoBehaviour
 {
     public int lives = 3; //number of enemies that can enter the casino before player loses
     [SerializeField] GameObject livesDisplay;
@@ -11,18 +9,13 @@ public class DeathZone : MonoBehaviour
     [Tooltip("Sound to play when an enemy crosses the line")]
     public string crossingClipname;
 
-
     public void GameOver()
     {
         AudioManager.StopAllSounds();
         lives = 0;
         Time.timeScale = 0f;
         gameOverScreen.SetActive(true);
-        //Debug.Log("Game Over");
-
-        
         AudioManager.Play("Death");
-        //Insert logic to display game over screen or restart level
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -49,7 +42,7 @@ public class DeathZone : MonoBehaviour
             }
 
             lives--;
-            //Update the draw mode width of the to display only the remaining lives
+
             livesDisplay.GetComponent<SpriteRenderer>().size -= new Vector2(15.8f, 0);
             
             //Debug.Log($"[DeathZone] Lives after: {lives}");
@@ -58,11 +51,6 @@ public class DeathZone : MonoBehaviour
             {
                 GameOver();
             }
-
-
         }
     }
-
-    // Lightweight marker used to indicate an enemy already triggered the death zone
-    private class DeathZoneCrossedMarker : MonoBehaviour { }
 }

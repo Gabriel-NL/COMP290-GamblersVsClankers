@@ -1,8 +1,4 @@
-using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
 using Slider = UnityEngine.UI.Slider;
 using Toggle = UnityEngine.UI.Toggle;
 
@@ -81,6 +77,7 @@ public class UIHandler : MonoBehaviour
     {
         bool isActive = optionsUI.activeSelf;
         optionsUI.SetActive(!isActive);
+
         // Re-enable pause if it was paused
         PauseMenu pauseMenu = Object.FindFirstObjectByType<PauseMenu>();
         if (pauseMenu != null && pauseMenu.IsPaused())

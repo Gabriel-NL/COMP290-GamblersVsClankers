@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,7 +14,6 @@ public class EMPController: MonoBehaviour
     private void Start()
     {
         Debug.Log(audioName);
-        // Instantly detonate on spawn
         Detonate();
     }
 
@@ -27,18 +25,18 @@ public class EMPController: MonoBehaviour
 
         // Find all enemies in radius - try without layer mask first to debug
         Collider2D[] allColliders = Physics2D.OverlapCircleAll(transform.position, aoeRadius);
-        Debug.Log($"[EMPController] Found {allColliders.Length} total colliders in radius");
+        //Debug.Log($"[EMPController] Found {allColliders.Length} total colliders in radius");
 
         // Find all enemies in radius with layer mask
         Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, aoeRadius, enemyLayer);
 
-        Debug.Log($"[EMPController] Found {hitColliders.Length} enemies in EMP radius with layer mask");
+        //Debug.Log($"[EMPController] Found {hitColliders.Length} enemies in EMP radius with layer mask");
 
         HashSet<EnemyBehaviour> affectedEnemies = new HashSet<EnemyBehaviour>();
 
         foreach (Collider2D hitCollider in hitColliders)
         {
-            Debug.Log($"[EMPController] Checking collider: '{hitCollider.gameObject.name}' on layer {LayerMask.LayerToName(hitCollider.gameObject.layer)}");
+            //Debug.Log($"[EMPController] Checking collider: '{hitCollider.gameObject.name}' on layer {LayerMask.LayerToName(hitCollider.gameObject.layer)}");
 
             EnemyBehaviour enemy = ResolveEnemyBehaviour(hitCollider);
             if (enemy == null)
@@ -53,39 +51,19 @@ public class EMPController: MonoBehaviour
             if (damageAmount > 0f)
             {
                 enemy.TakeDamage(damageAmount);
-                Debug.Log($"[EMPController] Applied {damageAmount} area damage to enemy '{enemy.gameObject.name}'");
+                //Debug.Log($"[EMPController] Applied {damageAmount} area damage to enemy '{enemy.gameObject.name}'");
             }
 
             if (stunDuration > 0f)
             {
                 enemy.Stun(stunDuration);
-                Debug.Log($"[EMPController] Successfully stunned enemy '{enemy.gameObject.name}' for {stunDuration} seconds");
+                //Debug.Log($"[EMPController] Successfully stunned enemy '{enemy.gameObject.name}' for {stunDuration} seconds");
             }
         }
 
         // Destroy the EMP object immediately
         Destroy(gameObject, effectLifetime);
     }
-
-    // private void SpawnEffect()
-    // {
-    //     /*if (!string.IsNullOrEmpty(audioName))
-    //     // {
-    //     //     AudioManager.Play(audioName);
-    //     }*/
-
-    //     /*if (empEffectPrefab == null)
-    //     {
-    //         Debug.LogWarning($"[EMPController] No EMP effect prefab assigned on '{gameObject.name}'.");
-    //         return;
-    //     }*/
-
-    //     //GameObject effectInstance = Instantiate(empEffectPrefab, transform.position, Quaternion.identity);
-    //     if (effectLifetime > 0f)
-    //     {
-    //         Destroy(effectInstance, effectLifetime);
-    //     }
-    // }
 
     // Walks up the hierarchy to find EnemyBehaviour in case the hit collider belongs to a child object.
     private EnemyBehaviour ResolveEnemyBehaviour(Collider2D col)

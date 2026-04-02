@@ -9,6 +9,5 @@ public class AudioInitializer : MonoBehaviour
         {
             AudioManager.AddSound(sound);
         }
-        //AudioManager.Play("GameplayMusic");
     }
 }

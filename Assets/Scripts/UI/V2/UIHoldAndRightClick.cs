@@ -1,13 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
-
-public interface IHoldableAndClickable
-{
-    void Hold();
-    void LeftClick();
-    void RightClick();
-}
+using System.Reflection;
 
 public class UIHoldAndRightClick : MonoBehaviour,
     IPointerDownHandler,
@@ -20,7 +14,7 @@ public class UIHoldAndRightClick : MonoBehaviour,
     [SerializeField] private bool triggerHoldOnlyOnce = true;
     [SerializeField] private bool cancelHoldWhenPointerLeaves = true;
 
-    private readonly List<IHoldableAndClickable> targets = new();
+    private readonly List<MonoBehaviour> targets = new();
 
     private bool isHoldingLeft;
     private float holdTimer;
@@ -116,18 +110,37 @@ public class UIHoldAndRightClick : MonoBehaviour,
         var behaviours = GetComponents<MonoBehaviour>();
         foreach (var behaviour in behaviours)
         {
-            if (behaviour is IHoldableAndClickable target)
+            if (HasTargetMethods(behaviour))
             {
-                targets.Add(target);
+                targets.Add(behaviour);
             }
         }
+    }
+
+    private bool HasTargetMethods(MonoBehaviour behaviour)
+    {
+        return behaviour != null
+            && behaviour.GetType().GetMethod("Hold", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic) != null
+            && behaviour.GetType().GetMethod("LeftClick", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic) != null
+            && behaviour.GetType().GetMethod("RightClick", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic) != null;
+    }
+
+    private void InvokeTargetMethod(MonoBehaviour target, string methodName)
+    {
+        if (target == null)
+        {
+            return;
+        }
+
+        MethodInfo method = target.GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        method?.Invoke(target, null);
     }
 
     private void InvokeHold()
     {
         for (int i = 0; i < targets.Count; i++)
         {
-            targets[i].Hold();
+            InvokeTargetMethod(targets[i], "Hold");
         }
     }
 
@@ -135,7 +148,7 @@ public class UIHoldAndRightClick : MonoBehaviour,
     {
         for (int i = 0; i < targets.Count; i++)
         {
-            targets[i].LeftClick();
+            InvokeTargetMethod(targets[i], "LeftClick");
         }
     }
 
@@ -143,7 +156,7 @@ public class UIHoldAndRightClick : MonoBehaviour,
     {
         for (int i = 0; i < targets.Count; i++)
         {
-            targets[i].RightClick();
+            InvokeTargetMethod(targets[i], "RightClick");
         }
     }
 }

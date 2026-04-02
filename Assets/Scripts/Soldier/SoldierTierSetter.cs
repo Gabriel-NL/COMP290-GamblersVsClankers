@@ -1,6 +1,5 @@
 using UnityEngine;
 using TMPro;
-using NaughtyAttributes;
 
 public class SoldierTierSetter : MonoBehaviour
 {

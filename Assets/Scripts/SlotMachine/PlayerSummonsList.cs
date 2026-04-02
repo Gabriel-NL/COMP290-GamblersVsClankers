@@ -87,12 +87,3 @@ public class PlayerSummonsList : ScriptableObject
     }
 #endif
 }
-
-[System.Serializable] // <-- Make the nested data class serializable for the inspector
-public class PlayerSummon
-{
-    public string summonName;
-    public Sprite summonSprite;
-    [Min(0)] public int summonCost;
-    public GameObject summonPrefab;
-}
