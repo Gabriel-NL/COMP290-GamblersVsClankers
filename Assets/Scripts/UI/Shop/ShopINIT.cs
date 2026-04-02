@@ -1,11 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 
 public class ShopINIT : MonoBehaviour
 {
@@ -47,60 +44,61 @@ public class ShopINIT : MonoBehaviour
         return null;
     }
 
+    private void SetSlotQuantity(int slotIndex, int delta)
+    {
+        TMP_Text tmpText = GetSlotText(slotIndex);
+        if (tmpText == null)
+        {
+            return;
+        }
+
+        if (!int.TryParse(tmpText.text, out int current))
+        {
+            current = 0;
+        }
+
+        tmpText.text = Mathf.Max(0, current + delta).ToString();
+    }
+
+    private void ConfigureDragStarter(Button button, int slotIndex)
+    {
+        ShopDragStarter dragStarter = button.GetComponent<ShopDragStarter>();
+        if (dragStarter == null)
+        {
+            dragStarter = button.gameObject.AddComponent<ShopDragStarter>();
+        }
+
+        dragStarter.shop = this;
+        dragStarter.slotIndex = slotIndex;
+    }
+
+    private bool IsValidSlotIndex(int slotIndex)
+    {
+        return slotIndex >= 0 && slotIndex < shopSoldiers.Count;
+    }
+
     private void InitializeShop()
     {
-        //Debug.Log($"InitializeShop started - shopSlots.Count: {shopSlots.Count}, shopSoldiers.Count: {shopSoldiers.Count}");
-
-        for (int i = 0; i < shopSlots.Count; i++)
+        for (int i = 0; i < Mathf.Min(shopSlots.Count, shopSoldiers.Count); i++)
         {
-            if (i >= shopSoldiers.Count) continue;
-
-            //Debug.Log($"Initializing slot {i}: {shopSlots[i]?.gameObject.name}");
-
             shopSlots[i].sprite = shopSoldiers[i].characterSprite;
 
-            int idx = i;
             Button btn = shopSlots[i].GetComponent<Button>();
-            if (btn != null)
+            if (btn == null)
             {
-                int persistentCount = btn.onClick.GetPersistentEventCount();
-                if (persistentCount > 0)
-                {
-                    Debug.Log($"Button '{btn.gameObject.name}' has {persistentCount} persistent OnClick listeners configured in the Inspector. Skipping adding a runtime listener to avoid duplicates.");
-                    for (int p = 0; p < persistentCount; p++)
-                    {
-                        Object target = btn.onClick.GetPersistentTarget(p);
-                        string methodName = btn.onClick.GetPersistentMethodName(p);
-                        Debug.Log($"  Persistent[{p}] target={target} method={methodName}");
-                    }
-
-                    ShopDragStarter dragStarterExisting = btn.gameObject.GetComponent<ShopDragStarter>();
-                    if (dragStarterExisting == null)
-                    {
-                        dragStarterExisting = btn.gameObject.AddComponent<ShopDragStarter>();
-                    }
-
-                    dragStarterExisting.shop = this;
-                    dragStarterExisting.slotIndex = idx;
-                }
-                else
-                {
-                    btn.onClick.RemoveAllListeners();
-                    btn.onClick.AddListener(() => OnSoldierClick(shopSoldiers[idx].name, idx));
-                    Debug.Log($"Added runtime listener for slot {idx} on Button '{btn.gameObject.name}'");
-
-                    ShopDragStarter dragStarter = btn.gameObject.GetComponent<ShopDragStarter>();
-                    if (dragStarter == null)
-                    {
-                        dragStarter = btn.gameObject.AddComponent<ShopDragStarter>();
-                        Debug.Log($"Added ShopDragStarter to slot {idx} ({btn.gameObject.name})");
-                    }
-
-                    dragStarter.shop = this;
-                    dragStarter.slotIndex = idx;
-                    Debug.Log($"Configured ShopDragStarter for slot {idx}");
-                }
+                continue;
             }
+
+            ConfigureDragStarter(btn, i);
+
+            if (btn.onClick.GetPersistentEventCount() > 0)
+            {
+                continue;
+            }
+
+            btn.onClick.RemoveAllListeners();
+            int slotIndex = i;
+            btn.onClick.AddListener(() => OnSoldierClick(shopSoldiers[slotIndex].name, slotIndex));
         }
     }
 
@@ -111,19 +109,7 @@ public class ShopINIT : MonoBehaviour
 
     public void DecrementSoldierByIndex(int slotIndex)
     {
-        TMP_Text tmpText = GetSlotText(slotIndex);
-        if (tmpText != null)
-        {
-            if (int.TryParse(tmpText.text, out int current))
-            {
-                current = Mathf.Max(0, current - 1);
-                tmpText.text = current.ToString();
-            }
-            else
-            {
-                tmpText.text = "0";
-            }
-        }
+        SetSlotQuantity(slotIndex, -1);
     }
 
     private float CalculateCosts(string soldierName)
@@ -171,29 +157,14 @@ public class ShopINIT : MonoBehaviour
             return;
         }
 
-        TMP_Text tmpText = GetSlotText(slotIndex);
-        if (tmpText != null)
-        {
-            if (int.TryParse(tmpText.text, out int current))
-            {
-                tmpText.text = (current + 1).ToString();
-            }
-            else
-            {
-                tmpText.text = "1";
-            }
-        }
-        else
-        {
-            Debug.LogWarning($"No text component found in shop slot {slotIndex} to set quantity.");
-        }
+        SetSlotQuantity(slotIndex, 1);
 
         Debug.Log("Button Clicked: " + soldierName + " | Cost: " + cost + " | Slot: " + slotIndex);
     }
 
     public void OnSoldierClickByIndex(int slotIndex)
     {
-        if (slotIndex < 0 || slotIndex >= shopSoldiers.Count)
+        if (!IsValidSlotIndex(slotIndex))
         {
             Debug.LogWarning("Slot index out of range: " + slotIndex);
             return;
@@ -215,24 +186,9 @@ public class ShopINIT : MonoBehaviour
         OnSoldierClick(soldierName, index);
     }
 
-    private Vector2 GetCurrentPointerScreenPosition()
-    {
-        if (Mouse.current != null)
-        {
-            return Mouse.current.position.ReadValue();
-        }
-
-        if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
-        {
-            return Touchscreen.current.primaryTouch.position.ReadValue();
-        }
-
-        return new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
-    }
-
     public GameObject TrySpawnOwnedSoldierForDrag(int slotIndex, PointerEventData eventData)
     {
-        if (slotIndex < 0 || slotIndex >= shopSoldiers.Count)
+        if (!IsValidSlotIndex(slotIndex))
         {
             Debug.LogWarning("Slot index out of range: " + slotIndex);
             return null;
@@ -251,18 +207,12 @@ public class ShopINIT : MonoBehaviour
             return null;
         }
 
-        GameObject dragObj = SpawnSoldierForDrag(slotIndex, eventData);
-        if (dragObj == null)
-        {
-            return null;
-        }
-
-        return dragObj;
+        return SpawnSoldierForDrag(slotIndex, eventData);
     }
 
     public GameObject SpawnSoldierForDrag(int slotIndex, PointerEventData eventData)
     {
-        if (slotIndex < 0 || slotIndex >= shopSoldiers.Count)
+        if (!IsValidSlotIndex(slotIndex))
         {
             Debug.LogWarning("Slot index out of range for SpawnSoldierForDrag: " + slotIndex);
             return null;
@@ -400,17 +350,6 @@ public class ShopINIT : MonoBehaviour
 
     public void IncrementSoldierByIndex(int slotIndex)
     {
-        TMP_Text tmpText = GetSlotText(slotIndex);
-        if (tmpText != null)
-        {
-            if (int.TryParse(tmpText.text, out int current))
-            {
-                tmpText.text = (current + 1).ToString();
-            }
-            else
-            {
-                tmpText.text = "1";
-            }
-        }
+        SetSlotQuantity(slotIndex, 1);
     }
 }

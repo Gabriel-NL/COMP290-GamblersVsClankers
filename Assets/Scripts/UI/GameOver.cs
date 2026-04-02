@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
@@ -8,12 +6,45 @@ using UnityEngine.InputSystem;
 public class GameOver : MonoBehaviour
 {
     [SerializeField] private InputActionAsset inputActionAsset;
+    [SerializeField] private GameObject gameOverPanel;
     private InputAction submitAction;
     private InputAction cancelAction;
+    private bool inputActionsEnabled;
 
     private void Start()
     {
-        SetupInputActions();
+        if (gameOverPanel == null)
+        {
+            gameOverPanel = GameObject.Find("GameOverPanel");
+        }
+
+        RefreshInputActions();
+    }
+
+    private void Update()
+    {
+        RefreshInputActions();
+    }
+
+    private void RefreshInputActions()
+    {
+        bool shouldEnable = gameOverPanel != null && gameOverPanel.activeInHierarchy;
+
+        if (shouldEnable == inputActionsEnabled)
+        {
+            return;
+        }
+
+        inputActionsEnabled = shouldEnable;
+
+        if (inputActionsEnabled)
+        {
+            SetupInputActions();
+        }
+        else
+        {
+            DisableInputActions();
+        }
     }
 
     private void SetupInputActions()
@@ -48,6 +79,21 @@ public class GameOver : MonoBehaviour
         }
     }
 
+    private void DisableInputActions()
+    {
+        if (submitAction != null)
+        {
+            submitAction.performed -= OnSubmit;
+            submitAction.Disable();
+        }
+
+        if (cancelAction != null)
+        {
+            cancelAction.performed -= OnCancel;
+            cancelAction.Disable();
+        }
+    }
+
     private void OnSubmit(InputAction.CallbackContext context)
     {
         RestartGame();
@@ -67,20 +113,11 @@ public class GameOver : MonoBehaviour
     public void ExitGame()
     {
         AudioManager.StopAllSounds();
-        SceneManager.LoadScene("TitleScreenJD");
+        SceneManager.LoadScene("TitleScreen");
     }
 
     private void OnDestroy()
     {
-        if (submitAction != null)
-        {
-            submitAction.performed -= OnSubmit;
-            submitAction.Disable();
-        }
-        if (cancelAction != null)
-        {
-            cancelAction.performed -= OnCancel;
-            cancelAction.Disable();
-        }
+        DisableInputActions();
     }
 }

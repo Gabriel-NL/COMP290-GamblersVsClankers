@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
 
@@ -34,7 +32,6 @@ public class SoldierBehaviour : MonoBehaviour
     [ReadOnly] public float stunDuration;
     [ReadOnly] public float aoeRadius;
     [ReadOnly] public bool isWaterBomb;
-    // legacy public timer kept for inspector visibility if needed, but firing uses attackSpeed
 
     [Header("Timer")]
     public float timer;
@@ -104,18 +101,6 @@ public class SoldierBehaviour : MonoBehaviour
         isWaterBomb = SoldierType.stats.isWaterBomb;
     }
 
-    [NaughtyAttributes.Button("Test: Take 10 Damage")]
-    private void TestTakeDamage()
-    {
-        TakeDamage(10f);
-    }
-
-    [NaughtyAttributes.Button("Test: Heal 10 Health")]
-    private void TestHeal()
-    {
-        Heal(10f);
-    }
-
     [NaughtyAttributes.Button("Apply Tier Changes")]
     private void ApplyTierChanges()
     {
@@ -158,12 +143,8 @@ public class SoldierBehaviour : MonoBehaviour
         {
             healthBlinkIndicator.Initialize(maxHealth, spriteRenderer);
         }
-        else
-        {
-            Debug.LogWarning($"[SoldierBehaviour] No health bar assigned on '{gameObject.name}'");
-        }
 
-        Debug.Log($"[SoldierINIT] Initialized attackSpeed={attackSpeed}, legacy timer={timer}, cooldownTimer={cooldownTimer}, health={currentHealth}/{maxHealth} on '{gameObject.name}'");
+        //Debug.Log($"[SoldierINIT] Initialized attackSpeed={attackSpeed}, legacy timer={timer}, cooldownTimer={cooldownTimer}, health={currentHealth}/{maxHealth} on '{gameObject.name}'");
 
         // Area-effect units detonate immediately on placement.
         if (isEMPGrenade && isWaterBomb)

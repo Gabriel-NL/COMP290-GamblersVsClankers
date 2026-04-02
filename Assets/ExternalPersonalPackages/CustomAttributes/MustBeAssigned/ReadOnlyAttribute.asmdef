@@ -1,9 +1,0 @@
-{
-  "name": "MustBeAssignedAttribute",
-  "references": [],
-  "includePlatforms": [],
-  "allowUnsafeCode": false,
-  "overrideReferences": false,
-  "autoReferenced": true,
-  "defineConstraints": []
-}

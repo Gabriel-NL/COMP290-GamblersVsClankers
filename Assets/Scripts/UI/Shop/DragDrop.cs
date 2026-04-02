@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -7,6 +6,8 @@ using UnityEngine.UI;
 
 public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
+    private const float SlotPaddingFactor = 0.95f;
+
     public Canvas canvas;
 
     [Header("Prefab to instantiate when dropped")]
@@ -22,6 +23,14 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
     private bool isUIElement;
     private Vector3 worldOffset;
     private Camera mainCamera;
+    private SpriteRenderer cachedSpriteRenderer;
+    private Image cachedImage;
+    private ShopSpawnInfo cachedShopSpawnInfo;
+
+    private readonly Vector3[] worldCornersBuffer = new Vector3[4];
+    private readonly List<RaycastResult> raycastResultsBuffer = new List<RaycastResult>(16);
+    private PointerEventData reusablePointerEventData;
+    private EventSystem reusablePointerEventSystem;
 
     public bool isSource = false;
     public bool oneTimeUse = false;
@@ -46,6 +55,9 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
         rectTransform = GetComponent<RectTransform>();
         isUIElement = rectTransform != null;
         mainCamera = Camera.main;
+        cachedSpriteRenderer = GetComponent<SpriteRenderer>();
+        cachedImage = GetComponent<Image>();
+        cachedShopSpawnInfo = GetComponent<ShopSpawnInfo>();
 
         if (isUIElement)
         {
@@ -61,10 +73,9 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
             if (col == null)
             {
                 BoxCollider2D boxCol = gameObject.AddComponent<BoxCollider2D>();
-                SpriteRenderer sr = GetComponent<SpriteRenderer>();
-                if (sr != null && sr.sprite != null)
+                if (cachedSpriteRenderer != null && cachedSpriteRenderer.sprite != null)
                 {
-                    boxCol.size = sr.sprite.bounds.size;
+                    boxCol.size = cachedSpriteRenderer.sprite.bounds.size;
                 }
             }
         }
@@ -94,11 +105,10 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
 
     private Vector2 GetRectTransformWorldSize(RectTransform rectTransformToMeasure)
     {
-        Vector3[] corners = new Vector3[4];
-        rectTransformToMeasure.GetWorldCorners(corners);
+        rectTransformToMeasure.GetWorldCorners(worldCornersBuffer);
 
-        float width = Vector3.Distance(corners[0], corners[3]);
-        float height = Vector3.Distance(corners[0], corners[1]);
+        float width = Vector3.Distance(worldCornersBuffer[0], worldCornersBuffer[3]);
+        float height = Vector3.Distance(worldCornersBuffer[0], worldCornersBuffer[1]);
 
         return new Vector2(width, height);
     }
@@ -186,9 +196,8 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
 
         if (isUIElement)
         {
-            Image srcImage = GetComponent<Image>();
-            Sprite sprite = srcImage != null ? srcImage.sprite : sourceSprite;
-            Color color = srcImage != null ? srcImage.color : sourceColor;
+            Sprite sprite = cachedImage != null ? cachedImage.sprite : sourceSprite;
+            Color color = cachedImage != null ? cachedImage.color : sourceColor;
 
             GameObject go = new GameObject(
                 gameObject.name + "_Clone",
@@ -227,9 +236,8 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
         }
         else
         {
-            SpriteRenderer srcSr = GetComponent<SpriteRenderer>();
-            Sprite sprite = srcSr != null ? srcSr.sprite : sourceSprite;
-            Color color = srcSr != null ? srcSr.color : sourceColor;
+            Sprite sprite = cachedSpriteRenderer != null ? cachedSpriteRenderer.sprite : sourceSprite;
+            Color color = cachedSpriteRenderer != null ? cachedSpriteRenderer.color : sourceColor;
 
             Vector3 spawnWorld = mainCamera.ScreenToWorldPoint(eventData.position);
             spawnWorld.z = transform.position.z;
@@ -317,17 +325,16 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
             worldPos.z = transform.position.z;
             worldOffset = worldPos - transform.position;
 
-            SpriteRenderer sr = GetComponent<SpriteRenderer>();
-            if (sr != null)
+            if (cachedSpriteRenderer != null)
             {
-                sr.sortingOrder += 100;
+                cachedSpriteRenderer.sortingOrder += 100;
             }
         }
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        Debug.Log("OnDrag");
+        //Debug.Log("OnDrag");
 
         if (!isDragging)
         {
@@ -379,316 +386,282 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
             return;
         }
 
+        RestorePostDragState();
+
+        if (!TryGetTargetSlot(eventData, out ItemSlot targetSlot))
+        {
+            HandleInvalidDrop();
+            return;
+        }
+
+        if (targetSlot.IsOccupied())
+        {
+            HandleOccupiedSlot();
+            return;
+        }
+
+        if (soldierPrefab != null)
+        {
+            SpawnSoldierInSlot(targetSlot);
+            return;
+        }
+
+        PlaceExistingObjectInSlot(targetSlot);
+    }
+
+    private void RestorePostDragState()
+    {
         if (isUIElement)
         {
             if (canvasGroup != null)
             {
                 canvasGroup.blocksRaycasts = true;
             }
+            return;
+        }
+
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        if (cachedSpriteRenderer != null)
+        {
+            cachedSpriteRenderer.sortingOrder -= 100;
+        }
+    }
+
+    private bool TryGetTargetSlot(PointerEventData eventData, out ItemSlot targetSlot)
+    {
+        return isUIElement
+            ? TryGetTargetSlotFromUI(eventData, out targetSlot)
+            : TryGetTargetSlotFromWorld(eventData, out targetSlot);
+    }
+
+    private bool TryGetTargetSlotFromUI(PointerEventData eventData, out ItemSlot targetSlot)
+    {
+        targetSlot = null;
+        if (EventSystem.current == null)
+        {
+            return false;
+        }
+
+        if (reusablePointerEventData == null || reusablePointerEventSystem != EventSystem.current)
+        {
+            reusablePointerEventData = new PointerEventData(EventSystem.current);
+            reusablePointerEventSystem = EventSystem.current;
+        }
+
+        reusablePointerEventData.Reset();
+        reusablePointerEventData.position = eventData.position;
+
+        raycastResultsBuffer.Clear();
+        EventSystem.current.RaycastAll(reusablePointerEventData, raycastResultsBuffer);
+
+        foreach (RaycastResult result in raycastResultsBuffer)
+        {
+            ItemSlot slot = result.gameObject.GetComponentInParent<ItemSlot>();
+            if (slot != null)
+            {
+                targetSlot = slot;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool TryGetTargetSlotFromWorld(PointerEventData eventData, out ItemSlot targetSlot)
+    {
+        targetSlot = null;
+
+        Vector3 worldPos = mainCamera.ScreenToWorldPoint(eventData.position);
+        worldPos.z = 0f;
+
+        Collider2D hitCollider = Physics2D.OverlapPoint(worldPos);
+        if (hitCollider != null)
+        {
+            targetSlot = hitCollider.GetComponentInParent<ItemSlot>();
+            if (targetSlot != null)
+            {
+                return true;
+            }
+        }
+
+        RaycastHit2D hit = Physics2D.Raycast(worldPos, Vector2.zero);
+        if (hit.collider != null)
+        {
+            targetSlot = hit.collider.GetComponentInParent<ItemSlot>();
+            if (targetSlot != null)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void HandleOccupiedSlot()
+    {
+        Debug.Log($"Slot is already occupied - cannot place item here");
+        parentSource?.onCancelledOrInvalidDrop?.Invoke();
+
+        ShopSpawnInfo shopInfo = cachedShopSpawnInfo;
+        if (shopInfo != null && shopInfo.shop != null)
+        {
+            shopInfo.shop.IncrementSoldierByIndex(shopInfo.slotIndex);
+            Destroy(gameObject);
+            return;
+        }
+
+        Destroy(gameObject);
+    }
+
+    private void SpawnSoldierInSlot(ItemSlot targetSlot)
+    {
+        Vector3 spawnPosition = targetSlot.transform.position;
+        spawnPosition.z = 0f;
+
+        GameObject spawnedSoldier = Instantiate(soldierPrefab, spawnPosition, Quaternion.identity);
+        spawnedSoldier.transform.SetParent(targetSlot.transform, true);
+        spawnedSoldier.transform.localRotation = Quaternion.identity;
+        spawnedSoldier.transform.localScale = Vector3.one;
+
+        FitVisualChildToSlot(spawnedSoldier, targetSlot);
+
+        Rigidbody2D rb = spawnedSoldier.GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.bodyType = RigidbodyType2D.Kinematic;
+            rb.linearVelocity = Vector2.zero;
+        }
+
+        SoldierBehaviour soldierBehaviour = spawnedSoldier.GetComponent<SoldierBehaviour>();
+        if (soldierBehaviour != null)
+        {
+            soldierBehaviour.tier = soldierTier;
+            if (soldierBehaviour.spriteRenderer != null)
+            {
+                soldierBehaviour.spriteRenderer.color = Color.white;
+            }
+        }
+
+        SpriteOutlineMapRenderer enchantController = spawnedSoldier.GetComponent<SpriteOutlineMapRenderer>();
+        if (enchantController == null)
+        {
+            enchantController = spawnedSoldier.GetComponentInChildren<SpriteOutlineMapRenderer>();
+        }
+
+        if (enchantController != null)
+        {
+            bool shouldEnchant = soldierTier != SoldierTierList.TierEnum.Common;
+            enchantController.SetEnchantColor(soldierColor);
+            enchantController.SetEnchantEnabled(shouldEnchant);
         }
         else
         {
-            SpriteRenderer sr = GetComponent<SpriteRenderer>();
-            if (sr != null)
-            {
-                sr.sortingOrder -= 100;
-            }
+            Debug.LogWarning($"No SpriteOutlineMapRenderer found on '{spawnedSoldier.name}'. No rarity enchant was applied.");
         }
 
-        ItemSlot targetSlot = null;
-
-        if (isUIElement && EventSystem.current != null)
+        if (DifficultyManager.instance != null)
         {
-            PointerEventData pe = new PointerEventData(EventSystem.current)
-            {
-                position = eventData.position
-            };
-
-            List<RaycastResult> results = new List<RaycastResult>();
-            EventSystem.current.RaycastAll(pe, results);
-
-            Debug.Log($"UI Raycast found {results.Count} results");
-
-            foreach (RaycastResult r in results)
-            {
-                Debug.Log($"Raycast hit: {r.gameObject.name} (distance: {r.distance})");
-
-                ItemSlot slot = r.gameObject.GetComponentInParent<ItemSlot>();
-                if (slot != null)
-                {
-                    targetSlot = slot;
-                    Debug.Log($"Found UI ItemSlot: {slot.gameObject.name}");
-                    break;
-                }
-                else
-                {
-                    Debug.Log($"No ItemSlot found on {r.gameObject.name} or its parents");
-                }
-            }
+            DifficultyManager.instance.OnSoldierPlaced();
         }
 
-        if (!isUIElement)
+        targetSlot.SetOccupied(spawnedSoldier);
+        MarkParentSourceAsUsed();
+        parentSource?.onSuccessfulDrop?.Invoke();
+
+        Destroy(gameObject);
+    }
+
+    private void PlaceExistingObjectInSlot(ItemSlot targetSlot)
+    {
+        if (isUIElement)
         {
-            Vector3 worldPos = mainCamera.ScreenToWorldPoint(eventData.position);
-            worldPos.z = 0f;
-
-            Collider2D hitCollider = Physics2D.OverlapPoint(worldPos);
-            if (hitCollider != null)
-            {
-                ItemSlot slot = hitCollider.GetComponentInParent<ItemSlot>();
-                if (slot != null)
-                {
-                    targetSlot = slot;
-                    Debug.Log($"Found world ItemSlot via OverlapPoint: {slot.gameObject.name}");
-                }
-            }
-
-            if (targetSlot == null)
-            {
-                RaycastHit2D hit = Physics2D.Raycast(worldPos, Vector2.zero);
-                if (hit.collider != null)
-                {
-                    ItemSlot slot = hit.collider.GetComponentInParent<ItemSlot>();
-                    if (slot != null)
-                    {
-                        targetSlot = slot;
-                        Debug.Log($"Found world ItemSlot via Raycast: {slot.gameObject.name}");
-                    }
-                }
-            }
-
-            if (targetSlot == null)
-            {
-                Debug.Log($"No ItemSlot found at world position: {worldPos}");
-            }
+            PlaceUIObjectInSlot(targetSlot);
+            return;
         }
 
-        if (targetSlot != null)
+        PlaceWorldObjectInSlot(targetSlot);
+    }
+
+    private void PlaceUIObjectInSlot(ItemSlot targetSlot)
+    {
+        RectTransform slotRect = targetSlot.GetComponent<RectTransform>();
+        if (slotRect == null)
         {
-            if (targetSlot.IsOccupied())
-            {
-                Debug.Log($"Slot {targetSlot.gameObject.name} is already occupied - cannot place soldier here");
+            HandleInvalidDrop();
+            return;
+        }
 
-                if (parentSource != null)
-                {
-                    parentSource.onCancelledOrInvalidDrop?.Invoke();
-                }
+        transform.SetParent(slotRect, false);
+        rectTransform.anchoredPosition = Vector2.zero;
 
-                ShopSpawnInfo shopInfo = GetComponent<ShopSpawnInfo>();
-                if (shopInfo != null && shopInfo.shop != null)
-                {
-                    shopInfo.shop.IncrementSoldierByIndex(shopInfo.slotIndex);
-                    Destroy(gameObject);
-                    return;
-                }
+        Image image = cachedImage;
+        if (image != null && image.sprite != null)
+        {
+            Vector2 slotSize = slotRect.rect.size;
+            Vector2 spriteSize = new Vector2(image.sprite.rect.width, image.sprite.rect.height);
 
-                Debug.Log("Item will remain in place (slot occupied)");
-                Destroy(gameObject);
-                return;
-            }
+            float scaleX = (slotSize.x * SlotPaddingFactor) / spriteSize.x;
+            float scaleY = (slotSize.y * SlotPaddingFactor) / spriteSize.y;
+            float scaleFactor = Mathf.Min(scaleX, scaleY);
 
-            if (soldierPrefab != null)
-            {
-                Vector3 spawnPosition = targetSlot.transform.position;
-                spawnPosition.z = 0f;
-                Transform parentTransform = targetSlot.transform;
+            rectTransform.localScale = Vector3.one * scaleFactor;
+        }
 
-                GameObject spawnedSoldier = Instantiate(soldierPrefab, spawnPosition, Quaternion.identity);
-                spawnedSoldier.transform.SetParent(parentTransform, true);
-                spawnedSoldier.transform.localRotation = Quaternion.identity;
-                spawnedSoldier.transform.localScale = Vector3.one;
+        SetImageAlphaToOpaque(image);
 
-                FitVisualChildToSlot(spawnedSoldier, targetSlot);
-
-                Rigidbody2D rb = spawnedSoldier.GetComponent<Rigidbody2D>();
-                if (rb != null)
-                {
-                    rb.bodyType = RigidbodyType2D.Kinematic;
-                    rb.linearVelocity = Vector2.zero;
-                }
-
-                Debug.Log($"Set placed soldier root '{spawnedSoldier.name}' localScale to {spawnedSoldier.transform.localScale}");
-
-                SoldierBehaviour soldierBehaviour = spawnedSoldier.GetComponent<SoldierBehaviour>();
-                if (soldierBehaviour != null)
-                {
-                    soldierBehaviour.tier = soldierTier;
-                    Debug.Log($"Applied tier {soldierTier} to spawned soldier '{spawnedSoldier.name}'");
-
-                    if (soldierBehaviour.spriteRenderer != null)
-                    {
-                        soldierBehaviour.spriteRenderer.color = Color.white;
-                    }
-                }
-
-                SpriteOutlineMapRenderer enchantController = spawnedSoldier.GetComponent<SpriteOutlineMapRenderer>();
-                if (enchantController == null)
-                {
-                    enchantController = spawnedSoldier.GetComponentInChildren<SpriteOutlineMapRenderer>();
-                }
-
-                if (enchantController != null)
-                {
-                    bool shouldEnchant = soldierTier != SoldierTierList.TierEnum.Common;
-                    enchantController.SetEnchantColor(soldierColor);
-                    enchantController.SetEnchantEnabled(shouldEnchant);
-
-                    Debug.Log($"Applied enchant color {soldierColor} to soldier '{spawnedSoldier.name}', enabled={shouldEnchant}");
-                }
-                else
-                {
-                    Debug.LogWarning($"No SpriteOutlineMapRenderer found on '{spawnedSoldier.name}'. No rarity enchant was applied.");
-                }
-
-                if (DifficultyManager.instance != null)
-                {
-                    DifficultyManager.instance.OnSoldierPlaced();
-                }
-
-                targetSlot.SetOccupied(spawnedSoldier);
-
-                if (parentSource != null && parentSource.oneTimeUse)
-                {
-                    parentSource.hasBeenUsed = true;
-                    Debug.Log($"Parent source '{parentSource.gameObject.name}' marked as used (one-time only)");
-                }
-
-                if (parentSource != null)
-                {
-                    parentSource.onSuccessfulDrop?.Invoke();
-                }
-
-                Debug.Log($"Instantiated soldier prefab '{soldierPrefab.name}' at slot: {targetSlot.gameObject.name}");
-                Destroy(gameObject);
-                return;
-            }
-            else
-            {
-                if (isUIElement)
-                {
-                    RectTransform slotRect = targetSlot.GetComponent<RectTransform>();
-                    if (slotRect != null)
-                    {
-                        transform.SetParent(slotRect, false);
-                        rectTransform.anchoredPosition = Vector2.zero;
-
-                        Image image = GetComponent<Image>();
-                        if (image != null && image.sprite != null)
-                        {
-                            Vector2 slotSize = slotRect.rect.size;
-                            Vector2 spriteSize = new Vector2(image.sprite.rect.width, image.sprite.rect.height);
-
-                            float paddingFactor = 0.95f;
-                            float scaleX = (slotSize.x * paddingFactor) / spriteSize.x;
-                            float scaleY = (slotSize.y * paddingFactor) / spriteSize.y;
-                            float scaleFactor = Mathf.Min(scaleX, scaleY);
-
-                            rectTransform.localScale = Vector3.one * scaleFactor;
-
-                            Debug.Log($"Scaled UI element by {scaleFactor} to fit slot (slot: {slotSize}, sprite: {spriteSize})");
-
-                            Color color = image.color;
-                            color.a = 1.0f;
-                            image.color = color;
-                        }
-                        else
-                        {
-                            if (image != null)
-                            {
-                                Color color = image.color;
-                                color.a = 1.0f;
-                                image.color = color;
-                            }
-                        }
-
-                        targetSlot.SetOccupied(gameObject);
-
-                        if (parentSource != null && parentSource.oneTimeUse)
-                        {
-                            parentSource.hasBeenUsed = true;
-                            Debug.Log($"Parent source '{parentSource.gameObject.name}' marked as used (one-time only)");
-                        }
-
-                        if (parentSource != null)
-                        {
-                            parentSource.onSuccessfulDrop?.Invoke();
-                        }
+        targetSlot.SetOccupied(gameObject);
+        MarkParentSourceAsUsed();
+        parentSource?.onSuccessfulDrop?.Invoke();
 
 #if UNITY_EDITOR
-                        if (UnityEditor.Selection.activeGameObject == gameObject)
-                        {
-                            UnityEditor.Selection.activeObject = null;
-                        }
+        if (UnityEditor.Selection.activeGameObject == gameObject)
+        {
+            UnityEditor.Selection.activeObject = null;
+        }
 #endif
-                        Destroy(gameObject);
-                        Debug.Log("Locked UI element to slot: " + targetSlot.gameObject.name);
-                        return;
-                    }
-                }
-                else
-                {
-                    Vector3 slotWorldPos = targetSlot.transform.position;
-                    slotWorldPos.z = transform.position.z;
-                    transform.position = slotWorldPos;
-                    transform.SetParent(targetSlot.transform);
+        Destroy(gameObject);
+    }
 
-                    RectTransform slotRect = targetSlot.GetComponent<RectTransform>();
-                    SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-                    if (slotRect != null && spriteRenderer != null && spriteRenderer.sprite != null)
-                    {
-                        Vector2 slotSize = slotRect.rect.size;
-                        Vector2 spriteSize = spriteRenderer.sprite.bounds.size;
+    private void PlaceWorldObjectInSlot(ItemSlot targetSlot)
+    {
+        Vector3 slotWorldPos = targetSlot.transform.position;
+        slotWorldPos.z = transform.position.z;
+        transform.position = slotWorldPos;
+        transform.SetParent(targetSlot.transform);
 
-                        float paddingFactor = 0.95f;
-                        float scaleX = (slotSize.x * paddingFactor) / spriteSize.x;
-                        float scaleY = (slotSize.y * paddingFactor) / spriteSize.y;
-                        float scaleFactor = Mathf.Min(scaleX, scaleY);
+        RectTransform slotRect = targetSlot.GetComponent<RectTransform>();
+        SpriteRenderer spriteRenderer = cachedSpriteRenderer;
 
-                        transform.localScale = Vector3.one * scaleFactor;
+        if (slotRect != null && spriteRenderer != null && spriteRenderer.sprite != null)
+        {
+            Vector2 slotSize = slotRect.rect.size;
+            Vector2 spriteSize = spriteRenderer.sprite.bounds.size;
 
-                        Debug.Log($"Scaled world sprite by {scaleFactor} to fit slot (slot: {slotSize}, sprite: {spriteSize})");
+            float scaleX = (slotSize.x * SlotPaddingFactor) / spriteSize.x;
+            float scaleY = (slotSize.y * SlotPaddingFactor) / spriteSize.y;
+            float scaleFactor = Mathf.Min(scaleX, scaleY);
 
-                        Color color = spriteRenderer.color;
-                        color.a = 1.0f;
-                        spriteRenderer.color = color;
-                    }
-                    else
-                    {
-                        if (spriteRenderer != null)
-                        {
-                            Color color = spriteRenderer.color;
-                            color.a = 1.0f;
-                            spriteRenderer.color = color;
-                        }
-                    }
-
-                    targetSlot.SetOccupied(gameObject);
-
-                    if (parentSource != null && parentSource.oneTimeUse)
-                    {
-                        parentSource.hasBeenUsed = true;
-                        Debug.Log($"Parent source '{parentSource.gameObject.name}' marked as used (one-time only)");
-                    }
-
-                    if (parentSource != null)
-                    {
-                        parentSource.onSuccessfulDrop?.Invoke();
-                    }
-
-#if UNITY_EDITOR
-                    if (UnityEditor.Selection.activeGameObject == gameObject)
-                    {
-                        UnityEditor.Selection.activeObject = null;
-                    }
-#endif
-                    Destroy(gameObject);
-                    Debug.Log("Locked world GameObject to slot: " + targetSlot.gameObject.name);
-                    return;
-                }
-            }
+            transform.localScale = Vector3.one * scaleFactor;
         }
 
-        ShopSpawnInfo info = GetComponent<ShopSpawnInfo>();
+        SetSpriteAlphaToOpaque(spriteRenderer);
+
+        targetSlot.SetOccupied(gameObject);
+        MarkParentSourceAsUsed();
+        parentSource?.onSuccessfulDrop?.Invoke();
+
+#if UNITY_EDITOR
+        if (UnityEditor.Selection.activeGameObject == gameObject)
+        {
+            UnityEditor.Selection.activeObject = null;
+        }
+#endif
+        Destroy(gameObject);
+    }
+
+    private void HandleInvalidDrop()
+    {
+        ShopSpawnInfo info = cachedShopSpawnInfo;
         if (info != null && info.shop != null)
         {
             info.shop.IncrementSoldierByIndex(info.slotIndex);
@@ -696,12 +669,40 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
             return;
         }
 
-        if (parentSource != null)
+        parentSource?.onCancelledOrInvalidDrop?.Invoke();
+        Destroy(gameObject);
+    }
+
+    private void MarkParentSourceAsUsed()
+    {
+        if (parentSource != null && parentSource.oneTimeUse)
         {
-            parentSource.onCancelledOrInvalidDrop?.Invoke();
+            parentSource.hasBeenUsed = true;
+            Debug.Log($"Parent source '{parentSource.gameObject.name}' marked as used (one-time only)");
+        }
+    }
+
+    private static void SetImageAlphaToOpaque(Image image)
+    {
+        if (image == null)
+        {
+            return;
         }
 
-        Debug.Log("Item was not dropped on a valid slot and will remain in place");
-        Destroy(gameObject);
+        Color color = image.color;
+        color.a = 1f;
+        image.color = color;
+    }
+
+    private static void SetSpriteAlphaToOpaque(SpriteRenderer spriteRenderer)
+    {
+        if (spriteRenderer == null)
+        {
+            return;
+        }
+
+        Color color = spriteRenderer.color;
+        color.a = 1f;
+        spriteRenderer.color = color;
     }
 }

@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class Coin : MonoBehaviour
 {
-   
-
     private void OnMouseDown()
     {
         if (ScoreManager.instance == null)

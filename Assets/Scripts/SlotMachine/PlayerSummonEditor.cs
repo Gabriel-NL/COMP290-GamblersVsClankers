@@ -43,12 +43,9 @@ public class PlayerSummonEditor : PropertyDrawer
         if (prefabChanged)
         {
             var prefab = prefabProp.objectReferenceValue as GameObject;
-
         }
 
         EditorGUI.EndProperty();
     }
-
-
 }
 #endif

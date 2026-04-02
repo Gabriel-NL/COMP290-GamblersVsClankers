@@ -36,9 +36,6 @@ public class HealthBlinkIndicator : MonoBehaviour
     private bool isInitialized = false;
     private bool isDead = false;
 
-    // -----------------------------
-    // Initialization
-    // -----------------------------
     public void Initialize(float health, SpriteRenderer rendererToBlink)
     {
         if (rendererToBlink == null)
@@ -66,9 +63,6 @@ public class HealthBlinkIndicator : MonoBehaviour
         isDead = false;
     }
 
-    // -----------------------------
-    // External Trigger
-    // -----------------------------
     public void SetHealth(float newHealth)
     {
         if (!isInitialized || isDead)

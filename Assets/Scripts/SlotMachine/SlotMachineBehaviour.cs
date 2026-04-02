@@ -1,9 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Image = UnityEngine.UI.Image;
 using Random = UnityEngine.Random;
@@ -92,7 +88,7 @@ public class SlotMachineBehaviour : MonoBehaviour
             return;
         }
 
-        Debug.Log($"Slot machine spin cost {spinCost} coins. Remaining: {ScoreManager.instance.CurrentScore}");
+        //Debug.Log($"Slot machine spin cost {spinCost} coins. Remaining: {ScoreManager.instance.CurrentScore}");
 
         SoldierTier newTier = WeightedRaritySelection();
 
@@ -199,15 +195,8 @@ public class SlotMachineBehaviour : MonoBehaviour
         dragDrop.soldierColor = rolledCharacter.tier.tierColor;
         dragDrop.soldierTier = rolledCharacter.tier.tierType;
 
-        if (rolledCharacter.soldierType.soldierPrefab != null)
-        {
-            dragDrop.soldierPrefab = rolledCharacter.soldierType.soldierPrefab;
-            Debug.Log($"Assigned soldierPrefab: {rolledCharacter.soldierType.soldierPrefab.name}");
-        }
-        else
-        {
-            Debug.LogWarning($"No soldierPrefab found on {rolledCharacter.soldierType.name}");
-        }
+        dragDrop.soldierPrefab = rolledCharacter.soldierType.soldierPrefab;
+        //Debug.Log($"Assigned soldierPrefab: {rolledCharacter.soldierType.soldierPrefab.name}");
 
         // When drag starts from reward slot, clear the source UI image,
         // but only after DragDrop has already created the dragged visual.
@@ -242,7 +231,7 @@ public class SlotMachineBehaviour : MonoBehaviour
 
         rewardSlotImage.raycastTarget = true;
 
-        Debug.Log($"Reward slot image is now draggable (SOURCE MODE, ONE-TIME USE) for {rolledCharacter.soldierType.name}");
+        //Debug.Log($"Reward slot image is now draggable (SOURCE MODE, ONE-TIME USE) for {rolledCharacter.soldierType.name}");
     }
 
     [System.Serializable]

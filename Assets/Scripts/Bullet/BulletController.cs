@@ -21,34 +21,28 @@ public class BulletController : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log($"[Bullet] '{gameObject.name}' collided with '{collision.gameObject.name}' (Tag: {collision.gameObject.tag})");
+        //Debug.Log($"[Bullet] '{gameObject.name}' collided with '{collision.gameObject.name}' (Tag: {collision.gameObject.tag})");
         
         // Check if hit an enemy
         if (collision.gameObject.CompareTag("Enemy"))
         {
             EnemyBehaviour enemy = collision.gameObject.GetComponent<EnemyBehaviour>();
-            if (enemy != null)
-            {
-                enemy.TakeDamage(enemy.isFlying == canShootAir ? DamageAmount*1.3f : DamageAmount);
-                Debug.Log($"[Bullet] Applied {DamageAmount} damage to enemy '{collision.gameObject.name}'");
-            }
+
+            enemy.TakeDamage(enemy.isFlying == canShootAir ? DamageAmount*1.3f : DamageAmount);
+            //Debug.Log($"[Bullet] Applied {DamageAmount} damage to enemy '{collision.gameObject.name}'");
         }
         // Check if hit a soldier (friendly fire or enemy bullets)
         else if (collision.gameObject.CompareTag("Soldier"))
         {
             SoldierBehaviour soldier = collision.gameObject.GetComponent<SoldierBehaviour>();
-            if (soldier != null)
-            {
-                soldier.TakeDamage(DamageAmount);
-                Debug.Log($"[Bullet] Applied {DamageAmount} damage to soldier '{collision.gameObject.name}'");
-            }
+            soldier.TakeDamage(DamageAmount);
+            //Debug.Log($"[Bullet] Applied {DamageAmount} damage to soldier '{collision.gameObject.name}'");
         }
         
         if (!isShootThrough)
         {
-            Debug.Log($"[Bullet] Bullet is not shoot-through, destroying on collision.");
+            //Debug.Log($"[Bullet] Bullet is not shoot-through, destroying on collision.");
             Destroy(this.gameObject);
         }
-        // Destroy bullet after collision
     }
 }
