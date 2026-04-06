@@ -17,6 +17,10 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
     [Tooltip("Placed soldier visual will fit within this multiplier of the cell size. 1.0 = cell size, 1.1 = 110% of cell size.")]
     public float placedVisualFitMultiplier = 1.1f;
 
+    [Header("Mobile Input Settings")]
+    [Tooltip("Enable debug logging for mobile touch input")]
+    public bool debugMobileInput = true;
+
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
     private Vector2 pointerOffset;
@@ -45,6 +49,11 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
     public SoldierTierList.TierEnum soldierTier = SoldierTierList.TierEnum.Common;
 
     private GameObject activeClone;
+
+    // Touch input tracking for mobile support
+    private int activeTouchId = -1;
+    private bool isTouchDragging = false;
+    private Vector2 lastTouchPosition = Vector2.zero;
 
     public Action onBeginDragFromSource;
     public Action onCancelledOrInvalidDrop;
@@ -79,6 +88,280 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
                 }
             }
         }
+
+        if (debugMobileInput)
+        {
+            Debug.Log($"[DragDrop] Initialized on {gameObject.name}. Platform: {Application.platform}, UI Element: {isUIElement}");
+        }
+    }
+
+    private void Update()
+    {
+        // Handle touch input for mobile (Android, iOS, etc.)
+        HandleTouchInput();
+    }
+
+    private void HandleTouchInput()
+    {
+        // Only process touch input if we have touches
+        if (Input.touchCount == 0)
+        {
+            return;
+        }
+
+        Touch touch = Input.GetTouch(0);
+
+        // Check if this is our active touch or if we should start tracking a new one
+        if (activeTouchId == -1 && touch.phase == TouchPhase.Began)
+        {
+            // Check if the touch is over this object
+            if (IsPointerOverObject(touch.position))
+            {
+                activeTouchId = touch.fingerId;
+                lastTouchPosition = touch.position;
+
+                if (debugMobileInput)
+                {
+                    Debug.Log($"[DragDrop] Touch began on {gameObject.name} at position {touch.position}");
+                }
+
+                // Trigger OnPointerDown equivalent
+                HandleTouchBegin(touch.position);
+            }
+        }
+
+        // Handle active touch
+        if (activeTouchId == touch.fingerId)
+        {
+            switch (touch.phase)
+            {
+                case TouchPhase.Moved:
+                    if (!isTouchDragging)
+                    {
+                        // Start dragging if touch has moved enough
+                        float dragDistance = Vector2.Distance(touch.position, lastTouchPosition);
+                        if (dragDistance > 5f) // Minimum drag threshold
+                        {
+                            isTouchDragging = true;
+                            if (debugMobileInput)
+                            {
+                                Debug.Log($"[DragDrop] Touch drag started on {gameObject.name}");
+                            }
+                            HandleTouchDragBegin(touch.position);
+                        }
+                    }
+
+                    if (isTouchDragging)
+                    {
+                        HandleTouchDrag(touch.position);
+                        lastTouchPosition = touch.position;
+                    }
+                    break;
+
+                case TouchPhase.Ended:
+                case TouchPhase.Canceled:
+                    if (isTouchDragging)
+                    {
+                        if (debugMobileInput)
+                        {
+                            Debug.Log($"[DragDrop] Touch drag ended on {gameObject.name}");
+                        }
+                        HandleTouchDragEnd(touch.position);
+                        isTouchDragging = false;
+                    }
+                    else if (debugMobileInput)
+                    {
+                        Debug.Log($"[DragDrop] Touch released without dragging on {gameObject.name}");
+                    }
+
+                    activeTouchId = -1;
+                    break;
+            }
+        }
+    }
+
+    private bool IsPointerOverObject(Vector2 screenPosition)
+    {
+        if (isUIElement)
+        {
+            // For UI elements, use RectTransformUtility
+            return RectTransformUtility.RectangleContainsScreenPoint(
+                rectTransform,
+                screenPosition,
+                canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera
+            );
+        }
+        else
+        {
+            // For world objects, use physics raycast
+            Vector3 worldPosition = mainCamera.ScreenToWorldPoint(screenPosition);
+            worldPosition.z = 0f;
+
+            Collider2D hitCollider = Physics2D.OverlapPoint(worldPosition);
+            if (hitCollider != null && (hitCollider.gameObject == gameObject || hitCollider.transform.IsChildOf(transform)))
+            {
+                return true;
+            }
+
+            RaycastHit2D hit = Physics2D.Raycast(worldPosition, Vector2.zero);
+            return hit.collider != null && (hit.collider.gameObject == gameObject || hit.collider.transform.IsChildOf(transform));
+        }
+    }
+
+    private void HandleTouchBegin(Vector2 touchPosition)
+    {
+        if (isUIElement)
+        {
+            transform.SetAsLastSibling();
+        }
+    }
+
+    private void HandleTouchDragBegin(Vector2 touchPosition)
+    {
+        if (isSource)
+        {
+            if (oneTimeUse && hasBeenUsed)
+            {
+                if (debugMobileInput) Debug.Log("[DragDrop] This reward has already been claimed - cannot drag again");
+                isTouchDragging = false;
+                activeTouchId = -1;
+                return;
+            }
+
+            // Create a pointer event data from touch position
+            PointerEventData touchEventData = CreatePointerEventDataFromTouch(touchPosition);
+            activeClone = CreateDraggableClone(touchEventData);
+            if (activeClone != null)
+            {
+                isDragging = true;
+                onBeginDragFromSource?.Invoke();
+                ExecuteEvents.Execute<IBeginDragHandler>(activeClone, touchEventData, ExecuteEvents.beginDragHandler);
+                return;
+            }
+        }
+
+        isDragging = true;
+
+        if (isUIElement)
+        {
+            if (canvasGroup != null)
+            {
+                canvasGroup.blocksRaycasts = false;
+            }
+
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                (RectTransform)canvas.transform,
+                touchPosition,
+                canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera,
+                out Vector2 localPoint))
+            {
+                pointerOffset = localPoint - rectTransform.anchoredPosition;
+            }
+            else
+            {
+                pointerOffset = Vector2.zero;
+            }
+        }
+        else
+        {
+            Vector3 worldPos = mainCamera.ScreenToWorldPoint(touchPosition);
+            worldPos.z = transform.position.z;
+            worldOffset = worldPos - transform.position;
+
+            if (cachedSpriteRenderer != null)
+            {
+                cachedSpriteRenderer.sortingOrder += 100;
+            }
+        }
+    }
+
+    private void HandleTouchDrag(Vector2 touchPosition)
+    {
+        if (!isDragging)
+        {
+            return;
+        }
+
+        if (activeClone != null)
+        {
+            PointerEventData touchEventData = CreatePointerEventDataFromTouch(touchPosition);
+            ExecuteEvents.Execute<IDragHandler>(activeClone, touchEventData, ExecuteEvents.dragHandler);
+            return;
+        }
+
+        if (isUIElement)
+        {
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                (RectTransform)canvas.transform,
+                touchPosition,
+                canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera,
+                out Vector2 localPoint))
+            {
+                rectTransform.anchoredPosition = localPoint - pointerOffset;
+            }
+        }
+        else
+        {
+            Vector3 worldPos = mainCamera.ScreenToWorldPoint(touchPosition);
+            worldPos.z = transform.position.z;
+            transform.position = worldPos - worldOffset;
+        }
+    }
+
+    private void HandleTouchDragEnd(Vector2 touchPosition)
+    {
+        if (!isDragging)
+        {
+            return;
+        }
+
+        isDragging = false;
+
+        if (activeClone != null)
+        {
+            PointerEventData touchEventData = CreatePointerEventDataFromTouch(touchPosition);
+            ExecuteEvents.Execute<IEndDragHandler>(activeClone, touchEventData, ExecuteEvents.endDragHandler);
+            Destroy(activeClone);
+            activeClone = null;
+            return;
+        }
+
+        RestorePostDragState();
+
+        PointerEventData endEventData = CreatePointerEventDataFromTouch(touchPosition);
+        if (!TryGetTargetSlot(endEventData, out ItemSlot targetSlot))
+        {
+            HandleInvalidDrop();
+            return;
+        }
+
+        if (targetSlot.IsOccupied())
+        {
+            HandleOccupiedSlot();
+            return;
+        }
+
+        if (soldierPrefab != null)
+        {
+            SpawnSoldierInSlot(targetSlot);
+            return;
+        }
+
+        PlaceExistingObjectInSlot(targetSlot);
+    }
+
+    private PointerEventData CreatePointerEventDataFromTouch(Vector2 touchPosition)
+    {
+        if (EventSystem.current == null)
+        {
+            Debug.LogError("[DragDrop] EventSystem.current is null! Cannot create PointerEventData.");
+            return new PointerEventData(EventSystem.current);
+        }
+
+        PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
+        pointerEventData.position = touchPosition;
+        pointerEventData.pointerId = activeTouchId;
+        return pointerEventData;
     }
 
     private Transform FindVisualChild(GameObject root)
