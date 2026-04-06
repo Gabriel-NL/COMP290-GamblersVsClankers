@@ -67,4 +67,8 @@ public class TitleScreen : MonoBehaviour
         UnityEditor.Selection.activeObject = null;
 #endif
     }
+    public void LoadLoreDex()
+    {
+        SceneManager.LoadScene("LoreDex");
+    }
 }
