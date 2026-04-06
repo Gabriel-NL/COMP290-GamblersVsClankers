@@ -125,7 +125,7 @@ public class PauseMenu : MonoBehaviour
     {
         Time.timeScale = 0f; // Stops all Time.deltaTime dependent operations
         isPaused = true;
-        Debug.Log("Game Paused");
+        //Debug.Log("Game Paused");
     }
     
     private void ResumeGame()
