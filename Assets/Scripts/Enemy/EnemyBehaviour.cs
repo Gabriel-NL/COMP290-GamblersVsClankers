@@ -90,6 +90,16 @@ public class EnemyBehaviour : MonoBehaviour
         hordeManager = manager;
     }
 
+    public void ReportDeathToHordeManager()
+    {
+        if (!hasReportedDeathToHordeManager && hordeManager != null)
+        {
+            hasReportedDeathToHordeManager = true;
+            hordeManager.RemoveEnemy(this);
+            Debug.Log($"[EnemyBehaviour] '{gameObject.name}' reported death to HordeManager");
+        }
+    }
+
     void Update()
     {
         UpdateAttackAnimation();

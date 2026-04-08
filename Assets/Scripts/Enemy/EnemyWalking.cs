@@ -39,6 +39,13 @@ public class EnemyWalking : MonoBehaviour
 
         if (autoDestroy && transform.position.x < destroyAtX)
         {
+            // Report death to HordeManager before destroying
+            EnemyBehaviour enemyBehaviour = GetComponent<EnemyBehaviour>();
+            if (enemyBehaviour != null)
+            {
+                enemyBehaviour.ReportDeathToHordeManager();
+            }
+
             Destroy(gameObject);
         }
     }
