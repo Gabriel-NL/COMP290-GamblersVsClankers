@@ -8679,34 +8679,34 @@ MonoBehaviour:
   - soldierType: {fileID: 11400000, guid: 27c1fbafe0e09cb4db5973cb2554c271, type: 2}
     probability: 40
   - soldierType: {fileID: 11400000, guid: a0cc2d97a4ea5054cb227062473176db, type: 2}
-    probability: 40
+    probability: 30
   - soldierType: {fileID: 11400000, guid: 230a6661fcc9d2f4b967dc75cbd6846f, type: 2}
-    probability: 30
+    probability: 22
   - soldierType: {fileID: 11400000, guid: 9fcc17ea4a17e3340885ca8080388207, type: 2}
-    probability: 15
+    probability: 10
   - soldierType: {fileID: 11400000, guid: 742f5728f55e73f4b8aca4733e003ecc, type: 2}
-    probability: 30
+    probability: 20
   - soldierType: {fileID: 11400000, guid: bd6adab3d859e7248abbaa68b43902bb, type: 2}
-    probability: 25
+    probability: 19
   - soldierType: {fileID: 11400000, guid: 81cdb19f43fffe6468350dc1a529bd2b, type: 2}
-    probability: 27.5
+    probability: 28
   - soldierType: {fileID: 11400000, guid: 99baa54a9d35e8d4cac756bc3175bbf7, type: 2}
     probability: 10
   - soldierType: {fileID: 11400000, guid: 20461b6a6296c714a99e63c1f4b18f6e, type: 2}
-    probability: 20
+    probability: 28
   - soldierType: {fileID: 11400000, guid: 8568e6901964d1d47bb93db530592052, type: 2}
     probability: 15
   possibleRarities:
   - type: 0
-    probability: 60
+    probability: 50
   - type: 1
-    probability: 35
+    probability: 30
   - type: 2
     probability: 15
   - type: 3
-    probability: 4
+    probability: 10
   - type: 4
-    probability: 1
+    probability: 6
   slotMachineImages:
   - {fileID: 1775185337}
   - {fileID: 270342236}
@@ -13876,6 +13876,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputActionAsset: {fileID: -944628639613478452, guid: 56882b78d9f923947a8040f82a56e561, type: 3}
+  gameOverPanel: {fileID: 0}
 --- !u!1 &2006691169
 GameObject:
   m_ObjectHideFlags: 0

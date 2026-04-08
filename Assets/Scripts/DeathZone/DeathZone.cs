@@ -24,21 +24,29 @@ public partial class DeathZone : MonoBehaviour
         
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            //Debug.Log($"[DeathZone] Enemy '{collision.gameObject.name}' entered death zone. Lives before: {lives}");
-
-            // Play the crossing sound once per enemy. Some enemies may have multiple colliders
-            // and trigger this method multiple times before being destroyed. To avoid duplicate
-            // playback we attach a lightweight marker component to the enemy and only play the
-            // sound the first time we see that marker.
-            if (collision.gameObject.GetComponent<DeathZoneCrossedMarker>() == null)
+            // Ignore duplicate collision callbacks for the same enemy.
+            if (collision.gameObject.GetComponent<DeathZoneCrossedMarker>() != null)
             {
-                // Add marker so subsequent trigger calls for the same object won't replay
-                collision.gameObject.AddComponent<DeathZoneCrossedMarker>();
+                return;
+            }
 
-                if (!string.IsNullOrEmpty(crossingClipname))
-                {
-                    AudioManager.Play(crossingClipname);
-                }
+            // Mark the enemy so multi-collider enemies only process once.
+            collision.gameObject.AddComponent<DeathZoneCrossedMarker>();
+
+            // Report the enemy to the horde system before destroying it.
+            EnemyBehaviour enemyBehaviour = collision.gameObject.GetComponent<EnemyBehaviour>();
+            if (enemyBehaviour != null)
+            {
+                enemyBehaviour.ReportDeathToHordeManager();
+            }
+            else
+            {
+                Debug.LogWarning($"[DeathZone] Enemy '{collision.gameObject.name}' has no EnemyBehaviour component.");
+            }
+
+            if (!string.IsNullOrEmpty(crossingClipname))
+            {
+                AudioManager.Play(crossingClipname);
             }
 
             lives--;
