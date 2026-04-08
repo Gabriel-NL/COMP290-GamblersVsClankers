@@ -2,12 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public sealed partial class HordeManager : MonoBehaviour
 {
 
     [Header("Database")]
     [SerializeField] private HordePrefabDatabase prefabDatabase;
+    [SerializeField] private TextMeshProUGUI hordeNumberText;
 
     [Header("Lane Position Logic")]
     private int numberOfLanes = 5;
@@ -80,6 +82,7 @@ public sealed partial class HordeManager : MonoBehaviour
         while (enabled)
         {
             currentHordeNumber = hordeIndex + 1;
+            hordeNumberText.text = currentHordeNumber.ToString();
 
             yield return SpawnHordeRoutine(orderedHordes[hordeIndex]);
 
