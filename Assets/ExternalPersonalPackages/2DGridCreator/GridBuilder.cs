@@ -12,17 +12,8 @@ public class GridBuilder<GenericType> where GenericType : UnityEngine.Component
 
     public GridBuilder(Transform parent)
     {
-        Transform[] children;
-        if (parent.GetComponentsInChildren<Transform>()==null)
-        {
-            children = parent.GetComponentsInChildren<RectTransform>();
-        }
-        else
-        {
-            children = parent.GetComponentsInChildren<Transform>();
-            
-        }
         GenericType[] objects = parent.GetComponentsInChildren<GenericType>();
+        Transform[] children = objects.Select(component => component.transform).ToArray();
         InitializeEmptyGrid(children);
         AddValuesToGrid(objects);
     }
@@ -82,7 +73,8 @@ public class GridBuilder<GenericType> where GenericType : UnityEngine.Component
             int gy = yIndex[p.y];
             if (customGrid.ContainsKey((gx, gy)))
             {
-                GameObject.Destroy(children[i]);
+                // Keep the first entry for duplicate coordinates and ignore the rest.
+                continue;
             }
             else
             {

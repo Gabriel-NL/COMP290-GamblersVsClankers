@@ -12,10 +12,16 @@ public class LoadingSystem : MonoBehaviour
 {
     [Header("Collection root")]
     public Transform slotsParent; // Reference to the grid of item slots
+
+    [Header("Loaded Visual Fit")]
+    [Tooltip("Loaded soldier visual will fit within this multiplier of the cell size. 1.0 = cell size, 1.1 = 110% of cell size.")]
+    public float placedVisualFitMultiplier = 1.1f;
     
     [Header("Soldier Type Registry")]
     [Tooltip("Reference to the SoldierTypeRegistry ScriptableObject that contains all soldier types")]
     public SoldierTypeRegistry soldierTypeRegistry;
+
+    private readonly Vector3[] worldCornersBuffer = new Vector3[4];
 
     private void Start()
     {
@@ -175,11 +181,15 @@ public class LoadingSystem : MonoBehaviour
                     }
 
                     // Place the soldier in the slot
-                    soldierObj.transform.SetParent(slot.transform);
+                    soldierObj.transform.SetParent(slot.transform, true);
+                    soldierObj.transform.localRotation = Quaternion.identity;
+                    soldierObj.transform.localScale = Vector3.one;
                     slot.SetOccupied(soldierObj);
                     
                     // Ensure local position is correct after parenting
                     soldierObj.transform.localPosition = new Vector3(0, 0, 0);
+
+                    ApplySavedScaleOrFit(soldierObj, slot, data);
                 }
                 else
                 {
@@ -213,6 +223,36 @@ public class LoadingSystem : MonoBehaviour
         Debug.Log("Game data loaded successfully!");
     }
 
+    private void ApplySavedScaleOrFit(GameObject spawnedSoldier, ItemSlot targetSlot, SoldierDataForSerialization data)
+    {
+        if (spawnedSoldier == null || targetSlot == null)
+        {
+            return;
+        }
+
+        if (data != null && data.hasRootScale)
+        {
+            spawnedSoldier.transform.localScale = data.GetRootLocalScale();
+        }
+        else
+        {
+            spawnedSoldier.transform.localScale = Vector3.one;
+        }
+
+        if (data != null && data.hasVisualScale)
+        {
+            Transform visualChild = FindVisualChild(spawnedSoldier);
+            if (visualChild != null)
+            {
+                visualChild.localScale = data.GetVisualLocalScale();
+                return;
+            }
+        }
+
+        // Backward compatibility for old saves that do not have scale info.
+        FitVisualChildToSlot(spawnedSoldier, targetSlot);
+    }
+
     /// <summary>
     /// Check if a save file exists
     /// </summary>
@@ -221,5 +261,86 @@ public class LoadingSystem : MonoBehaviour
         string projectSavesFolder = Path.Combine(Application.dataPath, "SavesJson");
         string fullPath = Path.Combine(projectSavesFolder, "MyFirstSave.json");
         return File.Exists(fullPath);
+    }
+
+    private Transform FindVisualChild(GameObject root)
+    {
+        if (root == null)
+        {
+            return null;
+        }
+
+        Transform named = root.transform.Find("sprite");
+        if (named != null)
+        {
+            return named;
+        }
+
+        SpriteRenderer sr = root.GetComponentInChildren<SpriteRenderer>();
+        if (sr != null)
+        {
+            return sr.transform;
+        }
+
+        return null;
+    }
+
+    private Vector2 GetRectTransformWorldSize(RectTransform rectTransformToMeasure)
+    {
+        rectTransformToMeasure.GetWorldCorners(worldCornersBuffer);
+
+        float width = Vector3.Distance(worldCornersBuffer[0], worldCornersBuffer[3]);
+        float height = Vector3.Distance(worldCornersBuffer[0], worldCornersBuffer[1]);
+
+        return new Vector2(width, height);
+    }
+
+    private void FitVisualChildToSlot(GameObject spawnedSoldier, ItemSlot targetSlot)
+    {
+        if (spawnedSoldier == null || targetSlot == null)
+        {
+            return;
+        }
+
+        RectTransform slotRect = targetSlot.GetComponent<RectTransform>();
+        if (slotRect == null)
+        {
+            Debug.LogWarning($"Target slot '{targetSlot.name}' has no RectTransform. Cannot fit visual child.");
+            return;
+        }
+
+        Transform visualChild = FindVisualChild(spawnedSoldier);
+        if (visualChild == null)
+        {
+            Debug.LogWarning($"No visual child named 'sprite' or SpriteRenderer found on '{spawnedSoldier.name}'.");
+            return;
+        }
+
+        SpriteRenderer visualSprite = visualChild.GetComponent<SpriteRenderer>();
+        if (visualSprite == null || visualSprite.sprite == null)
+        {
+            Debug.LogWarning($"Visual child '{visualChild.name}' has no SpriteRenderer/sprite on '{spawnedSoldier.name}'.");
+            return;
+        }
+
+        Vector2 slotWorldSize = GetRectTransformWorldSize(slotRect);
+        Vector2 targetWorldSize = slotWorldSize * placedVisualFitMultiplier;
+
+        Vector3 originalVisualScale = visualChild.localScale;
+
+        Bounds currentBounds = visualSprite.bounds;
+        Vector2 currentWorldSize = new Vector2(currentBounds.size.x, currentBounds.size.y);
+
+        if (currentWorldSize.x <= 0f || currentWorldSize.y <= 0f)
+        {
+            Debug.LogWarning($"Current rendered size invalid on '{visualChild.name}'.");
+            return;
+        }
+
+        float scaleX = targetWorldSize.x / currentWorldSize.x;
+        float scaleY = targetWorldSize.y / currentWorldSize.y;
+        float scaleFactor = Mathf.Min(scaleX, scaleY);
+
+        visualChild.localScale = originalVisualScale * scaleFactor;
     }
 }

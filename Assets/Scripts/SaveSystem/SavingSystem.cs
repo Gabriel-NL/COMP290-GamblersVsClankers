@@ -49,6 +49,19 @@ public class SavingSystem : MonoBehaviour
                 string tierName = soldierBehaviour.tier.ToString();
 
                 SoldierDataForSerialization entry = new SoldierDataForSerialization(soldierTypeName, tierName);
+
+                GameObject soldierObj = keyValuePair.Value.occupyingObject;
+                entry.SetRootLocalScale(soldierObj.transform.localScale);
+
+                Transform visualTransform = soldierBehaviour.spriteRenderer != null
+                    ? soldierBehaviour.spriteRenderer.transform
+                    : FindVisualChild(soldierObj);
+
+                if (visualTransform != null)
+                {
+                    entry.SetVisualLocalScale(visualTransform.localScale);
+                }
+
                 grid.Add(keyValuePair.Key, entry);
 
                 Debug.Log($"Saved soldier: {soldierTypeName} with tier {tierName} at grid position {keyValuePair.Key}");
@@ -69,5 +82,27 @@ public class SavingSystem : MonoBehaviour
         // So the file appears in the Project window immediately
         UnityEditor.AssetDatabase.Refresh();
 #endif
+    }
+
+    private static Transform FindVisualChild(GameObject root)
+    {
+        if (root == null)
+        {
+            return null;
+        }
+
+        Transform named = root.transform.Find("sprite");
+        if (named != null)
+        {
+            return named;
+        }
+
+        SpriteRenderer sr = root.GetComponentInChildren<SpriteRenderer>();
+        if (sr != null)
+        {
+            return sr.transform;
+        }
+
+        return null;
     }
 }
