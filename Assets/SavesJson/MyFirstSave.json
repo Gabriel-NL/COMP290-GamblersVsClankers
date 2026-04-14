@@ -2,8 +2,25 @@
     "metadata": [
         {
             "key": "points",
-            "value": "500"
+            "value": "310"
         }
     ],
-    "entries": []
+    "entries": [
+        {
+            "x": 3,
+            "y": 2,
+            "value": {
+                "soldierTypeName": "AR Soldier",
+                "soldierTierName": "Uncommon",
+                "hasRootScale": true,
+                "rootScaleX": 1.0,
+                "rootScaleY": 1.0,
+                "rootScaleZ": 1.0,
+                "hasVisualScale": true,
+                "visualScaleX": 10.015174865722657,
+                "visualScaleY": 10.015174865722657,
+                "visualScaleZ": 10.015174865722657
+            }
+        }
+    ]
 }
