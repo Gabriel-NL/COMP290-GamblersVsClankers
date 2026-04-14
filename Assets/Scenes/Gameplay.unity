@@ -12674,11 +12674,11 @@ RectTransform:
   - {fileID: 1282476118}
   - {fileID: 404071382}
   - {fileID: 1409303739}
+  - {fileID: 1467722277}
   - {fileID: 965739330}
   - {fileID: 1461990800}
   - {fileID: 993214289}
   - {fileID: 1548815}
-  - {fileID: 1467722277}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
