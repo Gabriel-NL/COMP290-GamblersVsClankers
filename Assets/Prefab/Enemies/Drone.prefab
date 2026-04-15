@@ -14,11 +14,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 953735057178029277, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
       propertyPath: speed
-      value: 2.5
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 953735057178029277, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
       propertyPath: reward
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 953735057178029277, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
+      propertyPath: isFlying
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 953735057178029277, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
       propertyPath: enemyType
@@ -26,11 +30,11 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 6b5b6ac514fbaff428340a3eddca0e84, type: 2}
     - target: {fileID: 953735057178029277, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
       propertyPath: maxHealth
-      value: 60
+      value: 120
       objectReference: {fileID: 0}
     - target: {fileID: 953735057178029277, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
       propertyPath: currentHealth
-      value: 60
+      value: 120
       objectReference: {fileID: 0}
     - target: {fileID: 953735057178029277, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
       propertyPath: attackLungeDistance

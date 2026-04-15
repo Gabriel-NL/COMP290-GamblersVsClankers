@@ -34,7 +34,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 6cdd0bfa0cdd4154b83987bc779c416a, type: 2}
     - target: {fileID: 953735057178029277, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
       propertyPath: maxHealth
-      value: 500
+      value: 1450
       objectReference: {fileID: 0}
     - target: {fileID: 953735057178029277, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
       propertyPath: bulletPrefab
@@ -46,7 +46,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 953735057178029277, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
       propertyPath: currentHealth
-      value: 500
+      value: 1450
       objectReference: {fileID: 0}
     - target: {fileID: 953735057178029277, guid: 59272db1d45f3c14abe6f88a397a9fb7, type: 3}
       propertyPath: attackCooldown
