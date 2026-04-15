@@ -14045,6 +14045,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotsParent: {fileID: 1730234393}
+  placedVisualFitMultiplier: 1.1
   soldierTypeRegistry: {fileID: 11400000, guid: f3f791edd77a8a445a0a40f1193344f9, type: 2}
 --- !u!1 &2000683153
 GameObject:

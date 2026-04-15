@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 463987066791403899, guid: f04003c4f173ccf47ba758bb63407c08, type: 3}
       propertyPath: dmg
-      value: 10
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 463987066791403899, guid: f04003c4f173ccf47ba758bb63407c08, type: 3}
       propertyPath: speed
@@ -26,11 +26,11 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: aea5345e715ba1b49b2364d5719eb272, type: 2}
     - target: {fileID: 463987066791403899, guid: f04003c4f173ccf47ba758bb63407c08, type: 3}
       propertyPath: maxHealth
-      value: 60
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 463987066791403899, guid: f04003c4f173ccf47ba758bb63407c08, type: 3}
       propertyPath: currentHealth
-      value: 60
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 2013877495965173475, guid: f04003c4f173ccf47ba758bb63407c08, type: 3}
       propertyPath: m_Size.y

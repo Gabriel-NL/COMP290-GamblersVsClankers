@@ -20,8 +20,12 @@ MonoBehaviour:
     bulletLife: 2
     attackSpeed: 1.7
     health: 50
-    dmg: 18
+    dmg: 16
     cost: 10
     isShootThrough: 0
     canShootAir: 0
     isShotgun: 0
+    isEMPGrenade: 0
+    stunDuration: 0
+    aoeRadius: 0
+    isWaterBomb: 0

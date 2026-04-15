@@ -16,12 +16,16 @@ MonoBehaviour:
   characterSprite: {fileID: -5264329314873338569, guid: cb929363b9d95ca459324d524229e82b, type: 3}
   soldierPrefab: {fileID: 1304353129378444638, guid: fce4381b3a2bf764e8bcb0919b8ddf72, type: 3}
   stats:
-    bulletSpeed: 35
+    bulletSpeed: 25
     bulletLife: 2
     attackSpeed: 0.6
-    health: 150
+    health: 120
     dmg: 15
     cost: 150
     isShootThrough: 0
     canShootAir: 0
     isShotgun: 0
+    isEMPGrenade: 0
+    stunDuration: 0
+    aoeRadius: 0
+    isWaterBomb: 0

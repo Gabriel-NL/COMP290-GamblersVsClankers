@@ -461,12 +461,12 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 64
-  bulletSpeed: 40
+  bulletSpeed: 30
   bulletLife: 2
   attackSpeed: 1.65
   maxHealth: 70
   currentHealth: 70
-  dmg: 50
+  dmg: 40
   isShootThrough: 1
   isShotgun: 0
   isEMPGrenade: 0
