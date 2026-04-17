@@ -13,10 +13,13 @@ public sealed partial class HordeManager : MonoBehaviour
 
     [Header("Lane Position Logic")]
     private int numberOfLanes = 5;
-    private float laneSpacing = 1.4f;
-    private float firstLaneOffset = -2f;
-    private float spawnXPosition = 0f;
-    private bool useLocalPosition = true;
+    private float laneSpacing = -1.1225f;
+    private float firstLaneOffset = 1.11f;
+    private float spawnXPosition = 6.55f;
+    private bool useLocalPosition = false;
+
+    [Header("Render Layering")]
+    [SerializeField] private int minimumEnemySortingOrder = 1;
 
     [Header("Debug / Read Only")]
     [SerializeField] private HordeState currentState = HordeState.Disabled;
@@ -202,6 +205,7 @@ public sealed partial class HordeManager : MonoBehaviour
         }
 
         instance.transform.SetParent(transform, worldPositionStays: true);
+        ApplyEnemySorting(instance);
 
         enemyBehaviour.SetHordeManager(this);
 
@@ -216,15 +220,45 @@ public sealed partial class HordeManager : MonoBehaviour
 
     private Vector3 GetSpawnPosition(int laneIndex)
     {
-        float y = firstLaneOffset + (laneIndex * laneSpacing);
-        Vector3 localPosition = new Vector3(spawnXPosition, y, 0f);
-
+        float spawnY = firstLaneOffset + (laneIndex * laneSpacing);
+        
+        // Fine-tune bottom lane
+        if (laneIndex == 4)
+        {
+            spawnY -= 0.1f;
+        }
+        
         if (useLocalPosition)
         {
-            return transform.TransformPoint(localPosition);
+            return transform.TransformPoint(new Vector3(spawnXPosition, spawnY, 0f));
+        }
+        else
+        {
+            return new Vector3(spawnXPosition, spawnY, 0f);
+        }
+    }
+
+    private void ApplyEnemySorting(GameObject enemyInstance)
+    {
+        if (enemyInstance == null)
+        {
+            return;
         }
 
-        return localPosition;
+        SpriteRenderer[] spriteRenderers = enemyInstance.GetComponentsInChildren<SpriteRenderer>(includeInactive: true);
+        for (int i = 0; i < spriteRenderers.Length; i++)
+        {
+            SpriteRenderer spriteRenderer = spriteRenderers[i];
+            if (spriteRenderer == null)
+            {
+                continue;
+            }
+
+            if (spriteRenderer.sortingOrder < minimumEnemySortingOrder)
+            {
+                spriteRenderer.sortingOrder = minimumEnemySortingOrder;
+            }
+        }
     }
 
     private void ValidateConfigurationOrThrow()
